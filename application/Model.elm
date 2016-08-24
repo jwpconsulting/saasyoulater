@@ -9,7 +9,7 @@ module Model
 type alias Model =
     { months : Int
     , churnRate : Float
-    , initialRevenue : Int
+    , revenue : Int
     , customerGrowth : Int
     , revenueGrossMargin : Float
     , cac : Int
@@ -21,7 +21,7 @@ init : Model
 init =
     { months = 24
     , churnRate = 0.03
-    , initialRevenue = 30
+    , revenue = 30
     , customerGrowth = 10
     , revenueGrossMargin = 0.75
     , cac = 50

@@ -61,7 +61,7 @@ revenueCohort model month cohort =
             cohortMonth cohort month
 
         revenue =
-            toFloat model.initialRevenue
+            toFloat model.revenue
     in
         customers * revenue
 
@@ -157,7 +157,7 @@ averageLife model =
 
 cltv : Model -> Int
 cltv model =
-    averageLife model * model.initialRevenue
+    averageLife model * model.revenue
 
 
 ltvcac : Model -> Float

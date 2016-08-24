@@ -60,7 +60,7 @@ controls model =
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Revenue per Customer per Month"
-                , numberInput model.initialRevenue SetInitialRevenue 0 1000 10
+                , numberInput model.revenue SetRevenue 0 1000 10
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Customer Acquisition Cost"
@@ -69,6 +69,10 @@ controls model =
             , div [ class "form-group" ]
                 [ controlLabel "Fixed Operation costs"
                 , numberInput model.opCost SetOpCost 0 1000 100
+                ]
+            , div [ class "form-group" ]
+                [ controlLabel "Gross Margin"
+                , numberInput (model.revenueGrossMargin * 100 |> round) SetMargin 0 100 5
                 ]
             ]
         , h4 [] [ text "Explanation" ]

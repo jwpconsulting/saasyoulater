@@ -42,11 +42,14 @@ update msg model =
         SetCustomerGrowth customerGrowth ->
             { model | customerGrowth = decodeInt customerGrowth } ! []
 
-        SetInitialRevenue initialRevenue ->
-            { model | initialRevenue = decodeInt initialRevenue } ! []
+        SetRevenue revenue ->
+            { model | revenue = decodeInt revenue } ! []
 
         SetCAC cac ->
             { model | cac = decodeInt cac } ! []
 
         SetOpCost opCost ->
             { model | opCost = decodeInt opCost } ! []
+
+        SetMargin margin ->
+            { model | revenueGrossMargin = decodePercentage margin } ! []
