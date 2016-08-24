@@ -42,4 +42,4 @@ serve:
 	cd $(BUILD) && python -m SimpleHTTPServer 3000
 
 deploy: all
-	git subtree push --prefix $(BUILD) origin $(GIT_BRANCH)
+	./deploy.sh
