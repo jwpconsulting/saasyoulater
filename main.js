@@ -7894,14 +7894,17 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Msg$SetMargin = function (a) {
+	return {ctor: 'SetMargin', _0: a};
+};
 var _user$project$Msg$SetOpCost = function (a) {
 	return {ctor: 'SetOpCost', _0: a};
 };
 var _user$project$Msg$SetCAC = function (a) {
 	return {ctor: 'SetCAC', _0: a};
 };
-var _user$project$Msg$SetInitialRevenue = function (a) {
-	return {ctor: 'SetInitialRevenue', _0: a};
+var _user$project$Msg$SetRevenue = function (a) {
+	return {ctor: 'SetRevenue', _0: a};
 };
 var _user$project$Msg$SetCustomerGrowth = function (a) {
 	return {ctor: 'SetCustomerGrowth', _0: a};
@@ -7997,10 +8000,10 @@ var _user$project$Humanize$humanize = function (month) {
 };
 
 var _user$project$Model$maxMonths = 100;
-var _user$project$Model$init = {months: 24, churnRate: 3.0e-2, initialRevenue: 30, customerGrowth: 10, revenueGrossMargin: 0.75, cac: 50, opCost: 200};
+var _user$project$Model$init = {months: 24, churnRate: 3.0e-2, revenue: 30, customerGrowth: 10, revenueGrossMargin: 0.75, cac: 50, opCost: 200};
 var _user$project$Model$Model = F7(
 	function (a, b, c, d, e, f, g) {
-		return {months: a, churnRate: b, initialRevenue: c, customerGrowth: d, revenueGrossMargin: e, cac: f, opCost: g};
+		return {months: a, churnRate: b, revenue: c, customerGrowth: d, revenueGrossMargin: e, cac: f, opCost: g};
 	});
 
 var _user$project$Update$decodePercentage = function (string) {
@@ -8060,13 +8063,13 @@ var _user$project$Update$update = F2(
 						}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
-			case 'SetInitialRevenue':
+			case 'SetRevenue':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{
-							initialRevenue: _user$project$Update$decodeInt(_p2._0)
+							revenue: _user$project$Update$decodeInt(_p2._0)
 						}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
@@ -8080,13 +8083,23 @@ var _user$project$Update$update = F2(
 						}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
-			default:
+			case 'SetOpCost':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{
 							opCost: _user$project$Update$decodeInt(_p2._0)
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							revenueGrossMargin: _user$project$Update$decodePercentage(_p2._0)
 						}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
@@ -8097,7 +8110,7 @@ var _user$project$Math$averageLife = function (model) {
 	return _elm_lang$core$Basics$round(1 / model.churnRate);
 };
 var _user$project$Math$cltv = function (model) {
-	return _user$project$Math$averageLife(model) * model.initialRevenue;
+	return _user$project$Math$averageLife(model) * model.revenue;
 };
 var _user$project$Math$ltvcac = function (model) {
 	return _elm_lang$core$Basics$toFloat(
@@ -8165,7 +8178,7 @@ var _user$project$Math$customerCohorts = F2(
 	});
 var _user$project$Math$revenueCohort = F3(
 	function (model, month, cohort) {
-		var revenue = _elm_lang$core$Basics$toFloat(model.initialRevenue);
+		var revenue = _elm_lang$core$Basics$toFloat(model.revenue);
 		var m = A2(_user$project$Math$cohortMonth, cohort, month);
 		var customers = A3(_user$project$Math$customerCohort, model, month, cohort);
 		return customers * revenue;
@@ -8381,6 +8394,117 @@ var _user$project$View$results = function (model) {
 					_elm_lang$core$Native_List.fromArray(
 						[]),
 					minimumCumulativeEarnings)
+				])),
+			A2(
+			_elm_lang$html$Html$h4,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text('Explanation')
+				])),
+			A2(
+			_elm_lang$html$Html$dl,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Earnings positive')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Month at which earnings cross 0 ')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Cumulative Earnings positive')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Month at which cumulative earnings (e.g. bank account) cross 0')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Average Customer Lifetime')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Average number of months a customer stays with this business ')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Customer Lifetime Value')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Average revenue earned through one customer over the whole lifetime ')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('LTV over CAC')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Ratio of Lifetime Value over Customer Acquisition Cost. Less than 1 means acquisition will not yield in profit.')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Minimum Cumulative Earnings')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Lowest point in cumulative earnings. Bank account needs to be able to shoulder this.')
+						]))
 				]))
 		]);
 };
@@ -8599,95 +8723,226 @@ var _user$project$View$controls = function (model) {
 					_elm_lang$html$Html$text(labelText)
 				]));
 	};
-	return A2(
-		_elm_lang$html$Html$form,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$class('form-horizontal')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$h2,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Parameters')
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Months:'),
-						A5(numberInput, model.months, _user$project$Msg$SetMonths, 1, 100, 1)
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Churn Rate (%): '),
-						A5(
-						numberInput,
-						_elm_lang$core$Basics$round(model.churnRate * 100),
-						_user$project$Msg$SetChurnRate,
-						1,
-						100,
-						1)
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Customer Growth p.m.: '),
-						A5(numberInput, model.customerGrowth, _user$project$Msg$SetCustomerGrowth, 0, 1000, 10)
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Revenue per Customer p.m.: '),
-						A5(numberInput, model.initialRevenue, _user$project$Msg$SetInitialRevenue, 0, 1000, 10)
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Customer Acquisition Cost'),
-						A5(numberInput, model.cac, _user$project$Msg$SetCAC, 0, 5000, 5)
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('form-group')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						controlLabel('Operation costs'),
-						A5(numberInput, model.opCost, _user$project$Msg$SetOpCost, 0, 1000, 100)
-					]))
-			]));
+	return _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$form,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$class('form-horizontal')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$h2,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Parameters')
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Months'),
+							A5(numberInput, model.months, _user$project$Msg$SetMonths, 1, 100, 1)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Churn Rate (%)'),
+							A5(
+							numberInput,
+							_elm_lang$core$Basics$round(model.churnRate * 100),
+							_user$project$Msg$SetChurnRate,
+							1,
+							100,
+							1)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Customer Growth per Month'),
+							A5(numberInput, model.customerGrowth, _user$project$Msg$SetCustomerGrowth, 0, 1000, 10)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Revenue per Customer per Month'),
+							A5(numberInput, model.revenue, _user$project$Msg$SetRevenue, 0, 1000, 10)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Customer Acquisition Cost'),
+							A5(numberInput, model.cac, _user$project$Msg$SetCAC, 0, 5000, 5)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Fixed Operation costs'),
+							A5(numberInput, model.opCost, _user$project$Msg$SetOpCost, 0, 1000, 100)
+						])),
+					A2(
+					_elm_lang$html$Html$div,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html_Attributes$class('form-group')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							controlLabel('Gross Margin'),
+							A5(
+							numberInput,
+							_elm_lang$core$Basics$round(model.revenueGrossMargin * 100),
+							_user$project$Msg$SetMargin,
+							0,
+							100,
+							5)
+						]))
+				])),
+			A2(
+			_elm_lang$html$Html$h4,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text('Explanation')
+				])),
+			A2(
+			_elm_lang$html$Html$dl,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Months')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Length of business forecast')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Churn Rate')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Percentage of customers leaving monthly')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Customer Growth per Month')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Number of customers signing up in one month')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Revenue per customer per Month')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Customer Acquisition Cost')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Cost related to acquiring one customer')
+						])),
+					A2(
+					_elm_lang$html$Html$dt,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Fixed Operation Cost')
+						])),
+					A2(
+					_elm_lang$html$Html$dd,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$html$Html$text('Fixed costs such as salaries, rent')
+						]))
+				]))
+		]);
 };
 var _user$project$View$view = function (model) {
 	return A2(
@@ -8726,10 +8981,7 @@ var _user$project$View$view = function (model) {
 							[
 								_elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3')
 							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_user$project$View$controls(model)
-							])),
+						_user$project$View$controls(model)),
 						A2(
 						_elm_lang$html$Html$div,
 						_elm_lang$core$Native_List.fromArray(
