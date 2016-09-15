@@ -13,7 +13,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 []
-            [ text "SaaSulator"
+            [ text "Saas You Later"
             , small [] [ text " - SaaS Business Model Calculator" ]
             ]
         , div [ class "row" ]
