@@ -8957,7 +8957,7 @@ var _user$project$View$view = function (model) {
 					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html$text('SaaSulator'),
+						_elm_lang$html$Html$text('Saas You Later'),
 						A2(
 						_elm_lang$html$Html$small,
 						_elm_lang$core$Native_List.fromArray(
