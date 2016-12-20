@@ -16,7 +16,7 @@ view model =
         scenario =
             Model.currentScenario model
     in
-        div []
+        div [] <|
             [ h1 []
                 [ text "SaaS You Later"
                 , small [] [ text " - SaaS Business Model Calculator" ]
@@ -35,12 +35,11 @@ view model =
                     (numbers scenario)
                 ]
             , hr [] []
-            , h2 [] [ text "Help" ]
-            , div [ class "row" ]
-                [ div [ class "col-md-6" ] resultsHelp
-                , div [ class "col-md-6" ] controlsHelp
-                ]
             ]
+                ++ help
+                ++ [ hr [] []
+                   , footer
+                   ]
 
 
 newTab : Html Msg
@@ -297,3 +296,21 @@ resultsHelp =
         , dd [] [ text "Lowest point in cumulative EBIT. Bank account needs to be able to shoulder this." ]
         ]
     ]
+
+
+help : List (Html Msg)
+help =
+    [ h2 [] [ text "Help" ]
+    , div [ class "row" ]
+        [ div [ class "col-md-6" ] resultsHelp
+        , div [ class "col-md-6" ] controlsHelp
+        ]
+    ]
+
+
+footer : Html Msg
+footer =
+    p []
+        [ text "Created by "
+        , a [ href "https://www.justus.pw" ] [ text "Justus Perlwitz" ]
+        ]
