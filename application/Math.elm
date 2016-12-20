@@ -15,7 +15,7 @@ module Math
         , minimumCumulativeEarnings
         )
 
-import Model exposing (Model)
+import Model exposing (Scenario)
 
 
 cohortMonth : Int -> Int -> Float
@@ -33,7 +33,7 @@ customers customerGrowth churnRate month =
     toFloat customerGrowth * churn churnRate month
 
 
-customerCohort : Model -> Int -> Int -> Float
+customerCohort : Scenario -> Int -> Int -> Float
 customerCohort model month cohort =
     let
         m =
@@ -45,13 +45,13 @@ customerCohort model month cohort =
             0.0
 
 
-customerCohorts : Model -> Int -> Float
+customerCohorts : Scenario -> Int -> Float
 customerCohorts model month =
     List.map (customerCohort model month) (List.range 1 model.months)
         |> List.foldl (+) 0
 
 
-revenueCohort : Model -> Int -> Int -> Float
+revenueCohort : Scenario -> Int -> Int -> Float
 revenueCohort model month cohort =
     let
         customers =
@@ -66,38 +66,38 @@ revenueCohort model month cohort =
         customers * revenue
 
 
-revenueCohorts : Model -> Int -> Float
+revenueCohorts : Scenario -> Int -> Float
 revenueCohorts model month =
     List.map (revenueCohort model month) (List.range 1 model.months)
         |> List.foldl (+) 0
 
 
-revenueCost : Model -> Int -> Float
+revenueCost : Scenario -> Int -> Float
 revenueCost model month =
     revenueCohorts model month * (1 - model.revenueGrossMargin)
 
 
-grossMargin : Model -> Int -> Float
+grossMargin : Scenario -> Int -> Float
 grossMargin model month =
     revenueCohorts model month * model.revenueGrossMargin
 
 
-expenses : Model -> Int
+expenses : Scenario -> Int
 expenses model =
     model.customerGrowth * model.cac + model.opCost
 
 
-earnings : Model -> Int -> Float
+earnings : Scenario -> Int -> Float
 earnings model month =
     grossMargin model month - toFloat (expenses model)
 
 
-cumulativeEarnings : Model -> Int -> Float
+cumulativeEarnings : Scenario -> Int -> Float
 cumulativeEarnings model month =
     List.map (earnings model) (List.range 1 month) |> List.foldl (+) 0
 
 
-earningsBreakEvenWithMonth : Model -> Int -> Maybe Int
+earningsBreakEvenWithMonth : Scenario -> Int -> Maybe Int
 earningsBreakEvenWithMonth model month =
     if earnings model month >= 0 then
         Just month
@@ -109,12 +109,12 @@ earningsBreakEvenWithMonth model month =
         )
 
 
-earningsBreakEven : Model -> Maybe Int
+earningsBreakEven : Scenario -> Maybe Int
 earningsBreakEven model =
     earningsBreakEvenWithMonth model 1
 
 
-breakEvenWithMonth : Model -> Int -> Maybe Int
+breakEvenWithMonth : Scenario -> Int -> Maybe Int
 breakEvenWithMonth model month =
     if cumulativeEarnings model month >= 0 then
         Just month
@@ -126,7 +126,7 @@ breakEvenWithMonth model month =
         )
 
 
-breakEven : Model -> Maybe Int
+breakEven : Scenario -> Maybe Int
 breakEven model =
     breakEvenWithMonth model 1
 
@@ -153,22 +153,22 @@ months months =
     linspace 1 months (min months 12)
 
 
-averageLife : Model -> Int
+averageLife : Scenario -> Int
 averageLife model =
     round (1 / model.churnRate)
 
 
-cltv : Model -> Int
+cltv : Scenario -> Int
 cltv model =
     averageLife model * model.revenue
 
 
-ltvcac : Model -> Float
+ltvcac : Scenario -> Float
 ltvcac model =
     toFloat (cltv model) / toFloat model.cac
 
 
-minimumCumulativeEarnings : Model -> Float
+minimumCumulativeEarnings : Scenario -> Float
 minimumCumulativeEarnings model =
     let
         minimum =

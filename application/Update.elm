@@ -1,8 +1,9 @@
 module Update exposing (update)
 
-import Model exposing (Model, maxMonths)
+import Model exposing (Model, maxMonths, newScenario, currentScenario)
 import String
 import Msg exposing (..)
+import Dict
 
 
 decodeInt : String -> Int
@@ -33,23 +34,66 @@ decodePercentage string =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SetMonths monthsString ->
-            { model | months = decodeIntWithMaximum monthsString maxMonths } ! []
+        SetScenario msg scenarioID value ->
+            let
+                scenario =
+                    currentScenario model
 
-        SetChurnRate churnRate ->
-            { model | churnRate = decodePercentage churnRate } ! []
+                scenario_ =
+                    case msg of
+                        SetMonths ->
+                            { scenario
+                                | months = decodeIntWithMaximum value maxMonths
+                            }
 
-        SetCustomerGrowth customerGrowth ->
-            { model | customerGrowth = decodeInt customerGrowth } ! []
+                        SetChurnRate ->
+                            { scenario
+                                | churnRate = decodePercentage value
+                            }
 
-        SetRevenue revenue ->
-            { model | revenue = decodeInt revenue } ! []
+                        SetCustomerGrowth ->
+                            { scenario
+                                | customerGrowth = decodeInt value
+                            }
 
-        SetCAC cac ->
-            { model | cac = decodeInt cac } ! []
+                        SetRevenue ->
+                            { scenario
+                                | revenue = decodeInt value
+                            }
 
-        SetOpCost opCost ->
-            { model | opCost = decodeInt opCost } ! []
+                        SetCAC ->
+                            { scenario
+                                | cac = decodeInt value
+                            }
 
-        SetMargin margin ->
-            { model | revenueGrossMargin = decodePercentage margin } ! []
+                        SetOpCost ->
+                            { scenario
+                                | opCost = decodeInt value
+                            }
+
+                        SetMargin ->
+                            { scenario
+                                | revenueGrossMargin = decodePercentage value
+                            }
+
+                scenarios_ =
+                    Dict.insert scenarioID scenario_ model.scenarios
+            in
+                { model | scenarios = scenarios_ } ! []
+
+        ChooseScenario id ->
+            { model | currentScenario = id } ! []
+
+        NewScenario ->
+            let
+                highest =
+                    (Dict.keys model.scenarios
+                        |> List.maximum
+                        |> Maybe.withDefault 0
+                    )
+                        + 1
+
+                scenarios_ =
+                    Dict.insert highest Model.newScenario model.scenarios
+            in
+                { model | scenarios = scenarios_ } ! []

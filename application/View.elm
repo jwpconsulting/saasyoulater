@@ -3,7 +3,8 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
-import Model exposing (Model)
+import Model exposing (Model, Scenario, ScenarioID)
+import Dict
 import Math
 import Msg exposing (..)
 import Humanize exposing (..)
@@ -11,21 +12,69 @@ import Humanize exposing (..)
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 []
-            [ text "Saas You Later"
-            , small [] [ text " - SaaS Business Model Calculator" ]
+    let
+        scenario =
+            Model.currentScenario model
+    in
+        div []
+            [ h1 []
+                [ text "SaaS You Later"
+                , small [] [ text " - SaaS Business Model Calculator" ]
+                ]
+            , ul [ class "nav nav-tabs" ] <|
+                (List.map (scenarioTab model.currentScenario) <|
+                    Dict.keys model.scenarios
+                )
+                    ++ [ newTab ]
+            , div [ class "row" ]
+                [ div [ class "col-xs-6 col-md-3" ]
+                    (controls model.currentScenario scenario)
+                , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
+                    (results scenario)
+                , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
+                    (numbers scenario)
+                ]
+            , hr [] []
+            , h2 [] [ text "Help" ]
+            , div [ class "row" ]
+                [ div [ class "col-md-6" ] resultsHelp
+                , div [ class "col-md-6" ] controlsHelp
+                ]
             ]
-        , div [ class "row" ]
-            [ div [ class "col-xs-6 col-md-3" ] (controls model)
-            , div [ class "col-xs-6 col-md-3 col-md-push-6" ] (results model)
-            , div [ class "col-xs-12 col-md-6 col-md-pull-3" ] (numbers model)
+
+
+newTab : Html Msg
+newTab =
+    li []
+        [ a
+            [ href "#"
+            , onClick NewScenario
+            ]
+            [ text "+ Add a Scenario" ]
+        ]
+
+
+scenarioTab : ScenarioID -> ScenarioID -> Html Msg
+scenarioTab currentScenario id =
+    li
+        [ class <|
+            if currentScenario == id then
+                "active"
+            else
+                ""
+        ]
+        [ a
+            [ href "#"
+            , onClick (ChooseScenario id)
+            ]
+            [ text "Scenario "
+            , text <| toString id
             ]
         ]
 
 
-controls : Model -> List (Html Msg)
-controls model =
+controls : ScenarioID -> Scenario -> List (Html Msg)
+controls id scenario =
     let
         controlLabel labelText =
             label [ class "control-label col-xs-6" ] [ text labelText ]
@@ -48,59 +97,92 @@ controls model =
             [ h2 [] [ text "Parameters" ]
             , div [ class "form-group" ]
                 [ controlLabel "Months"
-                , numberInput model.months SetMonths 1 100 1
+                , numberInput scenario.months
+                    (SetScenario SetMonths id)
+                    1
+                    100
+                    1
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Churn Rate (%)"
-                , numberInput (model.churnRate * 100 |> round) SetChurnRate 1 100 1
+                , numberInput (scenario.churnRate * 100 |> round)
+                    (SetScenario SetChurnRate id)
+                    1
+                    100
+                    1
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Customer Growth per Month"
-                , numberInput model.customerGrowth SetCustomerGrowth 0 1000 10
+                , numberInput scenario.customerGrowth
+                    (SetScenario SetCustomerGrowth id)
+                    0
+                    1000
+                    10
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Revenue per Customer per Month"
-                , numberInput model.revenue SetRevenue 0 1000 10
+                , numberInput scenario.revenue
+                    (SetScenario SetRevenue id)
+                    0
+                    1000
+                    10
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Customer Acquisition Cost"
-                , numberInput model.cac SetCAC 0 5000 5
+                , numberInput scenario.cac
+                    (SetScenario SetCAC id)
+                    0
+                    5000
+                    5
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Fixed Operation costs"
-                , numberInput model.opCost SetOpCost 0 1000 100
+                , numberInput scenario.opCost
+                    (SetScenario SetOpCost id)
+                    0
+                    1000
+                    100
                 ]
             , div [ class "form-group" ]
                 [ controlLabel "Gross Margin"
-                , numberInput (model.revenueGrossMargin * 100 |> round) SetMargin 0 100 5
+                , numberInput (scenario.revenueGrossMargin * 100 |> round)
+                    (SetScenario SetMargin id)
+                    0
+                    100
+                    5
                 ]
-            ]
-        , h4 [] [ text "Explanation" ]
-        , dl []
-            [ dt [] [ text "Months" ]
-            , dd [] [ text "Length of business forecast" ]
-            , dt [] [ text "Churn Rate" ]
-            , dd [] [ text "Percentage of customers leaving monthly" ]
-            , dt [] [ text "Customer Growth per Month" ]
-            , dd [] [ text "Number of customers signing up in one month" ]
-            , dt [] [ text "Revenue per customer per Month" ]
-            , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
-            , dt [] [ text "Customer Acquisition Cost" ]
-            , dd [] [ text "Cost related to acquiring one customer" ]
-            , dt [] [ text "Fixed Operation Cost" ]
-            , dd [] [ text "Fixed costs such as salaries, rent" ]
             ]
         ]
 
 
-numbers : Model -> List (Html Msg)
-numbers model =
+controlsHelp : List (Html Msg)
+controlsHelp =
+    [ h4 [] [ text "Explanation of Parameters" ]
+    , dl []
+        [ dt [] [ text "Months" ]
+        , dd [] [ text "Length of business forecast" ]
+        , dt [] [ text "Churn Rate" ]
+        , dd [] [ text "Percentage of customers leaving monthly" ]
+        , dt [] [ text "Customer Growth per Month" ]
+        , dd [] [ text "Number of customers signing up in one month" ]
+        , dt [] [ text "Revenue per customer per Month" ]
+        , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
+        , dt [] [ text "Customer Acquisition Cost" ]
+        , dd [] [ text "Cost related to acquiring one customer" ]
+        , dt [] [ text "Fixed Operation Cost" ]
+        , dd [] [ text "Fixed costs such as salaries, rent" ]
+        ]
+    ]
+
+
+numbers : Scenario -> List (Html Msg)
+numbers scenario =
     let
         months =
-            List.range 1 model.months
+            List.range 1 scenario.months
 
         breakEven =
-            Math.breakEven model
+            Math.breakEven scenario
 
         row month =
             let
@@ -119,21 +201,21 @@ numbers model =
             in
                 tr [ trClass ]
                     [ td [] [ toString month |> text ]
-                    , [ Math.customerCohorts model month
+                    , [ Math.customerCohorts scenario month
                             |> round
                             |> toString
                             |> text
                       ]
                         |> td []
-                    , Math.revenueCohorts model month |> humanizeValue |> td []
-                    , Math.grossMargin model month |> humanizeValue |> td []
-                    , Math.expenses model |> toFloat |> humanizeValue |> td []
-                    , Math.earnings model month |> humanizeValue |> td []
-                    , Math.cumulativeEarnings model month |> humanizeValue |> td []
+                    , Math.revenueCohorts scenario month |> humanizeValue |> td []
+                    , Math.grossMargin scenario month |> humanizeValue |> td []
+                    , Math.expenses scenario |> toFloat |> humanizeValue |> td []
+                    , Math.earnings scenario month |> humanizeValue |> td []
+                    , Math.cumulativeEarnings scenario month |> humanizeValue |> td []
                     ]
 
         rows =
-            List.map row (Math.months model.months)
+            List.map row (Math.months scenario.months)
     in
         [ h2 [] [ text "Numbers" ]
         , Html.table [ class "table table-hover table-condensed" ]
@@ -153,32 +235,32 @@ numbers model =
         ]
 
 
-results : Model -> List (Html Msg)
-results model =
+results : Scenario -> List (Html Msg)
+results scenario =
     let
         breakEven =
-            Math.breakEven model |> humanize
+            Math.breakEven scenario |> humanize
 
         earningsBreakEven =
-            Math.earningsBreakEven model |> humanize
+            Math.earningsBreakEven scenario |> humanize
 
         averageLife =
-            Math.averageLife model |> humanizeDuration
+            Math.averageLife scenario |> humanizeDuration
 
         cltv =
-            Math.cltv model |> toFloat |> humanizeValue
+            Math.cltv scenario |> toFloat |> humanizeValue
 
         ltvcac =
-            Math.ltvcac model |> humanizeRatio
+            Math.ltvcac scenario |> humanizeRatio
 
         minimumCumulativeEarnings =
-            Math.minimumCumulativeEarnings model |> humanizeValue
+            Math.minimumCumulativeEarnings scenario |> humanizeValue
     in
         [ h2 [] [ text "Results" ]
         , dl []
-            [ dt [] [ text "Earnings positive" ]
+            [ dt [] [ text "EBIT positive" ]
             , dd [] earningsBreakEven
-            , dt [] [ text "Cumulative Earnings positive" ]
+            , dt [] [ text "Cumulative EBIT positive" ]
             , dd [] breakEven
             , dt [] [ text "Average Customer Life" ]
             , dd [] averageLife
@@ -186,22 +268,32 @@ results model =
             , dd [] cltv
             , dt [] [ text "LTV over CAC" ]
             , dd [] ltvcac
-            , dt [] [ text "Minimum Cumulative Earnings" ]
+            , dt [] [ text "Minimum Cumulative EBIT" ]
             , dd [] minimumCumulativeEarnings
             ]
-        , h4 [] [ text "Explanation" ]
-        , dl []
-            [ dt [] [ text "Earnings positive" ]
-            , dd [] [ text "Month at which earnings cross 0 " ]
-            , dt [] [ text "Cumulative Earnings positive" ]
-            , dd [] [ text "Month at which cumulative earnings (e.g. bank account) cross 0" ]
-            , dt [] [ text "Average Customer Lifetime" ]
-            , dd [] [ text "Average number of months a customer stays with this business " ]
-            , dt [] [ text "Customer Lifetime Value" ]
-            , dd [] [ text "Average revenue earned through one customer over the whole lifetime " ]
-            , dt [] [ text "LTV over CAC" ]
-            , dd [] [ text "Ratio of Lifetime Value over Customer Acquisition Cost. Less than 1 means acquisition will not yield in profit." ]
-            , dt [] [ text "Minimum Cumulative Earnings" ]
-            , dd [] [ text "Lowest point in cumulative earnings. Bank account needs to be able to shoulder this." ]
-            ]
         ]
+
+
+resultsHelp : List (Html Msg)
+resultsHelp =
+    [ h4 [] [ text "Explanation of Results" ]
+    , dl []
+        [ dt [] [ text "EBIT" ]
+        , dd []
+            [ text "Earnings before interest and tax. "
+            , a [ href "https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes" ] [ text "(Wikipedia)" ]
+            ]
+        , dt [] [ text "EBIT positive" ]
+        , dd [] [ text "Month at which EBIT cross 0." ]
+        , dt [] [ text "Cumulative EBIT positive" ]
+        , dd [] [ text "Month at which cumulative EBIT cross 0." ]
+        , dt [] [ text "Average Customer Lifetime" ]
+        , dd [] [ text "Average number of months a customer stays with this business." ]
+        , dt [] [ text "Customer Lifetime Value" ]
+        , dd [] [ text "Average revenue earned through one customer over the whole lifetime." ]
+        , dt [] [ text "LTV over CAC" ]
+        , dd [] [ text "Ratio of Lifetime Value over Customer Acquisition Cost. Less than 1 means acquisition will not yield in profit." ]
+        , dt [] [ text "Minimum Cumulative EBIT" ]
+        , dd [] [ text "Lowest point in cumulative EBIT. Bank account needs to be able to shoulder this." ]
+        ]
+    ]

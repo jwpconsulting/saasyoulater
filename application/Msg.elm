@@ -1,11 +1,19 @@
 module Msg exposing (..)
 
+import Model exposing (ScenarioID)
+
+
+type ScenarioMsg
+    = SetMonths
+    | SetChurnRate
+    | SetCustomerGrowth
+    | SetRevenue
+    | SetCAC
+    | SetOpCost
+    | SetMargin
+
 
 type Msg
-    = SetMonths String
-    | SetChurnRate String
-    | SetCustomerGrowth String
-    | SetRevenue String
-    | SetCAC String
-    | SetOpCost String
-    | SetMargin String
+    = SetScenario ScenarioMsg ScenarioID String
+    | ChooseScenario ScenarioID
+    | NewScenario
