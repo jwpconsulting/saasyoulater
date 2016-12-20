@@ -8692,6 +8692,29 @@ var _user$project$Math$earningsBreakEven = function (model) {
 	return A2(_user$project$Math$earningsBreakEvenWithMonth, model, 1);
 };
 
+var _user$project$View$footer = A2(
+	_elm_lang$html$Html$p,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Created by '),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href('https://www.justus.pw'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Justus Perlwitz'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$View$resultsHelp = {
 	ctor: '::',
 	_0: A2(
@@ -9388,6 +9411,51 @@ var _user$project$View$controlsHelp = {
 		_1: {ctor: '[]'}
 	}
 };
+var _user$project$View$help = {
+	ctor: '::',
+	_0: A2(
+		_elm_lang$html$Html$h2,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Help'),
+			_1: {ctor: '[]'}
+		}),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('row'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
+						_1: {ctor: '[]'}
+					},
+					_user$project$View$resultsHelp),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
+							_1: {ctor: '[]'}
+						},
+						_user$project$View$controlsHelp),
+					_1: {ctor: '[]'}
+				}
+			}),
+		_1: {ctor: '[]'}
+	}
+};
 var _user$project$View$controls = F2(
 	function (id, scenario) {
 		var numberInput = F5(
@@ -9718,145 +9786,118 @@ var _user$project$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h1,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('SaaS You Later'),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$small,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(' - SaaS Business Model Calculator'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$ul,
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('nav nav-tabs'),
-						_1: {ctor: '[]'}
-					},
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						A2(
-							_elm_lang$core$List$map,
-							_user$project$View$scenarioTab(model.currentScenario),
-							_elm_lang$core$Dict$keys(model.scenarios)),
-						{
+						_0: _elm_lang$html$Html$text('SaaS You Later'),
+						_1: {
 							ctor: '::',
-							_0: _user$project$View$newTab,
+							_0: A2(
+								_elm_lang$html$Html$small,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(' - SaaS Business Model Calculator'),
+									_1: {ctor: '[]'}
+								}),
 							_1: {ctor: '[]'}
-						})),
+						}
+					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$div,
+						_elm_lang$html$Html$ul,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('row'),
+							_0: _elm_lang$html$Html_Attributes$class('nav nav-tabs'),
 							_1: {ctor: '[]'}
 						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3'),
-									_1: {ctor: '[]'}
-								},
-								A2(_user$project$View$controls, model.currentScenario, scenario)),
-							_1: {
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							A2(
+								_elm_lang$core$List$map,
+								_user$project$View$scenarioTab(model.currentScenario),
+								_elm_lang$core$Dict$keys(model.scenarios)),
+							{
+								ctor: '::',
+								_0: _user$project$View$newTab,
+								_1: {ctor: '[]'}
+							})),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('row'),
+								_1: {ctor: '[]'}
+							},
+							{
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-2 col-md-push-7'),
+										_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3'),
 										_1: {ctor: '[]'}
 									},
-									_user$project$View$results(scenario)),
+									A2(_user$project$View$controls, model.currentScenario, scenario)),
 								_1: {
 									ctor: '::',
 									_0: A2(
 										_elm_lang$html$Html$div,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('col-xs-12 col-md-7 col-md-pull-2'),
+											_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-2 col-md-push-7'),
 											_1: {ctor: '[]'}
 										},
-										_user$project$View$numbers(scenario)),
-									_1: {ctor: '[]'}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$hr,
-							{ctor: '[]'},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h2,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Help'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('row'),
-										_1: {ctor: '[]'}
-									},
-									{
+										_user$project$View$results(scenario)),
+									_1: {
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
+												_0: _elm_lang$html$Html_Attributes$class('col-xs-12 col-md-7 col-md-pull-2'),
 												_1: {ctor: '[]'}
 											},
-											_user$project$View$resultsHelp),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$div,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
-													_1: {ctor: '[]'}
-												},
-												_user$project$View$controlsHelp),
-											_1: {ctor: '[]'}
-										}
-									}),
-								_1: {ctor: '[]'}
-							}
+											_user$project$View$numbers(scenario)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$hr,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
 						}
 					}
 				}
-			}
-		});
+			},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$View$help,
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$hr,
+						{ctor: '[]'},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$View$footer,
+						_1: {ctor: '[]'}
+					}
+				})));
 };
 
 var _user$project$Main$main = _elm_lang$html$Html$program(
