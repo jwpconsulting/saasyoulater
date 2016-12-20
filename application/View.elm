@@ -17,7 +17,7 @@ view model =
             , small [] [ text " - SaaS Business Model Calculator" ]
             ]
         , div [ class "row" ]
-            [ div [ class "col-xs-6 col-md-3" ]  (controls model)
+            [ div [ class "col-xs-6 col-md-3" ] (controls model)
             , div [ class "col-xs-6 col-md-3 col-md-push-6" ] (results model)
             , div [ class "col-xs-12 col-md-6 col-md-pull-3" ] (numbers model)
             ]
@@ -33,7 +33,7 @@ controls model =
         numberInput numberValue message min max step =
             div [ class "col-xs-6" ]
                 [ input
-                    [ type' "number"
+                    [ type_ "number"
                     , class "form-control"
                     , numberValue |> toString |> value
                     , onInput message
@@ -97,7 +97,7 @@ numbers : Model -> List (Html Msg)
 numbers model =
     let
         months =
-            [1..model.months]
+            List.range 1 model.months
 
         breakEven =
             Math.breakEven model

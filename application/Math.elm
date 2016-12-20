@@ -47,7 +47,7 @@ customerCohort model month cohort =
 
 customerCohorts : Model -> Int -> Float
 customerCohorts model month =
-    List.map (customerCohort model month) [1..model.months]
+    List.map (customerCohort model month) (List.range 1 model.months)
         |> List.foldl (+) 0
 
 
@@ -68,7 +68,7 @@ revenueCohort model month cohort =
 
 revenueCohorts : Model -> Int -> Float
 revenueCohorts model month =
-    List.map (revenueCohort model month) [1..model.months]
+    List.map (revenueCohort model month) (List.range 1 model.months)
         |> List.foldl (+) 0
 
 
@@ -94,7 +94,7 @@ earnings model month =
 
 cumulativeEarnings : Model -> Int -> Float
 cumulativeEarnings model month =
-    List.map (earnings model) [1..month] |> List.foldl (+) 0
+    List.map (earnings model) (List.range 1 month) |> List.foldl (+) 0
 
 
 earningsBreakEvenWithMonth : Model -> Int -> Maybe Int
@@ -142,7 +142,10 @@ linspace start stop n =
                 h =
                     (toFloat (stop - start)) / (toFloat (n - 1))
             in
-                List.map (\n -> (toFloat start) + n * h) [0..n - 1] |> List.map round
+                (List.range 0 (n - 1))
+                    |> List.map toFloat
+                    |> List.map (\n -> (toFloat start) + n * h)
+                    |> List.map round
 
 
 months : Int -> List Int
@@ -169,7 +172,7 @@ minimumCumulativeEarnings : Model -> Float
 minimumCumulativeEarnings model =
     let
         minimum =
-            List.map (cumulativeEarnings model) [1..model.months] |> List.minimum
+            List.map (cumulativeEarnings model) (List.range 1 model.months) |> List.minimum
     in
         case minimum of
             Nothing ->
