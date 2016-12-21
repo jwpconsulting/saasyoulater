@@ -8256,8 +8256,50 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Decode$decodePercentage = function (string) {
+	var _p0 = _elm_lang$core$String$toFloat(string);
+	if (_p0.ctor === 'Ok') {
+		return _p0._0 / 100;
+	} else {
+		return 0;
+	}
+};
+var _user$project$Decode$decodeInt = function (string) {
+	var _p1 = _elm_lang$core$String$toInt(string);
+	if (_p1.ctor === 'Ok') {
+		return _p1._0;
+	} else {
+		return 0;
+	}
+};
+var _user$project$Decode$decodeIntWithMaximum = F2(
+	function (string, value) {
+		return A2(
+			_elm_lang$core$Basics$min,
+			_user$project$Decode$decodeInt(string),
+			value);
+	});
+
 var _user$project$Model$maxMonths = 100;
-var _user$project$Model$newScenario = {months: 24, churnRate: 3.0e-2, revenue: 30, customerGrowth: 10, revenueGrossMargin: 0.75, cac: 50, opCost: 200};
+var _user$project$Model$Model = F2(
+	function (a, b) {
+		return {scenarios: a, currentScenario: b};
+	});
+var _user$project$Model$Scenario = F7(
+	function (a, b, c, d, e, f, g) {
+		return {months: a, churnRate: b, revenue: c, customerGrowth: d, revenueGrossMargin: e, cac: f, opCost: g};
+	});
+var _user$project$Model$Absolute = F2(
+	function (a, b) {
+		return {ctor: 'Absolute', _0: a, _1: b};
+	});
+var _user$project$Model$emptyAbsolute = A2(_user$project$Model$Absolute, 0, 10);
+var _user$project$Model$Relative = F2(
+	function (a, b) {
+		return {ctor: 'Relative', _0: a, _1: b};
+	});
+var _user$project$Model$emptyRelative = A2(_user$project$Model$Relative, 10, 0.1);
+var _user$project$Model$newScenario = {months: 24, churnRate: 3.0e-2, revenue: 30, customerGrowth: _user$project$Model$emptyRelative, revenueGrossMargin: 0.75, cac: 50, opCost: 200};
 var _user$project$Model$init = {
 	scenarios: _elm_lang$core$Dict$fromList(
 		{
@@ -8273,15 +8315,44 @@ var _user$project$Model$currentScenario = function (model) {
 		_user$project$Model$newScenario,
 		A2(_elm_lang$core$Dict$get, model.currentScenario, model.scenarios));
 };
-var _user$project$Model$Model = F2(
-	function (a, b) {
-		return {scenarios: a, currentScenario: b};
+var _user$project$Model$updateGrowth = F2(
+	function (scenario, value) {
+		var customerGrowth = function () {
+			var _p0 = scenario.customerGrowth;
+			if (_p0.ctor === 'Absolute') {
+				return A2(
+					_user$project$Model$Absolute,
+					_p0._0,
+					_user$project$Decode$decodeInt(value));
+			} else {
+				return A2(
+					_user$project$Model$Relative,
+					_p0._0,
+					_user$project$Decode$decodePercentage(value));
+			}
+		}();
+		return _elm_lang$core$Native_Utils.update(
+			scenario,
+			{customerGrowth: customerGrowth});
 	});
-var _user$project$Model$Scenario = F7(
-	function (a, b, c, d, e, f, g) {
-		return {months: a, churnRate: b, revenue: c, customerGrowth: d, revenueGrossMargin: e, cac: f, opCost: g};
+var _user$project$Model$setStartValue = F2(
+	function (scenario, value) {
+		var value_ = _user$project$Decode$decodeInt(value);
+		var customerGrowth = function () {
+			var _p1 = scenario.customerGrowth;
+			if (_p1.ctor === 'Absolute') {
+				return A2(_user$project$Model$Absolute, value_, _p1._1);
+			} else {
+				return A2(_user$project$Model$Relative, value_, _p1._1);
+			}
+		}();
+		return _elm_lang$core$Native_Utils.update(
+			scenario,
+			{customerGrowth: customerGrowth});
 	});
 
+var _user$project$Msg$SetCustomerStart = {ctor: 'SetCustomerStart'};
+var _user$project$Msg$SetGrowthType = {ctor: 'SetGrowthType'};
 var _user$project$Msg$SetMargin = {ctor: 'SetMargin'};
 var _user$project$Msg$SetOpCost = {ctor: 'SetOpCost'};
 var _user$project$Msg$SetCAC = {ctor: 'SetCAC'};
@@ -8399,84 +8470,70 @@ var _user$project$Humanize$humanize = function (month) {
 	}
 };
 
-var _user$project$Update$decodePercentage = function (string) {
-	var _p0 = _elm_lang$core$String$toFloat(string);
-	if (_p0.ctor === 'Ok') {
-		return _p0._0 / 100;
-	} else {
-		return 0;
-	}
-};
-var _user$project$Update$decodeInt = function (string) {
-	var _p1 = _elm_lang$core$String$toInt(string);
-	if (_p1.ctor === 'Ok') {
-		return _p1._0;
-	} else {
-		return 0;
-	}
-};
-var _user$project$Update$decodeIntWithMaximum = F2(
-	function (string, value) {
-		return A2(
-			_elm_lang$core$Basics$min,
-			_user$project$Update$decodeInt(string),
-			value);
-	});
 var _user$project$Update$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
 			case 'SetScenario':
-				var _p4 = _p2._2;
+				var _p3 = _p0._2;
 				var scenario = _user$project$Model$currentScenario(model);
 				var scenario_ = function () {
-					var _p3 = _p2._0;
-					switch (_p3.ctor) {
+					var _p1 = _p0._0;
+					switch (_p1.ctor) {
 						case 'SetMonths':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									months: A2(_user$project$Update$decodeIntWithMaximum, _p4, _user$project$Model$maxMonths)
+									months: A2(_user$project$Decode$decodeIntWithMaximum, _p3, _user$project$Model$maxMonths)
 								});
 						case 'SetChurnRate':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									churnRate: _user$project$Update$decodePercentage(_p4)
+									churnRate: _user$project$Decode$decodePercentage(_p3)
 								});
 						case 'SetCustomerGrowth':
-							return _elm_lang$core$Native_Utils.update(
-								scenario,
-								{
-									customerGrowth: _user$project$Update$decodeInt(_p4)
-								});
+							return A2(_user$project$Model$updateGrowth, scenario, _p3);
 						case 'SetRevenue':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									revenue: _user$project$Update$decodeInt(_p4)
+									revenue: _user$project$Decode$decodeInt(_p3)
 								});
 						case 'SetCAC':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									cac: _user$project$Update$decodeInt(_p4)
+									cac: _user$project$Decode$decodeInt(_p3)
 								});
 						case 'SetOpCost':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									opCost: _user$project$Update$decodeInt(_p4)
+									opCost: _user$project$Decode$decodeInt(_p3)
 								});
-						default:
+						case 'SetMargin':
 							return _elm_lang$core$Native_Utils.update(
 								scenario,
 								{
-									revenueGrossMargin: _user$project$Update$decodePercentage(_p4)
+									revenueGrossMargin: _user$project$Decode$decodePercentage(_p3)
 								});
+						case 'SetGrowthType':
+							var _p2 = _p3;
+							if (_p2 === 'relative') {
+								return _elm_lang$core$Native_Utils.update(
+									scenario,
+									{customerGrowth: _user$project$Model$emptyRelative});
+							} else {
+								return _elm_lang$core$Native_Utils.update(
+									scenario,
+									{customerGrowth: _user$project$Model$emptyAbsolute});
+							}
+						default:
+							return A2(_user$project$Model$setStartValue, scenario, _p3);
 					}
 				}();
-				var scenarios_ = A3(_elm_lang$core$Dict$insert, _p2._1, scenario_, model.scenarios);
+				var scenarios_ = A3(_elm_lang$core$Dict$insert, _p0._1, scenario_, model.scenarios);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -8488,7 +8545,7 @@ var _user$project$Update$update = F2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{currentScenario: _p2._0}),
+						{currentScenario: _p0._0}),
 					{ctor: '[]'});
 			default:
 				var highest = A2(
@@ -8506,6 +8563,9 @@ var _user$project$Update$update = F2(
 		}
 	});
 
+var _user$project$Math$percentInt = function (percent) {
+	return _elm_lang$core$Basics$round(percent * 100);
+};
 var _user$project$Math$averageLife = function (model) {
 	return _elm_lang$core$Basics$round(1 / model.churnRate);
 };
@@ -8549,7 +8609,12 @@ var _user$project$Math$months = function (months) {
 		A2(_elm_lang$core$Basics$min, months, 12));
 };
 var _user$project$Math$expenses = function (model) {
-	return (model.customerGrowth * model.cac) + model.opCost;
+	var _p1 = model.customerGrowth;
+	if (_p1.ctor === 'Relative') {
+		return (2 * model.cac) + model.opCost;
+	} else {
+		return (_p1._1 * model.cac) + model.opCost;
+	}
 };
 var _user$project$Math$churn = F2(
 	function (churnRate, month) {
@@ -8557,7 +8622,13 @@ var _user$project$Math$churn = F2(
 	});
 var _user$project$Math$customers = F3(
 	function (customerGrowth, churnRate, month) {
-		return _elm_lang$core$Basics$toFloat(customerGrowth) * A2(_user$project$Math$churn, churnRate, month);
+		var currentChurn = A2(_user$project$Math$churn, churnRate, month);
+		var _p2 = customerGrowth;
+		if (_p2.ctor === 'Absolute') {
+			return _elm_lang$core$Basics$toFloat(_p2._0) + (_elm_lang$core$Basics$toFloat(_p2._1) * currentChurn);
+		} else {
+			return 0;
+		}
 	});
 var _user$project$Math$cohortMonth = F2(
 	function (cohort, month) {
@@ -8568,40 +8639,50 @@ var _user$project$Math$customerCohort = F3(
 		var m = A2(_user$project$Math$cohortMonth, cohort, month);
 		return (_elm_lang$core$Native_Utils.cmp(m, 0) > -1) ? A3(_user$project$Math$customers, model.customerGrowth, model.churnRate, m) : 0.0;
 	});
-var _user$project$Math$customerCohorts = F2(
-	function (model, month) {
-		return A3(
-			_elm_lang$core$List$foldl,
-			F2(
-				function (x, y) {
-					return x + y;
-				}),
-			0,
-			A2(
-				_elm_lang$core$List$map,
-				A2(_user$project$Math$customerCohort, model, month),
-				A2(_elm_lang$core$List$range, 1, model.months)));
-	});
 var _user$project$Math$revenueCohort = F3(
 	function (model, month, cohort) {
-		var revenue = _elm_lang$core$Basics$toFloat(model.revenue);
-		var m = A2(_user$project$Math$cohortMonth, cohort, month);
-		var customers = A3(_user$project$Math$customerCohort, model, month, cohort);
-		return customers * revenue;
+		return A3(_user$project$Math$customerCohort, model, month, cohort) * _elm_lang$core$Basics$toFloat(model.revenue);
+	});
+var _user$project$Math$monthRange = _elm_lang$core$List$range(1);
+var _user$project$Math$customerCohorts = F2(
+	function (model, month) {
+		var _p3 = model.customerGrowth;
+		if (_p3.ctor === 'Absolute') {
+			return A3(
+				_elm_lang$core$List$foldl,
+				F2(
+					function (x, y) {
+						return x + y;
+					}),
+				0,
+				A2(
+					_elm_lang$core$List$map,
+					A2(_user$project$Math$customerCohort, model, month),
+					_user$project$Math$monthRange(model.months)));
+		} else {
+			return _elm_lang$core$Basics$toFloat(_p3._0) * Math.pow(
+				1 + (_p3._1 - model.churnRate),
+				_elm_lang$core$Basics$toFloat(month) - 1);
+		}
 	});
 var _user$project$Math$revenueCohorts = F2(
 	function (model, month) {
-		return A3(
-			_elm_lang$core$List$foldl,
-			F2(
-				function (x, y) {
-					return x + y;
-				}),
-			0,
-			A2(
-				_elm_lang$core$List$map,
-				A2(_user$project$Math$revenueCohort, model, month),
-				A2(_elm_lang$core$List$range, 1, model.months)));
+		var _p4 = model.customerGrowth;
+		if (_p4.ctor === 'Relative') {
+			return A2(_user$project$Math$customerCohorts, model, month) * _elm_lang$core$Basics$toFloat(model.revenue);
+		} else {
+			return A3(
+				_elm_lang$core$List$foldl,
+				F2(
+					function (x, y) {
+						return x + y;
+					}),
+				0,
+				A2(
+					_elm_lang$core$List$map,
+					A2(_user$project$Math$revenueCohort, model, month),
+					_user$project$Math$monthRange(model.months)));
+		}
 	});
 var _user$project$Math$revenueCost = F2(
 	function (model, month) {
@@ -8642,10 +8723,10 @@ var _user$project$Math$breakEvenWithMonth = F2(
 				if (_elm_lang$core$Native_Utils.cmp(month, model.months) > -1) {
 					return _elm_lang$core$Maybe$Nothing;
 				} else {
-					var _v1 = model,
-						_v2 = month + 1;
-					model = _v1;
-					month = _v2;
+					var _v5 = model,
+						_v6 = month + 1;
+					model = _v5;
+					month = _v6;
 					continue breakEvenWithMonth;
 				}
 			}
@@ -8653,19 +8734,6 @@ var _user$project$Math$breakEvenWithMonth = F2(
 	});
 var _user$project$Math$breakEven = function (model) {
 	return A2(_user$project$Math$breakEvenWithMonth, model, 1);
-};
-var _user$project$Math$minimumCumulativeEarnings = function (model) {
-	var minimum = _elm_lang$core$List$minimum(
-		A2(
-			_elm_lang$core$List$map,
-			_user$project$Math$cumulativeEarnings(model),
-			A2(_elm_lang$core$List$range, 1, model.months)));
-	var _p1 = minimum;
-	if (_p1.ctor === 'Nothing') {
-		return 0;
-	} else {
-		return _p1._0;
-	}
 };
 var _user$project$Math$earningsBreakEvenWithMonth = F2(
 	function (model, month) {
@@ -8679,10 +8747,10 @@ var _user$project$Math$earningsBreakEvenWithMonth = F2(
 				if (_elm_lang$core$Native_Utils.cmp(month, model.months) > -1) {
 					return _elm_lang$core$Maybe$Nothing;
 				} else {
-					var _v4 = model,
-						_v5 = month + 1;
-					model = _v4;
-					month = _v5;
+					var _v7 = model,
+						_v8 = month + 1;
+					model = _v7;
+					month = _v8;
 					continue earningsBreakEvenWithMonth;
 				}
 			}
@@ -8690,6 +8758,16 @@ var _user$project$Math$earningsBreakEvenWithMonth = F2(
 	});
 var _user$project$Math$earningsBreakEven = function (model) {
 	return A2(_user$project$Math$earningsBreakEvenWithMonth, model, 1);
+};
+var _user$project$Math$minimumCumulativeEarnings = function (model) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		0,
+		_elm_lang$core$List$minimum(
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$Math$cumulativeEarnings(model),
+				_user$project$Math$monthRange(model.months))));
 };
 
 var _user$project$View$footer = A2(
@@ -8712,7 +8790,26 @@ var _user$project$View$footer = A2(
 					_0: _elm_lang$html$Html$text('Justus Perlwitz'),
 					_1: {ctor: '[]'}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(' / '),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href('mailto:hello@justus.pw'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('hello@justus.pw'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
 		}
 	});
 var _user$project$View$resultsHelp = {
@@ -9322,7 +9419,7 @@ var _user$project$View$controlsHelp = {
 									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Customer Growth per Month'),
+										_0: _elm_lang$html$Html$text('Customer Growth'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
@@ -9332,70 +9429,118 @@ var _user$project$View$controlsHelp = {
 										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('Number of customers signing up in one month'),
-											_1: {ctor: '[]'}
+											_0: _elm_lang$html$Html$text('With absolute growth X users join the platform every month. '),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$a,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Cohort_(statistics)'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('(in cohorts)'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$dt,
+											_elm_lang$html$Html$dd,
 											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Revenue per customer per Month'),
+												_0: _elm_lang$html$Html$text('With relative growth the user base will grow by X% every month.'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$dd,
+												_elm_lang$html$Html$dt,
 												{ctor: '[]'},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar'),
+													_0: _elm_lang$html$Html$text('Customer Growth per Month'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_elm_lang$html$Html$dt,
+													_elm_lang$html$Html$dd,
 													{ctor: '[]'},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text('Customer Acquisition Cost'),
+														_0: _elm_lang$html$Html$text('Number of customers signing up in one month, either relative or absolute, depending on the setting.'),
 														_1: {ctor: '[]'}
 													}),
 												_1: {
 													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$dd,
+														_elm_lang$html$Html$dt,
 														{ctor: '[]'},
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text('Cost related to acquiring one customer'),
+															_0: _elm_lang$html$Html$text('Revenue per customer per Month'),
 															_1: {ctor: '[]'}
 														}),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$dt,
+															_elm_lang$html$Html$dd,
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html$text('Fixed Operation Cost'),
+																_0: _elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$dd,
+																_elm_lang$html$Html$dt,
 																{ctor: '[]'},
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Fixed costs such as salaries, rent'),
+																	_0: _elm_lang$html$Html$text('Customer Acquisition Cost'),
 																	_1: {ctor: '[]'}
 																}),
-															_1: {ctor: '[]'}
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$dd,
+																	{ctor: '[]'},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text('Cost related to acquiring one customer'),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$dt,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text('Fixed Operation Cost'),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$dd,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('Fixed costs such as salaries, rent'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
 														}
 													}
 												}
@@ -9439,7 +9584,7 @@ var _user$project$View$help = {
 						_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
 						_1: {ctor: '[]'}
 					},
-					_user$project$View$resultsHelp),
+					_user$project$View$controlsHelp),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -9449,83 +9594,83 @@ var _user$project$View$help = {
 							_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
 							_1: {ctor: '[]'}
 						},
-						_user$project$View$controlsHelp),
+						_user$project$View$resultsHelp),
 					_1: {ctor: '[]'}
 				}
 			}),
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$View$controls = F2(
-	function (id, scenario) {
-		var numberInput = F5(
-			function (numberValue, message, min, max, step) {
-				return A2(
-					_elm_lang$html$Html$div,
+var _user$project$View$numberInput = F5(
+	function (numberValue, message, min, max, step) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('col-xs-6'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('col-xs-6'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
+						_0: _elm_lang$html$Html_Attributes$type_('number'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('form-control'),
+							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('number'),
+								_0: _elm_lang$html$Html_Attributes$value(
+									_elm_lang$core$Basics$toString(numberValue)),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('form-control'),
+									_0: _elm_lang$html$Html_Events$onInput(message),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value(
-											_elm_lang$core$Basics$toString(numberValue)),
+										_0: _elm_lang$html$Html_Attributes$min(
+											_elm_lang$core$Basics$toString(min)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(message),
+											_0: _elm_lang$html$Html_Attributes$max(
+												_elm_lang$core$Basics$toString(max)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$min(
-													_elm_lang$core$Basics$toString(min)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$max(
-														_elm_lang$core$Basics$toString(max)),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$step(
-															_elm_lang$core$Basics$toString(step)),
-														_1: {ctor: '[]'}
-													}
-												}
+												_0: _elm_lang$html$Html_Attributes$step(
+													_elm_lang$core$Basics$toString(step)),
+												_1: {ctor: '[]'}
 											}
 										}
 									}
 								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					});
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
 			});
-		var controlLabel = function (labelText) {
-			return A2(
-				_elm_lang$html$Html$label,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-6'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(labelText),
-					_1: {ctor: '[]'}
-				});
-		};
+	});
+var _user$project$View$controlLabel = function (labelText) {
+	return A2(
+		_elm_lang$html$Html$label,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-6'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(labelText),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View$controls = F2(
+	function (id, scenario) {
 		return {
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$form,
+				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('form-horizontal'),
@@ -9552,11 +9697,11 @@ var _user$project$View$controls = F2(
 							},
 							{
 								ctor: '::',
-								_0: controlLabel('Months'),
+								_0: _user$project$View$controlLabel('Months'),
 								_1: {
 									ctor: '::',
 									_0: A5(
-										numberInput,
+										_user$project$View$numberInput,
 										scenario.months,
 										A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMonths, id),
 										1,
@@ -9576,12 +9721,12 @@ var _user$project$View$controls = F2(
 								},
 								{
 									ctor: '::',
-									_0: controlLabel('Churn Rate (%)'),
+									_0: _user$project$View$controlLabel('Churn Rate (%)'),
 									_1: {
 										ctor: '::',
 										_0: A5(
-											numberInput,
-											_elm_lang$core$Basics$round(scenario.churnRate * 100),
+											_user$project$View$numberInput,
+											_user$project$Math$percentInt(scenario.churnRate),
 											A2(_user$project$Msg$SetScenario, _user$project$Msg$SetChurnRate, id),
 											1,
 											100,
@@ -9600,16 +9745,79 @@ var _user$project$View$controls = F2(
 									},
 									{
 										ctor: '::',
-										_0: controlLabel('Customer Growth per Month'),
+										_0: _user$project$View$controlLabel('Customer Growth'),
 										_1: {
 											ctor: '::',
-											_0: A5(
-												numberInput,
-												scenario.customerGrowth,
-												A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerGrowth, id),
-												0,
-												1000,
-												10),
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('col-sm-6'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class(
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	'btn btn-block',
+																	function () {
+																		var _p1 = scenario.customerGrowth;
+																		if (_p1.ctor === 'Relative') {
+																			return ' disabled';
+																		} else {
+																			return ' btn-primary';
+																		}
+																	}())),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onClick(
+																	A3(_user$project$Msg$SetScenario, _user$project$Msg$SetGrowthType, id, 'relative')),
+																_1: {ctor: '[]'}
+															}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Relative (%)'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$button,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		'btn btn-block',
+																		function () {
+																			var _p2 = scenario.customerGrowth;
+																			if (_p2.ctor === 'Relative') {
+																				return ' btn-primary';
+																			} else {
+																				return ' disabled';
+																			}
+																		}())),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onClick(
+																		A3(_user$project$Msg$SetScenario, _user$project$Msg$SetGrowthType, id, 'absolute')),
+																	_1: {ctor: '[]'}
+																}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Absolute'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}),
 											_1: {ctor: '[]'}
 										}
 									}),
@@ -9624,14 +9832,21 @@ var _user$project$View$controls = F2(
 										},
 										{
 											ctor: '::',
-											_0: controlLabel('Revenue per Customer per Month'),
+											_0: _user$project$View$controlLabel('Customers at Start'),
 											_1: {
 												ctor: '::',
 												_0: A5(
-													numberInput,
-													scenario.revenue,
-													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetRevenue, id),
-													0,
+													_user$project$View$numberInput,
+													function () {
+														var _p3 = scenario.customerGrowth;
+														if (_p3.ctor === 'Absolute') {
+															return _p3._0;
+														} else {
+															return _p3._0;
+														}
+													}(),
+													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerStart, id),
+													10,
 													1000,
 													10),
 												_1: {ctor: '[]'}
@@ -9648,16 +9863,34 @@ var _user$project$View$controls = F2(
 											},
 											{
 												ctor: '::',
-												_0: controlLabel('Customer Acquisition Cost'),
+												_0: _user$project$View$controlLabel(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'Customer Growth per Month',
+														function () {
+															var _p4 = scenario.customerGrowth;
+															if (_p4.ctor === 'Relative') {
+																return ' (%)';
+															} else {
+																return '';
+															}
+														}())),
 												_1: {
 													ctor: '::',
 													_0: A5(
-														numberInput,
-														scenario.cac,
-														A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCAC, id),
+														_user$project$View$numberInput,
+														function () {
+															var _p5 = scenario.customerGrowth;
+															if (_p5.ctor === 'Absolute') {
+																return _p5._1;
+															} else {
+																return _elm_lang$core$Basics$round(_p5._1 * 100);
+															}
+														}(),
+														A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerGrowth, id),
 														0,
-														5000,
-														5),
+														1000,
+														10),
 													_1: {ctor: '[]'}
 												}
 											}),
@@ -9672,16 +9905,16 @@ var _user$project$View$controls = F2(
 												},
 												{
 													ctor: '::',
-													_0: controlLabel('Fixed Operation costs'),
+													_0: _user$project$View$controlLabel('Revenue per Customer per Month'),
 													_1: {
 														ctor: '::',
 														_0: A5(
-															numberInput,
-															scenario.opCost,
-															A2(_user$project$Msg$SetScenario, _user$project$Msg$SetOpCost, id),
+															_user$project$View$numberInput,
+															scenario.revenue,
+															A2(_user$project$Msg$SetScenario, _user$project$Msg$SetRevenue, id),
 															0,
 															1000,
-															100),
+															10),
 														_1: {ctor: '[]'}
 													}
 												}),
@@ -9696,20 +9929,70 @@ var _user$project$View$controls = F2(
 													},
 													{
 														ctor: '::',
-														_0: controlLabel('Gross Margin'),
+														_0: _user$project$View$controlLabel('Customer Acquisition Cost'),
 														_1: {
 															ctor: '::',
 															_0: A5(
-																numberInput,
-																_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
-																A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMargin, id),
+																_user$project$View$numberInput,
+																scenario.cac,
+																A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCAC, id),
 																0,
-																100,
+																5000,
 																5),
 															_1: {ctor: '[]'}
 														}
 													}),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('form-group'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _user$project$View$controlLabel('Fixed Operation costs'),
+															_1: {
+																ctor: '::',
+																_0: A5(
+																	_user$project$View$numberInput,
+																	scenario.opCost,
+																	A2(_user$project$Msg$SetScenario, _user$project$Msg$SetOpCost, id),
+																	0,
+																	1000,
+																	100),
+																_1: {ctor: '[]'}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$div,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('form-group'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _user$project$View$controlLabel('Gross Margin (%)'),
+																_1: {
+																	ctor: '::',
+																	_0: A5(
+																		_user$project$View$numberInput,
+																		_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
+																		A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMargin, id),
+																		0,
+																		100,
+																		5),
+																	_1: {ctor: '[]'}
+																}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
 											}
 										}
 									}
