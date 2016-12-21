@@ -84,10 +84,10 @@ expenses model =
     case model.customerGrowth of
         Model.Relative start growth ->
             -- TODO Justus 2016-12-21
-            2 * model.cac + model.opCost
+            2 * model.cac
 
         Model.Absolute _ growth ->
-            growth * model.cac + model.opCost
+            growth * model.cac
 
 
 earnings : Scenario -> Int -> Float

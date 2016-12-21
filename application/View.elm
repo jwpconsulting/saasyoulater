@@ -169,14 +169,6 @@ controls id scenario =
                 5
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Fixed Operation costs"
-            , numberInput scenario.opCost
-                (SetScenario SetOpCost id)
-                0
-                1000
-                100
-            ]
-        , div [ class "form-group" ]
             [ controlLabel "Gross Margin (%)"
             , numberInput (scenario.revenueGrossMargin * 100 |> round)
                 (SetScenario SetMargin id)
@@ -211,8 +203,6 @@ controlsHelp =
         , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
         , dt [] [ text "Customer Acquisition Cost" ]
         , dd [] [ text "Cost related to acquiring one customer" ]
-        , dt [] [ text "Fixed Operation Cost" ]
-        , dd [] [ text "Fixed costs such as salaries, rent" ]
         ]
     ]
 

@@ -39,11 +39,6 @@ update msg model =
                                 | cac = decodeInt value
                             }
 
-                        SetOpCost ->
-                            { scenario
-                                | opCost = decodeInt value
-                            }
-
                         SetMargin ->
                             { scenario
                                 | revenueGrossMargin = decodePercentage value

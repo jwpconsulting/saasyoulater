@@ -31,7 +31,6 @@ type alias Scenario =
     , customerGrowth : CustomerGrowth
     , revenueGrossMargin : Float
     , cac : Int
-    , opCost : Int
     }
 
 
@@ -43,7 +42,6 @@ newScenario =
     , customerGrowth = emptyRelative
     , revenueGrossMargin = 0.75
     , cac = 50
-    , opCost = 200
     }
 
 
