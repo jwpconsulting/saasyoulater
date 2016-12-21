@@ -4,6 +4,11 @@ module Math
 
 import Model exposing (Scenario, CustomerGrowth(..))
 
+monthRange : Int -> List Int
+monthRange =
+    List.range 1
+
+
 
 cohortMonth : Int -> Int -> Float
 cohortMonth cohort month =
@@ -43,7 +48,7 @@ customerCohorts : Scenario -> Int -> Float
 customerCohorts model month =
     case model.customerGrowth of
         Absolute _ _ ->
-            List.map (customerCohort model month) (List.range 1 model.months)
+            List.map (customerCohort model month) (monthRange model.months)
                 |> List.foldl (+) 0
         Relative start growth ->
             toFloat start * ((1 + (growth - model.churnRate)) ^ (toFloat month - 1))
@@ -51,17 +56,7 @@ customerCohorts model month =
 
 revenueCohort : Scenario -> Int -> Int -> Float
 revenueCohort model month cohort =
-    let
-        customers =
-            customerCohort model month cohort
-
-        m =
-            cohortMonth cohort month
-
-        revenue =
-            toFloat model.revenue
-    in
-        customers * revenue
+    (customerCohort model month cohort) * (toFloat model.revenue)
 
 
 revenueCohorts : Scenario -> Int -> Float
@@ -70,7 +65,7 @@ revenueCohorts model month =
         Relative _ _ ->
             (customerCohorts model month) * (toFloat model.revenue)
         Absolute _ _ ->
-            List.map (revenueCohort model month) (List.range 1 model.months)
+            List.map (revenueCohort model month) (monthRange model.months)
                 |> List.foldl (+) 0
 
 
@@ -178,17 +173,10 @@ ltvcac model =
 
 minimumCumulativeEarnings : Scenario -> Float
 minimumCumulativeEarnings model =
-    let
-        minimum =
-            List.map (cumulativeEarnings model) (List.range 1 model.months) |> List.minimum
-    in
-        case minimum of
-            Nothing ->
-                0
-
-            Just value ->
-                value
+    List.map (cumulativeEarnings model) (monthRange model.months)
+        |> List.minimum
+        |> Maybe.withDefault 0
 
 percentInt : Float -> Int
-percentInt percent = 
+percentInt percent =
     percent * 100 |> round
