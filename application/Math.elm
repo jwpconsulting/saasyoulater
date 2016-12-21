@@ -1,13 +1,11 @@
-module Math
-    exposing
-        (..)
+module Math exposing (..)
 
 import Model exposing (Scenario, CustomerGrowth(..))
+
 
 monthRange : Int -> List Int
 monthRange =
     List.range 1
-
 
 
 cohortMonth : Int -> Int -> Float
@@ -29,7 +27,9 @@ customers customerGrowth churnRate month =
         case customerGrowth of
             Model.Absolute start growth ->
                 toFloat start + toFloat growth * currentChurn
-            _ -> 0
+
+            _ ->
+                0
 
 
 customerCohort : Scenario -> Int -> Int -> Float
@@ -50,6 +50,7 @@ customerCohorts model month =
         Absolute _ _ ->
             List.map (customerCohort model month) (monthRange model.months)
                 |> List.foldl (+) 0
+
         Relative start growth ->
             toFloat start * ((1 + (growth - model.churnRate)) ^ (toFloat month - 1))
 
@@ -64,6 +65,7 @@ revenueCohorts model month =
     case model.customerGrowth of
         Relative _ _ ->
             (customerCohorts model month) * (toFloat model.revenue)
+
         Absolute _ _ ->
             List.map (revenueCohort model month) (monthRange model.months)
                 |> List.foldl (+) 0
@@ -176,6 +178,7 @@ minimumCumulativeEarnings model =
     List.map (cumulativeEarnings model) (monthRange model.months)
         |> List.minimum
         |> Maybe.withDefault 0
+
 
 percentInt : Float -> Int
 percentInt percent =

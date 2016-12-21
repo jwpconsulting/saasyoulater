@@ -48,12 +48,14 @@ update msg model =
                             case value of
                                 "relative" ->
                                     { scenario
-                                    | customerGrowth = Model.emptyRelative
+                                        | customerGrowth = Model.emptyRelative
                                     }
+
                                 _ ->
                                     { scenario
-                                    | customerGrowth = Model.emptyAbsolute
+                                        | customerGrowth = Model.emptyAbsolute
                                     }
+
                         SetCustomerStart ->
                             Model.setStartValue scenario value
 

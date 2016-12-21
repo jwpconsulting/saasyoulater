@@ -93,6 +93,7 @@ numberInput numberValue message min max step =
             []
         ]
 
+
 controls : ScenarioID -> Scenario -> List (Html Msg)
 controls id scenario =
     [ div [ class "form-horizontal" ]
@@ -113,24 +114,27 @@ controls id scenario =
                 100
                 1
             ]
-        ,  div [ class "form-group" ]
+        , div [ class "form-group" ]
             [ controlLabel "Customer Growth Type"
             , div [ class "col-sm-6" ]
                 [ select
-                [ class "form-control"
-                , onSelect (\s-> (SetScenario SetGrowthType id) (Maybe.withDefault "" s))
-                ]
-                [ option [ value "relative" ] [ text "Relative (%)" ]
-                , option [ value "absolute" ] [ text "Absolute" ]
-                ]
+                    [ class "form-control"
+                    , onSelect (\s -> (SetScenario SetGrowthType id) (Maybe.withDefault "" s))
+                    ]
+                    [ option [ value "relative" ] [ text "Relative (%)" ]
+                    , option [ value "absolute" ] [ text "Absolute" ]
+                    ]
                 ]
             ]
         , div [ class "form-group" ]
             [ controlLabel <| "Customers at Start"
-            , numberInput (
-                case scenario.customerGrowth of
-                    Model.Absolute s _ -> s
-                    Model.Relative s _ -> s
+            , numberInput
+                (case scenario.customerGrowth of
+                    Model.Absolute s _ ->
+                        s
+
+                    Model.Relative s _ ->
+                        s
                 )
                 (SetScenario SetCustomerStart id)
                 10
@@ -138,14 +142,22 @@ controls id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel <| "Customer Growth per Month" ++ (
-                case scenario.customerGrowth of
-                    Model.Relative _ _ -> " (%)"
-                    Model.Absolute _ _ -> "")
-            , numberInput (
-                case scenario.customerGrowth of
-                    Model.Absolute _ g -> g
-                    Model.Relative _ g -> (round <| g * 100)
+            [ controlLabel <|
+                "Customer Growth per Month"
+                    ++ (case scenario.customerGrowth of
+                            Model.Relative _ _ ->
+                                " (%)"
+
+                            Model.Absolute _ _ ->
+                                ""
+                       )
+            , numberInput
+                (case scenario.customerGrowth of
+                    Model.Absolute _ g ->
+                        g
+
+                    Model.Relative _ g ->
+                        (round <| g * 100)
                 )
                 (SetScenario SetCustomerGrowth id)
                 0
@@ -193,9 +205,9 @@ controlsHelp =
             [ text "With absolute growth X users join the platform every month. "
             , a [ href "https://en.wikipedia.org/wiki/Cohort_(statistics)" ]
                 [ text "(in cohorts)" ]
-                ]
-        , dd [] [
-            text "With relative growth the user base will grow by X% every month."
+            ]
+        , dd []
+            [ text "With relative growth the user base will grow by X% every month."
             ]
         , dt [] [ text "Customer Growth per Month" ]
         , dd [] [ text "Number of customers signing up in one month, either relative or absolute, depending on the setting." ]

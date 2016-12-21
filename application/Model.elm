@@ -1,6 +1,4 @@
-module Model
-    exposing
-        (..)
+module Model exposing (..)
 
 import Dict exposing (Dict)
 import Decode exposing (..)
@@ -15,14 +13,25 @@ type alias Model =
     , currentScenario : ScenarioID
     }
 
-type alias StartValue = Int
-type CustomerGrowth = Relative StartValue Float | Absolute StartValue Int
+
+type alias StartValue =
+    Int
+
+
+type CustomerGrowth
+    = Relative StartValue Float
+    | Absolute StartValue Int
+
 
 emptyRelative : CustomerGrowth
-emptyRelative = Relative 10 0.1
+emptyRelative =
+    Relative 10 0.1
+
 
 emptyAbsolute : CustomerGrowth
-emptyAbsolute = Absolute 0 10
+emptyAbsolute =
+    Absolute 0 10
+
 
 type alias Scenario =
     { months : Int
@@ -70,24 +79,29 @@ updateGrowth scenario value =
             case scenario.customerGrowth of
                 Absolute start growth ->
                     Absolute start <| decodeInt value
+
                 Relative start growth ->
                     Relative start <| decodePercentage value
     in
         { scenario
-        | customerGrowth = customerGrowth
+            | customerGrowth = customerGrowth
         }
+
 
 setStartValue : Scenario -> String -> Scenario
 setStartValue scenario value =
     let
-        value_ = decodeInt value
+        value_ =
+            decodeInt value
+
         customerGrowth =
             case scenario.customerGrowth of
                 Absolute _ growth ->
                     Absolute value_ growth
+
                 Relative _ growth ->
                     Relative value_ growth
     in
         { scenario
-        | customerGrowth = customerGrowth
+            | customerGrowth = customerGrowth
         }
