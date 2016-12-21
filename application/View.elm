@@ -72,86 +72,126 @@ scenarioTab currentScenario id =
         ]
 
 
+controlLabel : String -> Html Msg
+controlLabel labelText =
+    label [ class "control-label col-xs-6" ] [ text labelText ]
+
+
+numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
+numberInput numberValue message min max step =
+    div [ class "col-xs-6" ]
+        [ input
+            [ type_ "number"
+            , class "form-control"
+            , numberValue |> toString |> value
+            , onInput message
+            , min |> toString |> Html.Attributes.min
+            , max |> toString |> Html.Attributes.max
+            , step |> toString |> Html.Attributes.step
+            ]
+            []
+        ]
+
 controls : ScenarioID -> Scenario -> List (Html Msg)
 controls id scenario =
-    let
-        controlLabel labelText =
-            label [ class "control-label col-xs-6" ] [ text labelText ]
-
-        numberInput numberValue message min max step =
-            div [ class "col-xs-6" ]
-                [ input
-                    [ type_ "number"
-                    , class "form-control"
-                    , numberValue |> toString |> value
-                    , onInput message
-                    , min |> toString |> Html.Attributes.min
-                    , max |> toString |> Html.Attributes.max
-                    , step |> toString |> Html.Attributes.step
-                    ]
-                    []
-                ]
-    in
-        [ Html.form [ class "form-horizontal" ]
-            [ h2 [] [ text "Parameters" ]
-            , div [ class "form-group" ]
-                [ controlLabel "Months"
-                , numberInput scenario.months
-                    (SetScenario SetMonths id)
-                    1
-                    100
-                    1
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Churn Rate (%)"
-                , numberInput (scenario.churnRate * 100 |> round)
-                    (SetScenario SetChurnRate id)
-                    1
-                    100
-                    1
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Customer Growth per Month"
-                , numberInput scenario.customerGrowth
-                    (SetScenario SetCustomerGrowth id)
-                    0
-                    1000
-                    10
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Revenue per Customer per Month"
-                , numberInput scenario.revenue
-                    (SetScenario SetRevenue id)
-                    0
-                    1000
-                    10
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Customer Acquisition Cost"
-                , numberInput scenario.cac
-                    (SetScenario SetCAC id)
-                    0
-                    5000
-                    5
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Fixed Operation costs"
-                , numberInput scenario.opCost
-                    (SetScenario SetOpCost id)
-                    0
-                    1000
-                    100
-                ]
-            , div [ class "form-group" ]
-                [ controlLabel "Gross Margin"
-                , numberInput (scenario.revenueGrossMargin * 100 |> round)
-                    (SetScenario SetMargin id)
-                    0
-                    100
-                    5
+    [ div [ class "form-horizontal" ]
+        [ h2 [] [ text "Parameters" ]
+        , div [ class "form-group" ]
+            [ controlLabel "Months"
+            , numberInput scenario.months
+                (SetScenario SetMonths id)
+                1
+                100
+                1
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Churn Rate (%)"
+            , numberInput (Math.percentInt scenario.churnRate)
+                (SetScenario SetChurnRate id)
+                1
+                100
+                1
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Customer Growth"
+            , div [ class "col-sm-6" ]
+                [ button
+                    [ class <| "btn btn-block" ++ (
+                        case scenario.customerGrowth of
+                            Model.Relative _ _ -> " disabled"
+                            Model.Absolute _ _ -> " btn-primary")
+                    , onClick (SetScenario SetGrowthType id "relative")
+                    ] [ text "Relative (%)" ]
+                , button
+                    [ class <| "btn btn-block" ++ (
+                        case scenario.customerGrowth of
+                            Model.Relative _ _ -> " btn-primary"
+                            Model.Absolute _ _ -> " disabled")
+                    , onClick (SetScenario SetGrowthType id "absolute")
+                    ] [ text "Absolute" ]
                 ]
             ]
+        , div [ class "form-group" ]
+            [ controlLabel <| "Customers at Start"
+            , numberInput (
+                case scenario.customerGrowth of
+                    Model.Absolute s _ -> s
+                    Model.Relative s _ -> s
+                )
+                (SetScenario SetCustomerStart id)
+                10
+                1000
+                10
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel <| "Customer Growth per Month" ++ (
+                case scenario.customerGrowth of
+                    Model.Relative _ _ -> " (%)"
+                    Model.Absolute _ _ -> "")
+            , numberInput (
+                case scenario.customerGrowth of
+                    Model.Absolute _ g -> g
+                    Model.Relative _ g -> (round <| g * 100)
+                )
+                (SetScenario SetCustomerGrowth id)
+                0
+                1000
+                10
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Revenue per Customer per Month"
+            , numberInput scenario.revenue
+                (SetScenario SetRevenue id)
+                0
+                1000
+                10
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Customer Acquisition Cost"
+            , numberInput scenario.cac
+                (SetScenario SetCAC id)
+                0
+                5000
+                5
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Fixed Operation costs"
+            , numberInput scenario.opCost
+                (SetScenario SetOpCost id)
+                0
+                1000
+                100
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel "Gross Margin (%)"
+            , numberInput (scenario.revenueGrossMargin * 100 |> round)
+                (SetScenario SetMargin id)
+                0
+                100
+                5
+            ]
         ]
+    ]
 
 
 controlsHelp : List (Html Msg)
@@ -162,8 +202,17 @@ controlsHelp =
         , dd [] [ text "Length of business forecast" ]
         , dt [] [ text "Churn Rate" ]
         , dd [] [ text "Percentage of customers leaving monthly" ]
+        , dt [] [ text "Customer Growth" ]
+        , dd []
+            [ text "With absolute growth X users join the platform every month. "
+            , a [ href "https://en.wikipedia.org/wiki/Cohort_(statistics)" ]
+                [ text "(in cohorts)" ]
+                ]
+        , dd [] [
+            text "With relative growth the user base will grow by X% every month."
+            ]
         , dt [] [ text "Customer Growth per Month" ]
-        , dd [] [ text "Number of customers signing up in one month" ]
+        , dd [] [ text "Number of customers signing up in one month, either relative or absolute, depending on the setting." ]
         , dt [] [ text "Revenue per customer per Month" ]
         , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
         , dt [] [ text "Customer Acquisition Cost" ]
@@ -302,8 +351,8 @@ help : List (Html Msg)
 help =
     [ h2 [] [ text "Help" ]
     , div [ class "row" ]
-        [ div [ class "col-md-6" ] resultsHelp
-        , div [ class "col-md-6" ] controlsHelp
+        [ div [ class "col-md-6" ] controlsHelp
+        , div [ class "col-md-6" ] resultsHelp
         ]
     ]
 
@@ -313,4 +362,6 @@ footer =
     p []
         [ text "Created by "
         , a [ href "https://www.justus.pw" ] [ text "Justus Perlwitz" ]
+        , text " / "
+        , a [ href "mailto:hello@justus.pw" ] [ text "hello@justus.pw" ]
         ]

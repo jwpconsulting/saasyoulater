@@ -1,34 +1,9 @@
 module Update exposing (update)
 
 import Model exposing (Model, maxMonths, newScenario, currentScenario)
-import String
 import Msg exposing (..)
 import Dict
-
-
-decodeInt : String -> Int
-decodeInt string =
-    case String.toInt string of
-        Ok value ->
-            value
-
-        Err _ ->
-            0
-
-
-decodeIntWithMaximum : String -> Int -> Int
-decodeIntWithMaximum string value =
-    min (decodeInt string) value
-
-
-decodePercentage : String -> Float
-decodePercentage string =
-    case String.toFloat string of
-        Ok value ->
-            value / 100
-
-        _ ->
-            0
+import Decode exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,9 +27,7 @@ update msg model =
                             }
 
                         SetCustomerGrowth ->
-                            { scenario
-                                | customerGrowth = decodeInt value
-                            }
+                            Model.updateGrowth scenario value
 
                         SetRevenue ->
                             { scenario
@@ -75,6 +48,19 @@ update msg model =
                             { scenario
                                 | revenueGrossMargin = decodePercentage value
                             }
+
+                        SetGrowthType ->
+                            case value of
+                                "relative" ->
+                                    { scenario
+                                    | customerGrowth = Model.emptyRelative
+                                    }
+                                _ ->
+                                    { scenario
+                                    | customerGrowth = Model.emptyAbsolute
+                                    }
+                        SetCustomerStart ->
+                            Model.setStartValue scenario value
 
                 scenarios_ =
                     Dict.insert scenarioID scenario_ model.scenarios

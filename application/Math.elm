@@ -1,21 +1,8 @@
 module Math
     exposing
-        ( customerCohorts
-        , revenueCohorts
-        , grossMargin
-        , expenses
-        , cumulativeEarnings
-        , earnings
-        , months
-        , earningsBreakEven
-        , breakEven
-        , averageLife
-        , cltv
-        , ltvcac
-        , minimumCumulativeEarnings
-        )
+        (..)
 
-import Model exposing (Scenario)
+import Model exposing (Scenario, CustomerGrowth(..))
 
 
 cohortMonth : Int -> Int -> Float
@@ -28,9 +15,16 @@ churn churnRate month =
     (1 - churnRate) ^ month
 
 
-customers : Int -> Float -> Float -> Float
+customers : Model.CustomerGrowth -> Float -> Float -> Float
 customers customerGrowth churnRate month =
-    toFloat customerGrowth * churn churnRate month
+    let
+        currentChurn =
+            churn churnRate month
+    in
+        case customerGrowth of
+            Model.Absolute start growth ->
+                toFloat start + toFloat growth * currentChurn
+            _ -> 0
 
 
 customerCohort : Scenario -> Int -> Int -> Float
@@ -47,8 +41,12 @@ customerCohort model month cohort =
 
 customerCohorts : Scenario -> Int -> Float
 customerCohorts model month =
-    List.map (customerCohort model month) (List.range 1 model.months)
-        |> List.foldl (+) 0
+    case model.customerGrowth of
+        Absolute _ _ ->
+            List.map (customerCohort model month) (List.range 1 model.months)
+                |> List.foldl (+) 0
+        Relative start growth ->
+            toFloat start * ((1 + (growth - model.churnRate)) ^ (toFloat month - 1))
 
 
 revenueCohort : Scenario -> Int -> Int -> Float
@@ -68,8 +66,12 @@ revenueCohort model month cohort =
 
 revenueCohorts : Scenario -> Int -> Float
 revenueCohorts model month =
-    List.map (revenueCohort model month) (List.range 1 model.months)
-        |> List.foldl (+) 0
+    case model.customerGrowth of
+        Relative _ _ ->
+            (customerCohorts model month) * (toFloat model.revenue)
+        Absolute _ _ ->
+            List.map (revenueCohort model month) (List.range 1 model.months)
+                |> List.foldl (+) 0
 
 
 revenueCost : Scenario -> Int -> Float
@@ -84,7 +86,13 @@ grossMargin model month =
 
 expenses : Scenario -> Int
 expenses model =
-    model.customerGrowth * model.cac + model.opCost
+    case model.customerGrowth of
+        Model.Relative start growth ->
+            -- TODO Justus 2016-12-21
+            2 * model.cac + model.opCost
+
+        Model.Absolute _ growth ->
+            growth * model.cac + model.opCost
 
 
 earnings : Scenario -> Int -> Float
@@ -180,3 +188,7 @@ minimumCumulativeEarnings model =
 
             Just value ->
                 value
+
+percentInt : Float -> Int
+percentInt percent = 
+    percent * 100 |> round
