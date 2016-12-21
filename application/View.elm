@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Model exposing (Model, Scenario, ScenarioID)
 import Dict
 import Math
+import Events exposing (onSelect)
 import Msg exposing (..)
 import Humanize exposing (..)
 
@@ -112,23 +113,16 @@ controls id scenario =
                 100
                 1
             ]
-        , div [ class "form-group" ]
-            [ controlLabel "Customer Growth"
+        ,  div [ class "form-group" ]
+            [ controlLabel "Customer Growth Type"
             , div [ class "col-sm-6" ]
-                [ button
-                    [ class <| "btn btn-block" ++ (
-                        case scenario.customerGrowth of
-                            Model.Relative _ _ -> " disabled"
-                            Model.Absolute _ _ -> " btn-primary")
-                    , onClick (SetScenario SetGrowthType id "relative")
-                    ] [ text "Relative (%)" ]
-                , button
-                    [ class <| "btn btn-block" ++ (
-                        case scenario.customerGrowth of
-                            Model.Relative _ _ -> " btn-primary"
-                            Model.Absolute _ _ -> " disabled")
-                    , onClick (SetScenario SetGrowthType id "absolute")
-                    ] [ text "Absolute" ]
+                [ select
+                [ class "form-control"
+                , onSelect (\s-> (SetScenario SetGrowthType id) (Maybe.withDefault "" s))
+                ]
+                [ option [ value "relative" ] [ text "Relative (%)" ]
+                , option [ value "absolute" ] [ text "Absolute" ]
+                ]
                 ]
             ]
         , div [ class "form-group" ]
