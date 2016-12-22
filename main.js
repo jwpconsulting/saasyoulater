@@ -9554,95 +9554,158 @@ var _user$project$View$controlsHelp = {
 										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('With absolute growth X users join the platform every month. '),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$a,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Cohort_(statistics)'),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('(in cohorts)'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											}
+											_0: _elm_lang$html$Html$text('With relative growth the user base will grow by X% every month.'),
+											_1: {ctor: '[]'}
 										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$dd,
+											_elm_lang$html$Html$dt,
 											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('With relative growth the user base will grow by X% every month.'),
+												_0: _elm_lang$html$Html$text('Customer Growth per Month'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$dt,
+												_elm_lang$html$Html$dd,
 												{ctor: '[]'},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Customer Growth per Month'),
+													_0: _elm_lang$html$Html$text('Number of customers signing up in one month, either relative or absolute, depending on the setting.'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_elm_lang$html$Html$dd,
+													_elm_lang$html$Html$dt,
 													{ctor: '[]'},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text('Number of customers signing up in one month, either relative or absolute, depending on the setting.'),
+														_0: _elm_lang$html$Html$text('Revenue per customer per Month'),
 														_1: {ctor: '[]'}
 													}),
 												_1: {
 													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$dt,
+														_elm_lang$html$Html$dd,
 														{ctor: '[]'},
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text('Revenue per customer per Month'),
+															_0: _elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar'),
 															_1: {ctor: '[]'}
 														}),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$dd,
+															_elm_lang$html$Html$dt,
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar'),
+																_0: _elm_lang$html$Html$text('Customer Acquisition Cost'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$dt,
+																_elm_lang$html$Html$dd,
 																{ctor: '[]'},
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Customer Acquisition Cost'),
-																	_1: {ctor: '[]'}
+																	_0: _elm_lang$html$Html$text('Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer.'),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$a,
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Customer_acquisition_cost'),
+																				_1: {ctor: '[]'}
+																			},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text(' (Wikipedia)'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
+																	}
 																}),
 															_1: {
 																ctor: '::',
 																_0: A2(
-																	_elm_lang$html$Html$dd,
+																	_elm_lang$html$Html$dt,
 																	{ctor: '[]'},
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('Cost related to acquiring one customer'),
+																		_0: _elm_lang$html$Html$text('Gross Margin'),
 																		_1: {ctor: '[]'}
 																	}),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$dd,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text('Difference between revenue and cost.'),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$a,
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Gross_margin'),
+																						_1: {ctor: '[]'}
+																					},
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html$text(' (Wikipedia)'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {ctor: '[]'}
+																			}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$dt,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('Fixed cost'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$dd,
+																				{ctor: '[]'},
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html$text('Business expenses that are not dependent on the amount of customers.'),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$a,
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Fixed_cost'),
+																								_1: {ctor: '[]'}
+																							},
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text(' (Wikipedia)'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}
+																				}),
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
 															}
 														}
 													}
