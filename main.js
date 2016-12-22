@@ -8256,6 +8256,7 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Model$currencyKey = 'currency';
 var _user$project$Model$maxMonths = 100;
 var _user$project$Model$Model = F3(
 	function (a, b, c) {
@@ -8338,6 +8339,9 @@ var _user$project$Msg$SetRevenue = {ctor: 'SetRevenue'};
 var _user$project$Msg$SetCustomerGrowth = {ctor: 'SetCustomerGrowth'};
 var _user$project$Msg$SetChurnRate = {ctor: 'SetChurnRate'};
 var _user$project$Msg$SetMonths = {ctor: 'SetMonths'};
+var _user$project$Msg$LocalStorageReceive = function (a) {
+	return {ctor: 'LocalStorageReceive', _0: a};
+};
 var _user$project$Msg$SetCurrency = function (a) {
 	return {ctor: 'SetCurrency', _0: a};
 };
@@ -8350,42 +8354,72 @@ var _user$project$Msg$SetScenario = F3(
 		return {ctor: 'SetScenario', _0: a, _1: b, _2: c};
 	});
 
+var _user$project$LocalStorage$get = _elm_lang$core$Native_Platform.outgoingPort(
+	'get',
+	function (v) {
+		return v;
+	});
+var _user$project$LocalStorage$receive = _elm_lang$core$Native_Platform.incomingPort(
+	'receive',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (x0) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (x1) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{ctor: '_Tuple2', _0: x0, _1: x1});
+				},
+				A2(
+					_elm_lang$core$Json_Decode$index,
+					1,
+					_elm_lang$core$Json_Decode$oneOf(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+								_1: {ctor: '[]'}
+							}
+						})));
+		},
+		A2(_elm_lang$core$Json_Decode$index, 0, _elm_lang$core$Json_Decode$string)));
+var _user$project$LocalStorage$set = _elm_lang$core$Native_Platform.outgoingPort(
+	'set',
+	function (v) {
+		return [v._0, v._1];
+	});
+
+var _user$project$Cmds$retrieveCurrency = _user$project$LocalStorage$get('currency');
+
 var _user$project$Decode$decodeCurrency = function (string) {
 	var _p0 = string;
-	if (_p0.ctor === 'Just') {
-		var _p1 = _p0._0;
-		switch (_p1) {
-			case 'aud':
-				return _user$project$Msg$SetCurrency(
-					_elm_lang$core$Maybe$Just(_user$project$Model$AUD));
-			case 'eur':
-				return _user$project$Msg$SetCurrency(
-					_elm_lang$core$Maybe$Just(_user$project$Model$EUR));
-			case 'jpy':
-				return _user$project$Msg$SetCurrency(
-					_elm_lang$core$Maybe$Just(_user$project$Model$JPY));
-			case 'usd':
-				return _user$project$Msg$SetCurrency(
-					_elm_lang$core$Maybe$Just(_user$project$Model$USD));
-			default:
-				return _user$project$Msg$SetCurrency(_elm_lang$core$Maybe$Nothing);
-		}
-	} else {
-		return _user$project$Msg$SetCurrency(_elm_lang$core$Maybe$Nothing);
+	switch (_p0) {
+		case 'aud':
+			return _user$project$Model$AUD;
+		case 'eur':
+			return _user$project$Model$EUR;
+		case 'jpy':
+			return _user$project$Model$JPY;
+		case 'usd':
+			return _user$project$Model$USD;
+		default:
+			return _user$project$Model$USD;
 	}
 };
 var _user$project$Decode$decodePercentage = function (string) {
-	var _p2 = _elm_lang$core$String$toFloat(string);
-	if (_p2.ctor === 'Ok') {
-		return _p2._0 / 100;
+	var _p1 = _elm_lang$core$String$toFloat(string);
+	if (_p1.ctor === 'Ok') {
+		return _p1._0 / 100;
 	} else {
 		return 0;
 	}
 };
 var _user$project$Decode$decodeInt = function (string) {
-	var _p3 = _elm_lang$core$String$toInt(string);
-	if (_p3.ctor === 'Ok') {
-		return _p3._0;
+	var _p2 = _elm_lang$core$String$toInt(string);
+	if (_p2.ctor === 'Ok') {
+		return _p2._0;
 	} else {
 		return 0;
 	}
@@ -8398,9 +8432,90 @@ var _user$project$Decode$decodeIntWithMaximum = F2(
 			value);
 	});
 
+var _user$project$Encode$encodeCustomerGrowth = function (customerGrowth) {
+	var _p0 = customerGrowth;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'start',
+				_1: _elm_lang$core$Json_Encode$int(_p0._0)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'growth',
+					_1: _elm_lang$core$Json_Encode$float(_p0._1)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Encode$encodeScenario = function (scenario) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'months',
+				_1: _elm_lang$core$Json_Encode$int(scenario.months)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'churnRate',
+					_1: _elm_lang$core$Json_Encode$float(scenario.churnRate)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'revenue',
+						_1: _elm_lang$core$Json_Encode$int(scenario.revenue)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'customerGrowth',
+							_1: _user$project$Encode$encodeCustomerGrowth(scenario.customerGrowth)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'revenueGrossMargin',
+								_1: _elm_lang$core$Json_Encode$float(scenario.revenueGrossMargin)
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'cac',
+									_1: _elm_lang$core$Json_Encode$int(scenario.cac)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'fixedCost',
+										_1: _elm_lang$core$Json_Encode$int(scenario.fixedCost)
+									},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Encode$encodeCurrency = function (currency) {
-	var _p0 = currency;
-	switch (_p0.ctor) {
+	var _p1 = currency;
+	switch (_p1.ctor) {
 		case 'USD':
 			return 'usd';
 		case 'EUR':
@@ -8410,17 +8525,6 @@ var _user$project$Encode$encodeCurrency = function (currency) {
 		default:
 			return 'jpy';
 	}
-};
-
-var _user$project$Events$emptyIsNothing = function (s) {
-	return _elm_lang$core$Native_Utils.eq(s, '') ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(s);
-};
-var _user$project$Events$maybeTargetValue = A2(_elm_lang$core$Json_Decode$map, _user$project$Events$emptyIsNothing, _elm_lang$html$Html_Events$targetValue);
-var _user$project$Events$onSelect = function (f) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'change',
-		A2(_elm_lang$core$Json_Decode$map, f, _user$project$Events$maybeTargetValue));
 };
 
 var _user$project$Localize$currencyName = function (currency) {
@@ -8641,14 +8745,54 @@ var _user$project$Update$update = F2(
 						model,
 						{scenarios: scenarios_}),
 					{ctor: '[]'});
+			case 'SetCurrency':
+				var _p3 = _p0._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							currency: _user$project$Decode$decodeCurrency(_p3)
+						}),
+					{
+						ctor: '::',
+						_0: _user$project$LocalStorage$set(
+							{
+								ctor: '_Tuple2',
+								_0: _user$project$Model$currencyKey,
+								_1: _user$project$Encode$encodeCurrency(
+									_user$project$Decode$decodeCurrency(_p3))
+							}),
+						_1: {ctor: '[]'}
+					});
 			default:
-				if (_p0._0.ctor === 'Just') {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
+				var _p4 = _p0._0._0;
+				if (_p4 === 'currency') {
+					var _p5 = _p0._0._1;
+					if (_p5.ctor === 'Just') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{
+									currency: _user$project$Decode$decodeCurrency(_p5._0)
+								}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
 							model,
-							{currency: _p0._0._0}),
-						{ctor: '[]'});
+							{
+								ctor: '::',
+								_0: _user$project$LocalStorage$set(
+									{
+										ctor: '_Tuple2',
+										_0: _user$project$Model$currencyKey,
+										_1: _user$project$Encode$encodeCurrency(model.currency)
+									}),
+								_1: {ctor: '[]'}
+							});
+					}
 				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -9048,31 +9192,37 @@ var _user$project$View$resultsHelp = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$View$currencyOption = function (currency) {
-	return A2(
-		_elm_lang$html$Html$option,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$value(
-				_user$project$Encode$encodeCurrency(currency)),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_user$project$Localize$currencyName(currency),
+var _user$project$View$currencyOption = F2(
+	function (currentCurrency, currency) {
+		return A2(
+			_elm_lang$html$Html$option,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$value(
+					_user$project$Encode$encodeCurrency(currency)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$selected(
+						_elm_lang$core$Native_Utils.eq(currentCurrency, currency)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						' (',
+						_user$project$Localize$currencyName(currency),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							_user$project$Localize$localizeCurrency(currency),
-							')')))),
-			_1: {ctor: '[]'}
-		});
-};
+							' (',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_user$project$Localize$localizeCurrency(currency),
+								')')))),
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$View$results = F2(
 	function (currency, scenario) {
 		var ltvcac = _user$project$Humanize$humanizeRatio(
@@ -9237,11 +9387,14 @@ var _user$project$View$results = F2(
 																											_0: _elm_lang$html$Html_Attributes$class('form-control'),
 																											_1: {
 																												ctor: '::',
-																												_0: _user$project$Events$onSelect(_user$project$Decode$decodeCurrency),
+																												_0: _elm_lang$html$Html_Events$onInput(_user$project$Msg$SetCurrency),
 																												_1: {ctor: '[]'}
 																											}
 																										},
-																										A2(_elm_lang$core$List$map, _user$project$View$currencyOption, _user$project$Model$currencies)),
+																										A2(
+																											_elm_lang$core$List$map,
+																											_user$project$View$currencyOption(currency),
+																											_user$project$Model$currencies)),
 																									_1: {ctor: '[]'}
 																								}),
 																							_1: {ctor: '[]'}
@@ -10264,14 +10417,25 @@ var _user$project$View$view = function (model) {
 				})));
 };
 
+var _user$project$Subscriptions$subscriptions = function (model) {
+	return _user$project$LocalStorage$receive(_user$project$Msg$LocalStorageReceive);
+};
+
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
-		init: {ctor: '_Tuple2', _0: _user$project$Model$init, _1: _elm_lang$core$Platform_Cmd$none},
+		init: {
+			ctor: '_Tuple2',
+			_0: _user$project$Model$init,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{
+					ctor: '::',
+					_0: _user$project$Cmds$retrieveCurrency,
+					_1: {ctor: '[]'}
+				})
+		},
 		update: _user$project$Update$update,
 		view: _user$project$View$view,
-		subscriptions: function (_p0) {
-			return _elm_lang$core$Platform_Sub$none;
-		}
+		subscriptions: _user$project$Subscriptions$subscriptions
 	})();
 
 var Elm = {};
