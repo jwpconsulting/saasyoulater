@@ -18,3 +18,4 @@ type Msg
     = SetScenario ScenarioMsg ScenarioID String
     | ChooseScenario ScenarioID
     | NewScenario
+    | SetCurrency String

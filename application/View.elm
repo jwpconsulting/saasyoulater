@@ -3,7 +3,7 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
-import Model exposing (Model, Scenario, ScenarioID)
+import Model exposing (Model, Scenario, ScenarioID, Currency)
 import Dict
 import Math
 import Events exposing (onSelect)
@@ -31,9 +31,9 @@ view model =
                 [ div [ class "col-xs-6 col-md-3" ]
                     (controls model.currentScenario scenario)
                 , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
-                    (results scenario)
+                    (results model.currency scenario)
                 , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
-                    (numbers scenario)
+                    (numbers model.currency scenario)
                 ]
             , hr [] []
             ]
@@ -219,9 +219,10 @@ controlsHelp =
     ]
 
 
-numbers : Scenario -> List (Html Msg)
-numbers scenario =
+numbers : Currency -> Scenario -> List (Html Msg)
+numbers currency scenario =
     let
+        hv = humanizeValue currency
         months =
             List.range 1 scenario.months
 
@@ -251,11 +252,11 @@ numbers scenario =
                             |> text
                       ]
                         |> td []
-                    , Math.revenueCohorts scenario month |> humanizeValue |> td []
-                    , Math.grossMargin scenario month |> humanizeValue |> td []
-                    , Math.expenses scenario |> toFloat |> humanizeValue |> td []
-                    , Math.earnings scenario month |> humanizeValue |> td []
-                    , Math.cumulativeEarnings scenario month |> humanizeValue |> td []
+                    , Math.revenueCohorts scenario month |> hv |> td []
+                    , Math.grossMargin scenario month |> hv |> td []
+                    , Math.expenses scenario |> toFloat |> hv |> td []
+                    , Math.earnings scenario month |> hv |> td []
+                    , Math.cumulativeEarnings scenario month |> hv |> td []
                     ]
 
         rows =
@@ -279,9 +280,10 @@ numbers scenario =
         ]
 
 
-results : Scenario -> List (Html Msg)
-results scenario =
+results : Currency -> Scenario -> List (Html Msg)
+results currency scenario =
     let
+        hv = humanizeValue currency
         breakEven =
             Math.breakEven scenario |> humanize
 
@@ -292,13 +294,13 @@ results scenario =
             Math.averageLife scenario |> humanizeDuration
 
         cltv =
-            Math.cltv scenario |> toFloat |> humanizeValue
+            Math.cltv scenario |> toFloat |> hv
 
         ltvcac =
             Math.ltvcac scenario |> humanizeRatio
 
         minimumCumulativeEarnings =
-            Math.minimumCumulativeEarnings scenario |> humanizeValue
+            Math.minimumCumulativeEarnings scenario |> hv
     in
         [ h2 [] [ text "Results" ]
         , dl []
@@ -314,6 +316,20 @@ results scenario =
             , dd [] ltvcac
             , dt [] [ text "Minimum Cumulative EBIT" ]
             , dd [] minimumCumulativeEarnings
+            , dt [] [ text "Show results in" ]
+            , dd []
+                [ div [ class "form-group" ]
+                    [ div []
+                        [ select
+                            [ class "form-control"
+                            , onSelect (\s -> (SetCurrency) (Maybe.withDefault "" s))
+                            ]
+                            [ option [ value "usd" ] [ text "USD ($)" ]
+                            , option [ value "eur" ] [ text "EUR (€)" ]
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ]
 

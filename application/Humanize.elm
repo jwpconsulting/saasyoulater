@@ -3,6 +3,7 @@ module Humanize exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Msg exposing (..)
+import Model exposing (Currency(..))
 
 
 humanize : Maybe number -> List (Html Msg)
@@ -33,8 +34,8 @@ humanizeDuration month =
         ]
 
 
-humanizeValue : Float -> List (Html Msg)
-humanizeValue value =
+humanizeValue : Currency -> Float -> List (Html Msg)
+humanizeValue currency value =
     [ strong
         [ class
             (if value < 1 then
@@ -44,7 +45,11 @@ humanizeValue value =
             )
         ]
         [ value |> round |> toString |> text ]
-    , " €" |> text
+    , text <| (
+        case currency of
+            EUR -> " €"
+            USD -> " $"
+        )
     ]
 
 

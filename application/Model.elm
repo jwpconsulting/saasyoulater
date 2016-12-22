@@ -11,11 +11,17 @@ type alias ScenarioID =
 type alias Model =
     { scenarios : Dict.Dict ScenarioID Scenario
     , currentScenario : ScenarioID
+    , currency : Currency
     }
 
 
 type alias StartValue =
     Int
+
+
+type Currency
+    = USD
+    | EUR
 
 
 type CustomerGrowth
@@ -58,6 +64,7 @@ init : Model
 init =
     { scenarios = Dict.fromList [ ( 1, newScenario ) ]
     , currentScenario = 1
+    , currency = USD
     }
 
 

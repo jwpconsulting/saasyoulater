@@ -80,3 +80,10 @@ update msg model =
                     Dict.insert highest Model.newScenario model.scenarios
             in
                 { model | scenarios = scenarios_ } ! []
+
+        SetCurrency currency ->
+            case currency of
+                "eur" ->
+                    { model | currency = Model.EUR } ! []
+                _ ->
+                    { model | currency = Model.USD } ! []
