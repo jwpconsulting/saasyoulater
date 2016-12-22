@@ -202,11 +202,6 @@ controlsHelp =
         , dd [] [ text "Percentage of customers leaving monthly" ]
         , dt [] [ text "Customer Growth" ]
         , dd []
-            [ text "With absolute growth X users join the platform every month. "
-            , a [ href "https://en.wikipedia.org/wiki/Cohort_(statistics)" ]
-                [ text "(in cohorts)" ]
-            ]
-        , dd []
             [ text "With relative growth the user base will grow by X% every month."
             ]
         , dt [] [ text "Customer Growth per Month" ]
@@ -214,7 +209,23 @@ controlsHelp =
         , dt [] [ text "Revenue per customer per Month" ]
         , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
         , dt [] [ text "Customer Acquisition Cost" ]
-        , dd [] [ text "Cost related to acquiring one customer" ]
+        , dd []
+            [ text "Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer."
+            , a [ href "https://en.wikipedia.org/wiki/Customer_acquisition_cost" ]
+                [ text " (Wikipedia)" ]
+            ]
+        , dt [] [ text "Gross Margin" ]
+        , dd []
+            [ text "Difference between revenue and cost."
+            , a [ href "https://en.wikipedia.org/wiki/Gross_margin" ]
+                [ text " (Wikipedia)" ]
+            ]
+        , dt [] [ text "Fixed cost" ]
+        , dd []
+            [ text "Business expenses that are not dependent on the amount of customers."
+            , a [ href "https://en.wikipedia.org/wiki/Fixed_cost" ]
+                [ text " (Wikipedia)" ]
+            ]
         ]
     ]
 
