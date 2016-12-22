@@ -8734,7 +8734,7 @@ var _user$project$Math$expenses = F2(
 		return A2(
 			_elm_lang$core$Basics$max,
 			0,
-			(c(month) - c(month - 1)) * model.cac) - model.fixedCost;
+			(c(month) - c(month - 1)) * model.cac) + model.fixedCost;
 	});
 var _user$project$Math$earnings = F2(
 	function (model, month) {
