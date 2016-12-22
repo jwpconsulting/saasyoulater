@@ -34,7 +34,7 @@ humanizeDuration month =
         ]
 
 
-humanizeValue : Currency -> Float -> List (Html Msg)
+humanizeValue : Currency -> Int -> List (Html Msg)
 humanizeValue currency value =
     [ strong
         [ class
@@ -44,11 +44,14 @@ humanizeValue currency value =
                 "text-success"
             )
         ]
-        [ value |> round |> toString |> text ]
-    , text <| (
-        case currency of
-            EUR -> " €"
-            USD -> " $"
+        [ value |> toString |> text ]
+    , text <|
+        (case currency of
+            EUR ->
+                " €"
+
+            USD ->
+                " $"
         )
     ]
 

@@ -44,18 +44,6 @@ update msg model =
                                 | revenueGrossMargin = decodePercentage value
                             }
 
-                        SetGrowthType ->
-                            case value of
-                                "relative" ->
-                                    { scenario
-                                        | customerGrowth = Model.emptyRelative
-                                    }
-
-                                _ ->
-                                    { scenario
-                                        | customerGrowth = Model.emptyAbsolute
-                                    }
-
                         SetCustomerStart ->
                             Model.setStartValue scenario value
 
@@ -85,5 +73,6 @@ update msg model =
             case currency of
                 "eur" ->
                     { model | currency = Model.EUR } ! []
+
                 _ ->
                     { model | currency = Model.USD } ! []

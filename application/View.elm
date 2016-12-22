@@ -115,24 +115,9 @@ controls id scenario =
                 1
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Customer Growth Type"
-            , div [ class "col-sm-6" ]
-                [ select
-                    [ class "form-control"
-                    , onSelect (\s -> (SetScenario SetGrowthType id) (Maybe.withDefault "" s))
-                    ]
-                    [ option [ value "relative" ] [ text "Relative (%)" ]
-                    , option [ value "absolute" ] [ text "Absolute" ]
-                    ]
-                ]
-            ]
-        , div [ class "form-group" ]
             [ controlLabel <| "Customers at Start"
             , numberInput
                 (case scenario.customerGrowth of
-                    Model.Absolute s _ ->
-                        s
-
                     Model.Relative s _ ->
                         s
                 )
@@ -142,20 +127,9 @@ controls id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel <|
-                "Customer Growth per Month"
-                    ++ (case scenario.customerGrowth of
-                            Model.Relative _ _ ->
-                                " (%)"
-
-                            Model.Absolute _ _ ->
-                                ""
-                       )
+            [ controlLabel "Customer Growth per Month (%)"
             , numberInput
                 (case scenario.customerGrowth of
-                    Model.Absolute _ g ->
-                        g
-
                     Model.Relative _ g ->
                         (round <| g * 100)
                 )
@@ -222,7 +196,9 @@ controlsHelp =
 numbers : Currency -> Scenario -> List (Html Msg)
 numbers currency scenario =
     let
-        hv = humanizeValue currency
+        hv =
+            humanizeValue currency
+
         months =
             List.range 1 scenario.months
 
@@ -246,15 +222,16 @@ numbers currency scenario =
             in
                 tr [ trClass ]
                     [ td [] [ toString month |> text ]
-                    , [ Math.customerCohorts scenario month
-                            |> round
+                    , [ Math.customers scenario.customerGrowth
+                            scenario.churnRate
+                            month
                             |> toString
                             |> text
                       ]
                         |> td []
-                    , Math.revenueCohorts scenario month |> hv |> td []
+                    , Math.revenue scenario month |> hv |> td []
                     , Math.grossMargin scenario month |> hv |> td []
-                    , Math.expenses scenario |> toFloat |> hv |> td []
+                    , Math.expenses scenario month |> hv |> td []
                     , Math.earnings scenario month |> hv |> td []
                     , Math.cumulativeEarnings scenario month |> hv |> td []
                     ]
@@ -283,7 +260,9 @@ numbers currency scenario =
 results : Currency -> Scenario -> List (Html Msg)
 results currency scenario =
     let
-        hv = humanizeValue currency
+        hv =
+            humanizeValue currency
+
         breakEven =
             Math.breakEven scenario |> humanize
 
@@ -294,7 +273,7 @@ results currency scenario =
             Math.averageLife scenario |> humanizeDuration
 
         cltv =
-            Math.cltv scenario |> toFloat |> hv
+            Math.cltv scenario |> hv
 
         ltvcac =
             Math.ltvcac scenario |> humanizeRatio
@@ -322,7 +301,11 @@ results currency scenario =
                     [ div []
                         [ select
                             [ class "form-control"
-                            , onSelect (\s -> (SetCurrency) (Maybe.withDefault "" s))
+                            , onSelect
+                                (\s ->
+                                    (SetCurrency)
+                                        (Maybe.withDefault "" s)
+                                )
                             ]
                             [ option [ value "usd" ] [ text "USD ($)" ]
                             , option [ value "eur" ] [ text "EUR (€)" ]

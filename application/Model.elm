@@ -19,14 +19,25 @@ type alias StartValue =
     Int
 
 
+type alias GrowthValue =
+    Float
+
+
+type alias ChurnRate =
+    Float
+
+
+type alias Month =
+    Int
+
+
 type Currency
     = USD
     | EUR
 
 
 type CustomerGrowth
-    = Relative StartValue Float
-    | Absolute StartValue Int
+    = Relative StartValue GrowthValue
 
 
 emptyRelative : CustomerGrowth
@@ -34,13 +45,8 @@ emptyRelative =
     Relative 10 0.1
 
 
-emptyAbsolute : CustomerGrowth
-emptyAbsolute =
-    Absolute 0 10
-
-
 type alias Scenario =
-    { months : Int
+    { months : Month
     , churnRate : Float
     , revenue : Int
     , customerGrowth : CustomerGrowth
@@ -84,9 +90,6 @@ updateGrowth scenario value =
     let
         customerGrowth =
             case scenario.customerGrowth of
-                Absolute start growth ->
-                    Absolute start <| decodeInt value
-
                 Relative start growth ->
                     Relative start <| decodePercentage value
     in
@@ -103,9 +106,6 @@ setStartValue scenario value =
 
         customerGrowth =
             case scenario.customerGrowth of
-                Absolute _ growth ->
-                    Absolute value_ growth
-
                 Relative _ growth ->
                     Relative value_ growth
     in

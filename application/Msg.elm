@@ -10,7 +10,6 @@ type ScenarioMsg
     | SetRevenue
     | SetCAC
     | SetMargin
-    | SetGrowthType
     | SetCustomerStart
 
 

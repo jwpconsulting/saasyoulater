@@ -1,6 +1,6 @@
 module Math exposing (..)
 
-import Model exposing (Scenario, CustomerGrowth(..))
+import Model exposing (..)
 
 
 monthRange : Int -> List Int
@@ -13,96 +13,50 @@ cohortMonth cohort month =
     month - cohort |> toFloat
 
 
-churn : Float -> Float -> Float
-churn churnRate month =
-    (1 - churnRate) ^ month
-
-
-customers : Model.CustomerGrowth -> Float -> Float -> Float
+customers : CustomerGrowth -> ChurnRate -> Int -> Month
 customers customerGrowth churnRate month =
-    let
-        currentChurn =
-            churn churnRate month
-    in
-        case customerGrowth of
-            Model.Absolute start growth ->
-                toFloat start + toFloat growth * currentChurn
-
-            _ ->
-                0
-
-
-customerCohort : Scenario -> Int -> Int -> Float
-customerCohort model month cohort =
-    let
-        m =
-            cohortMonth cohort month
-    in
-        if m >= 0 then
-            customers model.customerGrowth model.churnRate m
-        else
-            0.0
-
-
-customerCohorts : Scenario -> Int -> Float
-customerCohorts model month =
-    case model.customerGrowth of
-        Absolute _ _ ->
-            List.map (customerCohort model month) (monthRange model.months)
-                |> List.foldl (+) 0
-
+    case customerGrowth of
         Relative start growth ->
-            toFloat start * ((1 + (growth - model.churnRate)) ^ (toFloat month - 1))
+            round (toFloat start * ((1 + (growth - churnRate)) ^ (toFloat <| month - 1)))
 
 
-revenueCohort : Scenario -> Int -> Int -> Float
-revenueCohort model month cohort =
-    (customerCohort model month cohort) * (toFloat model.revenue)
-
-
-revenueCohorts : Scenario -> Int -> Float
-revenueCohorts model month =
+revenue : Scenario -> Month -> Int
+revenue model month =
     case model.customerGrowth of
         Relative _ _ ->
-            (customerCohorts model month) * (toFloat model.revenue)
-
-        Absolute _ _ ->
-            List.map (revenueCohort model month) (monthRange model.months)
-                |> List.foldl (+) 0
+            (customers model.customerGrowth model.churnRate month) * (model.revenue)
 
 
-revenueCost : Scenario -> Int -> Float
+revenueCost : Scenario -> Int -> Int
 revenueCost model month =
-    revenueCohorts model month * (1 - model.revenueGrossMargin)
+    toFloat (revenue model month) * (1 - model.revenueGrossMargin) |> round
 
 
-grossMargin : Scenario -> Int -> Float
+grossMargin : Scenario -> Month -> Int
 grossMargin model month =
-    revenueCohorts model month * model.revenueGrossMargin
+    round <| toFloat (revenue model month) * model.revenueGrossMargin
 
 
-expenses : Scenario -> Int
-expenses model =
-    case model.customerGrowth of
-        Model.Relative start growth ->
-            -- TODO Justus 2016-12-21
-            2 * model.cac
-
-        Model.Absolute _ growth ->
-            growth * model.cac
+expenses : Scenario -> Month -> Int
+expenses model month =
+    let
+        c =
+            customers model.customerGrowth model.churnRate
+    in
+        max 0 <| ((c month) - (c <| month - 1)) * model.cac
 
 
-earnings : Scenario -> Int -> Float
+earnings : Scenario -> Month -> Int
 earnings model month =
-    grossMargin model month - toFloat (expenses model)
+    grossMargin model month - expenses model month
 
 
-cumulativeEarnings : Scenario -> Int -> Float
+cumulativeEarnings : Scenario -> Month -> Int
 cumulativeEarnings model month =
     List.map (earnings model) (List.range 1 month) |> List.foldl (+) 0
 
 
-earningsBreakEvenWithMonth : Scenario -> Int -> Maybe Int
+earningsBreakEvenWithMonth : Scenario -> Month -> Maybe Int
 earningsBreakEvenWithMonth model month =
     if earnings model month >= 0 then
         Just month
@@ -114,12 +68,12 @@ earningsBreakEvenWithMonth model month =
         )
 
 
-earningsBreakEven : Scenario -> Maybe Int
+earningsBreakEven : Scenario -> Maybe Month
 earningsBreakEven model =
     earningsBreakEvenWithMonth model 1
 
 
-breakEvenWithMonth : Scenario -> Int -> Maybe Int
+breakEvenWithMonth : Scenario -> Month -> Maybe Month
 breakEvenWithMonth model month =
     if cumulativeEarnings model month >= 0 then
         Just month
@@ -153,7 +107,7 @@ linspace start stop n =
                     |> List.map round
 
 
-months : Int -> List Int
+months : Month -> List Int
 months months =
     linspace 1 months (min months 12)
 
@@ -173,7 +127,7 @@ ltvcac model =
     toFloat (cltv model) / toFloat model.cac
 
 
-minimumCumulativeEarnings : Scenario -> Float
+minimumCumulativeEarnings : Scenario -> Int
 minimumCumulativeEarnings model =
     List.map (cumulativeEarnings model) (monthRange model.months)
         |> List.minimum
