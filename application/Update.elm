@@ -4,6 +4,8 @@ import Model exposing (Model, maxMonths, newScenario, currentScenario)
 import Msg exposing (..)
 import Dict
 import Decode exposing (..)
+import Encode exposing (..)
+import LocalStorage
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,7 +76,31 @@ update msg model =
             in
                 { model | scenarios = scenarios_ } ! []
 
-        SetCurrency (Just currency) ->
-            { model | currency = currency } ! []
-        SetCurrency Nothing ->
-            model ! []
+        SetCurrency value ->
+            { model | currency = decodeCurrency value }
+                ! [ LocalStorage.set
+                        ( Model.currencyKey
+                        , encodeCurrency <| decodeCurrency value
+                        )
+                  ]
+
+        LocalStorageReceive ( key, value ) ->
+            case key of
+                "currency" ->
+                    case value of
+                        Just value ->
+                            { model
+                                | currency = decodeCurrency value
+                            }
+                                ! []
+
+                        Nothing ->
+                            model
+                                ! [ LocalStorage.set
+                                        ( Model.currencyKey
+                                        , encodeCurrency model.currency
+                                        )
+                                  ]
+
+                _ ->
+                    model ! []

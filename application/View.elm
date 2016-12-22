@@ -6,12 +6,10 @@ import Html.Attributes exposing (..)
 import Model exposing (Model, Scenario, ScenarioID, Currency)
 import Dict
 import Math
-import Events exposing (onSelect)
 import Msg exposing (..)
 import Humanize exposing (..)
 import Localize exposing (localizeCurrency, currencyName)
 import Encode exposing (encodeCurrency)
-import Decode exposing (decodeCurrency)
 
 
 view : Model -> Html Msg
@@ -76,7 +74,11 @@ scenarioTab currentScenario id =
         ]
 
 
-type LabelType = Percentage | Currency | Number
+type LabelType
+    = Percentage
+    | Currency
+    | Number
+
 
 controlLabel : Model -> LabelType -> String -> Html Msg
 controlLabel model labelType labelText =
@@ -92,7 +94,7 @@ controlLabel model labelType labelText =
                 Number ->
                     ""
     in
-        label [ class "control-label col-xs-6" ] [ text <| labelText ++ suff]
+        label [ class "control-label col-xs-6" ] [ text <| labelText ++ suff ]
 
 
 numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
@@ -188,7 +190,6 @@ controls model id scenario =
                 100
             ]
         ]
-
     ]
 
 
@@ -293,12 +294,20 @@ numbers currency scenario =
             ]
         ]
 
-currencyOption : Currency -> Html Msg
-currencyOption currency =
-    option [ value <| encodeCurrency currency ]
-        [ text <|
-            currencyName currency ++ " (" ++ localizeCurrency currency ++ ")"
+
+currencyOption : Currency -> Currency -> Html Msg
+currencyOption currentCurrency currency =
+    option
+        [ value <| encodeCurrency currency
+        , selected <| currentCurrency == currency
         ]
+        [ text <|
+            currencyName currency
+                ++ " ("
+                ++ localizeCurrency currency
+                ++ ")"
+        ]
+
 
 results : Currency -> Scenario -> List (Html Msg)
 results currency scenario =
@@ -344,8 +353,12 @@ results currency scenario =
                     [ div []
                         [ select
                             [ class "form-control"
-                            , onSelect decodeCurrency
-                            ] <| (List.map currencyOption Model.currencies)
+                            , onInput SetCurrency
+                            ]
+                          <|
+                            (List.map (currencyOption currency)
+                                Model.currencies
+                            )
                         ]
                     ]
                 ]

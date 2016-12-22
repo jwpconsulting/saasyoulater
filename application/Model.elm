@@ -8,7 +8,8 @@ type alias ScenarioID =
 
 
 defaultCurrency : Currency
-defaultCurrency = USD
+defaultCurrency =
+    USD
 
 
 type alias Model =
@@ -114,7 +115,7 @@ updateGrowth scenario value =
     let
         customerGrowth =
             case scenario.customerGrowth of
-                Relative start growth ->
+                Relative start _ ->
                     Relative start value
     in
         { scenario
@@ -133,3 +134,8 @@ setStartValue scenario value =
         { scenario
             | customerGrowth = customerGrowth
         }
+
+
+currencyKey : String
+currencyKey =
+    "currency"

@@ -13,6 +13,16 @@
     <script type="application/javascript">
       var node = document.getElementById('container');
       var app = Elm.Main.embed(node);
+      app.ports.get.subscribe(function(key) {
+        var value = localStorage.getItem(key);
+        app.ports.receive.send([key, value]);
+      });
+      app.ports.set.subscribe(function(item) {
+        console.log(item);
+        var key = item[0];
+        var value = item[1];
+        localStorage.setItem(key, value);
+      });
     </script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
