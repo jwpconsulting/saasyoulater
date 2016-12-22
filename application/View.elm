@@ -260,11 +260,7 @@ numbers currency scenario =
             in
                 tr [ trClass ]
                     [ td [] [ toString month |> text ]
-                    , [ Math.customers scenario.customerGrowth
-                            scenario.churnRate
-                            month
-                            |> toString
-                            |> text
+                    , [ Math.customers scenario month |> toString |> text
                       ]
                         |> td []
                     , Math.revenue scenario month |> hv |> td []

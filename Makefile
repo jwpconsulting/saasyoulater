@@ -1,5 +1,6 @@
 .PHONY=all clean format reactor serve
 
+TEST=tests
 APPLICATION=application
 BUILD=build
 TARGET=build/main.js build/index.html build/CNAME
@@ -26,7 +27,7 @@ $(BUILD)/CNAME: CNAME
 	cp $< $@
 
 format:
-	elm-format-0.17 $(APPLICATION)/*.elm --yes
+	elm-format-0.17 $(APPLICATION)/*.elm $(TEST)/*.elm --yes
 
 clean:
 	rm -rf elm-stuff/build-artifacts/
@@ -37,9 +38,16 @@ reactor:
 
 dependencies:
 	elm-package install
+	npm install -g elm-test
 
 serve:
 	cd $(BUILD) && python -m SimpleHTTPServer 3000
 
 deploy: all
 	./deploy.sh
+
+test:
+	elm test --watch
+
+watch:
+	watch make all
