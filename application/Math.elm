@@ -43,7 +43,8 @@ expenses model month =
         c =
             customers model.customerGrowth model.churnRate
     in
-        max 0 <| ((c month) - (c <| month - 1)) * model.cac
+        (max 0 <| ((c month) - (c <| month - 1)) * model.cac) -
+        model.fixedCost
 
 
 earnings : Scenario -> Month -> Int

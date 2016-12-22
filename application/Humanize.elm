@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Msg exposing (..)
 import Model exposing (Currency(..))
+import Localize exposing (..)
 
 
 humanize : Maybe number -> List (Html Msg)
@@ -45,14 +46,7 @@ humanizeValue currency value =
             )
         ]
         [ value |> toString |> text ]
-    , text <|
-        (case currency of
-            EUR ->
-                " €"
-
-            USD ->
-                " $"
-        )
+    , text <| " " ++ localizeCurrency currency
     ]
 
 

@@ -11,6 +11,7 @@ type ScenarioMsg
     | SetCAC
     | SetMargin
     | SetCustomerStart
+    | SetFixedCost
 
 
 type Msg

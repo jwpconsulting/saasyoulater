@@ -27,7 +27,7 @@ update msg model =
                             }
 
                         SetCustomerGrowth ->
-                            Model.updateGrowth scenario value
+                            Model.updateGrowth scenario <| decodePercentage value
 
                         SetRevenue ->
                             { scenario
@@ -45,12 +45,17 @@ update msg model =
                             }
 
                         SetCustomerStart ->
-                            Model.setStartValue scenario value
+                            Model.setStartValue scenario <| decodeInt value
 
-                scenarios_ =
-                    Dict.insert scenarioID scenario_ model.scenarios
+                        SetFixedCost ->
+                            { scenario
+                                | fixedCost = decodeInt value
+                            }
             in
-                { model | scenarios = scenarios_ } ! []
+                { model
+                    | scenarios = Dict.insert scenarioID scenario_ model.scenarios
+                }
+                    ! []
 
         ChooseScenario id ->
             { model | currentScenario = id } ! []

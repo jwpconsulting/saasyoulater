@@ -162,7 +162,16 @@ controls id scenario =
                 100
                 5
             ]
+        , div [ class "form-group" ]
+            [ controlLabel <| "Fixed Cost (" ++ "$" ++ ")"
+            , numberInput (scenario.fixedCost)
+                (SetScenario SetFixedCost id)
+                0
+                10000
+                100
+            ]
         ]
+
     ]
 
 

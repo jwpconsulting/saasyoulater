@@ -1,5 +1,7 @@
 module Decode exposing (..)
 
+import Model exposing (Currency(..))
+
 
 decodeInt : String -> Int
 decodeInt string =
@@ -24,3 +26,22 @@ decodePercentage string =
 
         _ ->
             0
+
+
+decodeCurrency : String -> Maybe Currency
+decodeCurrency string =
+    case string of
+        "aud" ->
+            Just AUD
+
+        "eur" ->
+            Just EUR
+
+        "jpy" ->
+            Just JPY
+
+        "usd" ->
+            Just USD
+
+        _ ->
+            Nothing

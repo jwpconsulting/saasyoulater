@@ -1,7 +1,6 @@
 module Model exposing (..)
 
 import Dict exposing (Dict)
-import Decode exposing (..)
 
 
 type alias ScenarioID =
@@ -31,9 +30,19 @@ type alias Month =
     Int
 
 
+type alias Money =
+    Int
+
+
+type alias Percentage =
+    Float
+
+
 type Currency
     = USD
     | EUR
+    | AUD
+    | JPY
 
 
 type CustomerGrowth
@@ -42,16 +51,17 @@ type CustomerGrowth
 
 emptyRelative : CustomerGrowth
 emptyRelative =
-    Relative 10 0.1
+    Relative 10 0.2
 
 
 type alias Scenario =
     { months : Month
-    , churnRate : Float
-    , revenue : Int
+    , churnRate : Percentage
+    , revenue : Money
     , customerGrowth : CustomerGrowth
-    , revenueGrossMargin : Float
-    , cac : Int
+    , revenueGrossMargin : Percentage
+    , cac : Money
+    , fixedCost : Money
     }
 
 
@@ -63,6 +73,7 @@ newScenario =
     , customerGrowth = emptyRelative
     , revenueGrossMargin = 0.75
     , cac = 50
+    , fixedCost = 100
     }
 
 
@@ -85,29 +96,26 @@ currentScenario model =
         |> Maybe.withDefault newScenario
 
 
-updateGrowth : Scenario -> String -> Scenario
+updateGrowth : Scenario -> GrowthValue -> Scenario
 updateGrowth scenario value =
     let
         customerGrowth =
             case scenario.customerGrowth of
                 Relative start growth ->
-                    Relative start <| decodePercentage value
+                    Relative start value
     in
         { scenario
             | customerGrowth = customerGrowth
         }
 
 
-setStartValue : Scenario -> String -> Scenario
+setStartValue : Scenario -> StartValue -> Scenario
 setStartValue scenario value =
     let
-        value_ =
-            decodeInt value
-
         customerGrowth =
             case scenario.customerGrowth of
                 Relative _ growth ->
-                    Relative value_ growth
+                    Relative value growth
     in
         { scenario
             | customerGrowth = customerGrowth
