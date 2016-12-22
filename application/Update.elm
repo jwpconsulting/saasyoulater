@@ -74,10 +74,7 @@ update msg model =
             in
                 { model | scenarios = scenarios_ } ! []
 
-        SetCurrency currency ->
-            case currency of
-                "eur" ->
-                    { model | currency = Model.EUR } ! []
-
-                _ ->
-                    { model | currency = Model.USD } ! []
+        SetCurrency (Just currency) ->
+            { model | currency = currency } ! []
+        SetCurrency Nothing ->
+            model ! []

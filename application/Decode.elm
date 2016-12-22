@@ -1,6 +1,7 @@
 module Decode exposing (..)
 
 import Model exposing (Currency(..))
+import Msg exposing (..)
 
 
 decodeInt : String -> Int
@@ -28,20 +29,24 @@ decodePercentage string =
             0
 
 
-decodeCurrency : String -> Maybe Currency
+decodeCurrency : Maybe String -> Msg
 decodeCurrency string =
     case string of
-        "aud" ->
-            Just AUD
+        Just string ->
+            case string of
+                "aud" ->
+                    SetCurrency (Just AUD)
 
-        "eur" ->
-            Just EUR
+                "eur" ->
+                    SetCurrency (Just EUR)
 
-        "jpy" ->
-            Just JPY
+                "jpy" ->
+                    SetCurrency (Just JPY)
 
-        "usd" ->
-            Just USD
+                "usd" ->
+                    SetCurrency (Just USD)
 
-        _ ->
-            Nothing
+                _ ->
+                    SetCurrency Nothing
+        Nothing ->
+            SetCurrency Nothing

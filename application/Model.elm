@@ -7,6 +7,10 @@ type alias ScenarioID =
     Int
 
 
+defaultCurrency : Currency
+defaultCurrency = USD
+
+
 type alias Model =
     { scenarios : Dict.Dict ScenarioID Scenario
     , currentScenario : ScenarioID
@@ -45,6 +49,15 @@ type Currency
     | JPY
 
 
+currencies : List Currency
+currencies =
+    [ defaultCurrency
+    , EUR
+    , AUD
+    , JPY
+    ]
+
+
 type CustomerGrowth
     = Relative StartValue GrowthValue
 
@@ -81,7 +94,7 @@ init : Model
 init =
     { scenarios = Dict.fromList [ ( 1, newScenario ) ]
     , currentScenario = 1
-    , currency = USD
+    , currency = defaultCurrency
     }
 
 

@@ -17,3 +17,19 @@ localizeCurrency currency =
 
         JPY ->
             "¥"
+
+
+currencyName : Currency -> String
+currencyName currency =
+    case currency of
+        EUR ->
+            "EUR"
+
+        USD ->
+            "USD"
+
+        AUD ->
+            "AUD"
+
+        JPY ->
+            "JPY"

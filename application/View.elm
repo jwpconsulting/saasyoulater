@@ -9,6 +9,9 @@ import Math
 import Events exposing (onSelect)
 import Msg exposing (..)
 import Humanize exposing (..)
+import Localize exposing (localizeCurrency, currencyName)
+import Encode exposing (encodeCurrency)
+import Decode exposing (decodeCurrency)
 
 
 view : Model -> Html Msg
@@ -29,7 +32,7 @@ view model =
                     ++ [ newTab ]
             , div [ class "row" ]
                 [ div [ class "col-xs-6 col-md-3" ]
-                    (controls model.currentScenario scenario)
+                    (controls model model.currentScenario scenario)
                 , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
                     (results model.currency scenario)
                 , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
@@ -73,9 +76,23 @@ scenarioTab currentScenario id =
         ]
 
 
-controlLabel : String -> Html Msg
-controlLabel labelText =
-    label [ class "control-label col-xs-6" ] [ text labelText ]
+type LabelType = Percentage | Currency | Number
+
+controlLabel : Model -> LabelType -> String -> Html Msg
+controlLabel model labelType labelText =
+    let
+        suff =
+            case labelType of
+                Percentage ->
+                    " (%)"
+
+                Currency ->
+                    " (" ++ localizeCurrency model.currency ++ ")"
+
+                Number ->
+                    ""
+    in
+        label [ class "control-label col-xs-6" ] [ text <| labelText ++ suff]
 
 
 numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
@@ -94,12 +111,12 @@ numberInput numberValue message min max step =
         ]
 
 
-controls : ScenarioID -> Scenario -> List (Html Msg)
-controls id scenario =
+controls : Model -> ScenarioID -> Scenario -> List (Html Msg)
+controls model id scenario =
     [ div [ class "form-horizontal" ]
         [ h2 [] [ text "Parameters" ]
         , div [ class "form-group" ]
-            [ controlLabel "Months"
+            [ controlLabel model Number "Months"
             , numberInput scenario.months
                 (SetScenario SetMonths id)
                 1
@@ -107,7 +124,7 @@ controls id scenario =
                 1
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Churn Rate (%)"
+            [ controlLabel model Percentage "Churn Rate"
             , numberInput (Math.percentInt scenario.churnRate)
                 (SetScenario SetChurnRate id)
                 1
@@ -115,7 +132,7 @@ controls id scenario =
                 1
             ]
         , div [ class "form-group" ]
-            [ controlLabel <| "Customers at Start"
+            [ controlLabel model Number "Customers at Start"
             , numberInput
                 (case scenario.customerGrowth of
                     Model.Relative s _ ->
@@ -127,7 +144,7 @@ controls id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Customer Growth per Month (%)"
+            [ controlLabel model Percentage "Customer Growth per Month"
             , numberInput
                 (case scenario.customerGrowth of
                     Model.Relative _ g ->
@@ -139,7 +156,7 @@ controls id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Revenue per Customer per Month"
+            [ controlLabel model Currency "Revenue per Customer per Month"
             , numberInput scenario.revenue
                 (SetScenario SetRevenue id)
                 0
@@ -147,7 +164,7 @@ controls id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Customer Acquisition Cost"
+            [ controlLabel model Currency "Customer Acquisition Cost"
             , numberInput scenario.cac
                 (SetScenario SetCAC id)
                 0
@@ -155,7 +172,7 @@ controls id scenario =
                 5
             ]
         , div [ class "form-group" ]
-            [ controlLabel "Gross Margin (%)"
+            [ controlLabel model Percentage "Gross Margin"
             , numberInput (scenario.revenueGrossMargin * 100 |> round)
                 (SetScenario SetMargin id)
                 0
@@ -163,7 +180,7 @@ controls id scenario =
                 5
             ]
         , div [ class "form-group" ]
-            [ controlLabel <| "Fixed Cost (" ++ "$" ++ ")"
+            [ controlLabel model Currency "Fixed Cost "
             , numberInput (scenario.fixedCost)
                 (SetScenario SetFixedCost id)
                 0
@@ -265,6 +282,12 @@ numbers currency scenario =
             ]
         ]
 
+currencyOption : Currency -> Html Msg
+currencyOption currency =
+    option [ value <| encodeCurrency currency ]
+        [ text <|
+            currencyName currency ++ " (" ++ localizeCurrency currency ++ ")"
+        ]
 
 results : Currency -> Scenario -> List (Html Msg)
 results currency scenario =
@@ -310,15 +333,8 @@ results currency scenario =
                     [ div []
                         [ select
                             [ class "form-control"
-                            , onSelect
-                                (\s ->
-                                    (SetCurrency)
-                                        (Maybe.withDefault "" s)
-                                )
-                            ]
-                            [ option [ value "usd" ] [ text "USD ($)" ]
-                            , option [ value "eur" ] [ text "EUR (€)" ]
-                            ]
+                            , onSelect decodeCurrency
+                            ] <| (List.map currencyOption Model.currencies)
                         ]
                     ]
                 ]

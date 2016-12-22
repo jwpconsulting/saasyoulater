@@ -1,6 +1,6 @@
 module Msg exposing (..)
 
-import Model exposing (ScenarioID)
+import Model exposing (ScenarioID, Currency)
 
 
 type ScenarioMsg
@@ -18,4 +18,4 @@ type Msg
     = SetScenario ScenarioMsg ScenarioID String
     | ChooseScenario ScenarioID
     | NewScenario
-    | SetCurrency String
+    | SetCurrency (Maybe Currency)
