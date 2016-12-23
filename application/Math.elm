@@ -3,9 +3,14 @@ module Math exposing (..)
 import Model exposing (..)
 
 
-monthRange : Int -> List Int
+firstMonth : Month
+firstMonth =
+    1
+
+
+monthRange : Month -> List Month
 monthRange =
-    List.range 1
+    List.range firstMonth
 
 
 cohortMonth : Int -> Int -> Float
@@ -13,38 +18,55 @@ cohortMonth cohort month =
     month - cohort |> toFloat
 
 
-customers : CustomerGrowth -> ChurnRate -> Int -> Month
-customers customerGrowth churnRate month =
-    case customerGrowth of
-        Relative start growth ->
-            round (toFloat start * ((1 + (growth - churnRate)) ^ (toFloat <| month - 1)))
+type alias EffectiveGrowth =
+    Float
+
+
+effectiveGrowth : Scenario -> EffectiveGrowth
+effectiveGrowth scenario =
+    case scenario.customerGrowth of
+        Relative _ growth ->
+            (1 + (growth - scenario.churnRate))
+
+
+customers : Scenario -> Month -> Int
+customers scenario month =
+    case scenario.customerGrowth of
+        Relative start _ ->
+            round <|
+                toFloat start
+                    * ((effectiveGrowth scenario)
+                        ^ (toFloat <| month - 1)
+                      )
 
 
 revenue : Scenario -> Month -> Int
 revenue model month =
-    case model.customerGrowth of
-        Relative _ _ ->
-            (customers model.customerGrowth model.churnRate month) * (model.revenue)
+    (customers model month) * (model.revenue)
 
 
-revenueCost : Scenario -> Int -> Int
-revenueCost model month =
-    toFloat (revenue model month) * (1 - model.revenueGrossMargin) |> round
-
-
-grossMargin : Scenario -> Month -> Int
+grossMargin : Scenario -> Month -> Money
 grossMargin model month =
     round <| toFloat (revenue model month) * model.revenueGrossMargin
 
 
-expenses : Scenario -> Month -> Int
-expenses model month =
+customerGrowth : Scenario -> Month -> Int
+customerGrowth scenario month =
     let
         c =
-            customers model.customerGrowth model.churnRate
+            customers scenario
     in
-        (max 0 <| ((c month) - (c <| month - 1)) * model.cac)
-            + model.fixedCost
+        max 0 <| ((c month) - (c <| month - 1))
+
+
+customerAcquisitionCost : Scenario -> Month -> Money
+customerAcquisitionCost scenario month =
+    customerGrowth scenario month * scenario.cac
+
+
+expenses : Scenario -> Month -> Int
+expenses scenario month =
+    customerAcquisitionCost scenario month + scenario.fixedCost
 
 
 earnings : Scenario -> Month -> Int
