@@ -8847,24 +8847,21 @@ var _user$project$Math$months = function (months) {
 		months,
 		A2(_elm_lang$core$Basics$min, months, 12));
 };
-var _user$project$Math$customers = F3(
-	function (customerGrowth, churnRate, month) {
-		var _p1 = customerGrowth;
+var _user$project$Math$effectiveGrowth = function (scenario) {
+	var _p1 = scenario.customerGrowth;
+	return 1 + (_p1._1 - scenario.churnRate);
+};
+var _user$project$Math$customers = F2(
+	function (scenario, month) {
+		var _p2 = scenario.customerGrowth;
 		return _elm_lang$core$Basics$round(
-			_elm_lang$core$Basics$toFloat(_p1._0) * Math.pow(
-				1 + (_p1._1 - churnRate),
+			_elm_lang$core$Basics$toFloat(_p2._0) * Math.pow(
+				_user$project$Math$effectiveGrowth(scenario),
 				_elm_lang$core$Basics$toFloat(month - 1)));
 	});
 var _user$project$Math$revenue = F2(
 	function (model, month) {
-		var _p2 = model.customerGrowth;
-		return A3(_user$project$Math$customers, model.customerGrowth, model.churnRate, month) * model.revenue;
-	});
-var _user$project$Math$revenueCost = F2(
-	function (model, month) {
-		return _elm_lang$core$Basics$round(
-			_elm_lang$core$Basics$toFloat(
-				A2(_user$project$Math$revenue, model, month)) * (1 - model.revenueGrossMargin));
+		return A2(_user$project$Math$customers, model, month) * model.revenue;
 	});
 var _user$project$Math$grossMargin = F2(
 	function (model, month) {
@@ -8872,13 +8869,21 @@ var _user$project$Math$grossMargin = F2(
 			_elm_lang$core$Basics$toFloat(
 				A2(_user$project$Math$revenue, model, month)) * model.revenueGrossMargin);
 	});
-var _user$project$Math$expenses = F2(
-	function (model, month) {
-		var c = A2(_user$project$Math$customers, model.customerGrowth, model.churnRate);
+var _user$project$Math$customerGrowth = F2(
+	function (scenario, month) {
+		var c = _user$project$Math$customers(scenario);
 		return A2(
 			_elm_lang$core$Basics$max,
 			0,
-			(c(month) - c(month - 1)) * model.cac) + model.fixedCost;
+			c(month) - c(month - 1));
+	});
+var _user$project$Math$customerAcquisitionCost = F2(
+	function (scenario, month) {
+		return A2(_user$project$Math$customerGrowth, scenario, month) * scenario.cac;
+	});
+var _user$project$Math$expenses = F2(
+	function (scenario, month) {
+		return A2(_user$project$Math$customerAcquisitionCost, scenario, month) + scenario.fixedCost;
 	});
 var _user$project$Math$earnings = F2(
 	function (model, month) {
@@ -8950,7 +8955,8 @@ var _user$project$Math$cohortMonth = F2(
 	function (cohort, month) {
 		return _elm_lang$core$Basics$toFloat(month - cohort);
 	});
-var _user$project$Math$monthRange = _elm_lang$core$List$range(1);
+var _user$project$Math$firstMonth = 1;
+var _user$project$Math$monthRange = _elm_lang$core$List$range(_user$project$Math$firstMonth);
 var _user$project$Math$minimumCumulativeEarnings = function (model) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -9462,7 +9468,7 @@ var _user$project$View$numbers = F2(
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
 									_elm_lang$core$Basics$toString(
-										A3(_user$project$Math$customers, scenario.customerGrowth, scenario.churnRate, month))),
+										A2(_user$project$Math$customers, scenario, month))),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
