@@ -12,7 +12,7 @@ import Subscriptions
 main : Program Never Model.Model Msg.Msg
 main =
     Html.program
-        { init = ( Model.init, Cmd.batch [ Cmds.retrieveCurrency ] )
+        { init = ( Model.init, Cmds.startCmds )
         , update = Update.update
         , view = View.view
         , subscriptions = Subscriptions.subscriptions

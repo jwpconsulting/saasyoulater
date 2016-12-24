@@ -29,13 +29,21 @@ view model =
                 )
                     ++ [ newTab ]
             , div [ class "row" ]
-                [ div [ class "col-xs-6 col-md-3" ]
-                    (controls model model.currentScenario scenario)
-                , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
-                    (results model.currency scenario)
-                , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
-                    (numbers model.currency scenario)
-                ]
+                (case scenario of
+                    Nothing ->
+                        [ div [ class "col-xs-12" ]
+                            [ text "Loading scenarios" ]
+                        ]
+
+                    Just scenario ->
+                        [ div [ class "col-xs-6 col-md-3" ]
+                            (controls model model.currentScenario scenario)
+                        , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
+                            (results model.currency scenario)
+                        , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
+                            (numbers model.currency scenario)
+                        ]
+                )
             , hr [] []
             ]
                 ++ help
@@ -55,7 +63,7 @@ newTab =
         ]
 
 
-scenarioTab : ScenarioID -> ScenarioID -> Html Msg
+scenarioTab : Int -> Int -> Html Msg
 scenarioTab currentScenario id =
     li
         [ class <|
@@ -113,7 +121,7 @@ numberInput numberValue message min max step =
         ]
 
 
-controls : Model -> ScenarioID -> Scenario -> List (Html Msg)
+controls : Model -> Int -> Scenario -> List (Html Msg)
 controls model id scenario =
     [ div [ class "form-horizontal" ]
         [ h2 [] [ text "Parameters" ]

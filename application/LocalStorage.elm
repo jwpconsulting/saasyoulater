@@ -1,5 +1,7 @@
 port module LocalStorage exposing (..)
 
+import Json.Encode
+
 
 port get : String -> Cmd msg
 
