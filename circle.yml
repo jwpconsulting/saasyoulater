@@ -19,10 +19,3 @@ compile:
 test:
   override:
     - $HOME/sysconfcpus/bin/sysconfcpus elm-test
-
-deployment:
-  production:
-    branch: master
-    commands:
-      - make all
-      - make deploy
