@@ -18,7 +18,7 @@ defaultCurrency =
 
 type alias Model =
     { scenarios : Scenarios
-    , currentScenario : ScenarioID
+    , currentScenario : Maybe ScenarioID
     , currency : Currency
     }
 
@@ -103,7 +103,7 @@ newScenarios =
 init : Model
 init =
     { scenarios = Dict.empty
-    , currentScenario = 1
+    , currentScenario = Just 1
     , currency = defaultCurrency
     }
 
@@ -113,9 +113,19 @@ maxMonths =
     100
 
 
-currentScenario : Model -> Maybe Scenario
+currentScenario : Model -> Maybe ( ScenarioID, Scenario )
 currentScenario model =
-    Dict.get model.currentScenario model.scenarios
+    case model.currentScenario of
+        Nothing ->
+            Nothing
+
+        Just id ->
+            case Dict.get id model.scenarios of
+                Just scenario ->
+                    Just ( id, scenario )
+
+                _ ->
+                    Nothing
 
 
 updateGrowth : Scenario -> GrowthValue -> Scenario
@@ -147,3 +157,20 @@ setStartValue scenario value =
 currencyKey : String
 currencyKey =
     "currency"
+
+
+firstScenarioID : Scenarios -> Maybe ScenarioID
+firstScenarioID scenarios =
+    List.minimum <| Dict.keys scenarios
+
+
+lowestFreeId : Scenarios -> ScenarioID
+lowestFreeId scenarios =
+    let
+        findFree x =
+            if Dict.member x scenarios then
+                findFree <| x + 1
+            else
+                x
+    in
+        findFree 1

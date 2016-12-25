@@ -20,3 +20,4 @@ type Msg
     | NewScenario
     | SetCurrency String
     | LocalStorageReceive ( String, Maybe String )
+    | DeleteScenario ScenarioID

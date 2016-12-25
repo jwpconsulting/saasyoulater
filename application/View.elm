@@ -35,11 +35,12 @@ view model =
                             [ text "Loading scenarios" ]
                         ]
 
-                    Just scenario ->
+                    Just ( id, scenario ) ->
                         [ div [ class "col-xs-6 col-md-3" ]
-                            (controls model model.currentScenario scenario)
-                        , div [ class "col-xs-6 col-md-2 col-md-push-7" ]
+                            (controls model id scenario)
+                        , div [ class "col-xs-6 col-md-2 col-md-push-7" ] <|
                             (results model.currency scenario)
+                                ++ options model
                         , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
                             (numbers model.currency scenario)
                         ]
@@ -63,23 +64,32 @@ newTab =
         ]
 
 
-scenarioTab : Int -> Int -> Html Msg
+scenarioTab : Maybe ScenarioID -> ScenarioID -> Html Msg
 scenarioTab currentScenario id =
-    li
-        [ class <|
-            if currentScenario == id then
-                "active"
-            else
-                ""
-        ]
-        [ a
-            [ href "#"
-            , onClick (ChooseScenario id)
+    let
+        current =
+            case currentScenario of
+                Nothing ->
+                    False
+
+                Just current ->
+                    current == id
+    in
+        li
+            [ class <|
+                if current then
+                    "active"
+                else
+                    ""
             ]
-            [ text "Scenario "
-            , text <| toString id
+            [ a
+                [ href "#"
+                , onClick (ChooseScenario id)
+                ]
+                [ text "Scenario "
+                , text <| toString id
+                ]
             ]
-        ]
 
 
 type LabelType
@@ -299,6 +309,36 @@ numbers currency scenario =
         ]
 
 
+options : Model -> List (Html Msg)
+options model =
+    [ h3 [] [ text "Options" ]
+    , div [ class "form-group" ]
+        [ label [] [ text "Currency" ]
+        , div []
+            [ select
+                [ class "form-control"
+                , onInput SetCurrency
+                ]
+              <|
+                (List.map (currencyOption model.currency)
+                    Model.currencies
+                )
+            ]
+        ]
+    , Maybe.withDefault (span [] []) <|
+        Maybe.map
+            (\s ->
+                a
+                    [ href "#"
+                    , onClick (DeleteScenario s)
+                    , class "btn btn-danger btn-block"
+                    ]
+                    [ text "Delete Scenario" ]
+            )
+            model.currentScenario
+    ]
+
+
 currencyOption : Currency -> Currency -> Html Msg
 currencyOption currentCurrency currency =
     option
@@ -351,21 +391,6 @@ results currency scenario =
             , dd [] ltvcac
             , dt [] [ text "Minimum Cumulative EBIT" ]
             , dd [] minimumCumulativeEarnings
-            , dt [] [ text "Show results in" ]
-            , dd []
-                [ div [ class "form-group" ]
-                    [ div []
-                        [ select
-                            [ class "form-control"
-                            , onInput SetCurrency
-                            ]
-                          <|
-                            (List.map (currencyOption currency)
-                                Model.currencies
-                            )
-                        ]
-                    ]
-                ]
             ]
         ]
 

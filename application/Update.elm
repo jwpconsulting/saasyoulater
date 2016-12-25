@@ -1,157 +1,180 @@
 module Update exposing (update)
 
-import Model exposing (Model, maxMonths, newScenario, currentScenario)
+import Model exposing (Model, maxMonths, newScenario, currentScenario, ScenarioID)
 import Msg exposing (..)
 import Dict
 import Decode exposing (..)
-import Encode exposing (..)
-import LocalStorage
 import Json.Decode
-import Json.Encode
+import Cmds exposing (..)
+
+
+localStorage : Model -> ( String, Maybe String ) -> ( Model, Cmd Msg )
+localStorage model ( key, value ) =
+    case key of
+        "currency" ->
+            case value of
+                Just value ->
+                    { model
+                        | currency = decodeCurrency value
+                    }
+                        ! []
+
+                Nothing ->
+                    model ! [ storeCurrency model.currency ]
+
+        "scenarios" ->
+            case Debug.log "scenarios" value of
+                Nothing ->
+                    let
+                        model_ =
+                            { model | scenarios = Model.newScenarios }
+                    in
+                        { model_
+                            | currentScenario = Model.firstScenarioID model_.scenarios
+                        }
+                            ! [ storeScenarios model_
+                              ]
+
+                Just scenarios ->
+                    case decodeScenarios <| Json.Decode.decodeString Decode.scenarios scenarios of
+                        Ok scenarios ->
+                            let
+                                model_ =
+                                    if scenarios == Dict.empty then
+                                        { model | scenarios = Model.newScenarios }
+                                    else
+                                        { model | scenarios = scenarios }
+                            in
+                                { model_
+                                    | currentScenario = Model.firstScenarioID model_.scenarios
+                                }
+                                    ! []
+
+                        Err _ ->
+                            let
+                                model_ =
+                                    { model | scenarios = Model.newScenarios }
+                            in
+                                { model_
+                                    | currentScenario = Model.firstScenarioID model_.scenarios
+                                }
+                                    ! [ storeScenarios model_ ]
+
+        key ->
+            case Debug.log "unknown key" key of
+                _ ->
+                    model ! []
+
+
+setScenario : Model -> ScenarioMsg -> ScenarioID -> String -> ( Model, Cmd Msg )
+setScenario model msg scenarioID value =
+    let
+        setScenario scenario msg value =
+            case msg of
+                SetMonths ->
+                    { scenario
+                        | months = decodeIntWithMaximum value maxMonths
+                    }
+
+                SetChurnRate ->
+                    { scenario
+                        | churnRate = decodePercentage value
+                    }
+
+                SetCustomerGrowth ->
+                    Model.updateGrowth scenario <| decodePercentage value
+
+                SetRevenue ->
+                    { scenario
+                        | revenue = decodeInt value
+                    }
+
+                SetCAC ->
+                    { scenario
+                        | cac = decodeInt value
+                    }
+
+                SetMargin ->
+                    { scenario
+                        | revenueGrossMargin = decodePercentage value
+                    }
+
+                SetCustomerStart ->
+                    Model.setStartValue scenario <| decodeInt value
+
+                SetFixedCost ->
+                    { scenario
+                        | fixedCost = decodeInt value
+                    }
+    in
+        case Dict.get scenarioID model.scenarios of
+            Nothing ->
+                model ! []
+
+            Just scenario ->
+                let
+                    scenarios =
+                        Dict.insert scenarioID
+                            (setScenario scenario msg value)
+                            model.scenarios
+
+                    model_ =
+                        { model | scenarios = scenarios }
+                in
+                    model_ ! [ storeScenarios model_ ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetScenario msg scenarioID value ->
-            case currentScenario model of
-                Nothing ->
-                    model ! []
-
-                Just scenario ->
-                    let
-                        model_ =
-                            { model
-                                | scenarios =
-                                    Dict.insert scenarioID
-                                        (case msg of
-                                            SetMonths ->
-                                                { scenario
-                                                    | months = decodeIntWithMaximum value maxMonths
-                                                }
-
-                                            SetChurnRate ->
-                                                { scenario
-                                                    | churnRate = decodePercentage value
-                                                }
-
-                                            SetCustomerGrowth ->
-                                                Model.updateGrowth scenario <| decodePercentage value
-
-                                            SetRevenue ->
-                                                { scenario
-                                                    | revenue = decodeInt value
-                                                }
-
-                                            SetCAC ->
-                                                { scenario
-                                                    | cac = decodeInt value
-                                                }
-
-                                            SetMargin ->
-                                                { scenario
-                                                    | revenueGrossMargin = decodePercentage value
-                                                }
-
-                                            SetCustomerStart ->
-                                                Model.setStartValue scenario <| decodeInt value
-
-                                            SetFixedCost ->
-                                                { scenario
-                                                    | fixedCost = decodeInt value
-                                                }
-                                        )
-                                        model.scenarios
-                            }
-                    in
-                        model_
-                            ! [ LocalStorage.set
-                                    ( "scenarios"
-                                    , Json.Encode.encode 0 <|
-                                        encodeScenarios model_.scenarios
-                                    )
-                              ]
+            setScenario model msg scenarioID value
 
         ChooseScenario id ->
-            { model | currentScenario = id } ! []
+            if Dict.member id model.scenarios then
+                { model | currentScenario = Just id } ! []
+            else
+                model ! []
 
         NewScenario ->
             let
                 highest =
-                    (Dict.keys model.scenarios
-                        |> List.maximum
-                        |> Maybe.withDefault 0
-                    )
-                        + 1
+                    Model.lowestFreeId model.scenarios
 
                 scenarios_ =
                     Dict.insert highest Model.newScenario model.scenarios
 
                 model_ =
-                    { model | scenarios = scenarios_ }
+                    { model
+                        | scenarios = scenarios_
+                        , currentScenario = Just highest
+                    }
             in
                 model_
-                    ! [ LocalStorage.set
-                            ( "scenarios"
-                            , Json.Encode.encode 0 <|
-                                encodeScenarios model_.scenarios
-                            )
-                      ]
+                    ! [ storeScenarios model_ ]
 
         SetCurrency value ->
-            { model | currency = decodeCurrency value }
-                ! [ LocalStorage.set
-                        ( Model.currencyKey
-                        , Json.Encode.encode 0 <| encodeCurrencyJson <| decodeCurrency value
-                        )
-                  ]
+            let
+                currency =
+                    decodeCurrency value
+            in
+                { model | currency = currency } ! [ storeCurrency currency ]
 
-        LocalStorageReceive ( key, value ) ->
-            case key of
-                "currency" ->
-                    case value of
-                        Just value ->
-                            { model
-                                | currency = decodeCurrency value
-                            }
-                                ! []
+        LocalStorageReceive kv ->
+            localStorage model kv
 
-                        Nothing ->
-                            model
-                                ! [ LocalStorage.set
-                                        ( Model.currencyKey
-                                        , Json.Encode.encode 0 <| encodeCurrencyJson model.currency
-                                        )
-                                  ]
+        DeleteScenario id ->
+            let
+                scenarios =
+                    Dict.remove id model.scenarios
 
-                "scenarios" ->
-                    case Debug.log "scenarios" value of
-                        Nothing ->
-                            let
-                                model_ =
-                                    { model | scenarios = Model.newScenarios }
-                            in
-                                model_
-                                    ! [ LocalStorage.set
-                                            ( "scenarios"
-                                            , Json.Encode.encode 0 <| encodeScenarios model_.scenarios
-                                            )
-                                      ]
+                currentScenario =
+                    Model.firstScenarioID scenarios
 
-                        Just scenarios ->
-                            case Debug.log "decode" <| decodeScenarios <| Json.Decode.decodeString Decode.scenarios scenarios of
-                                Ok scenarios ->
-                                    { model | scenarios = scenarios } ! []
-
-                                Err _ ->
-                                    { model | scenarios = Model.newScenarios }
-                                        ! [ LocalStorage.set
-                                                ( "scenarios"
-                                                , Json.Encode.encode 0 <| encodeScenarios Model.newScenarios
-                                                )
-                                          ]
-
-                key ->
-                    case Debug.log "unknown key" key of
-                        _ ->
-                            model ! []
+                model_ =
+                    { model
+                        | scenarios = scenarios
+                        , currentScenario = currentScenario
+                    }
+            in
+                model_ ! [ storeScenarios model_ ]
