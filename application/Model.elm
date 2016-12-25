@@ -7,13 +7,17 @@ type alias ScenarioID =
     Int
 
 
+type alias Scenarios =
+    Dict.Dict ScenarioID Scenario
+
+
 defaultCurrency : Currency
 defaultCurrency =
     USD
 
 
 type alias Model =
-    { scenarios : Dict.Dict ScenarioID Scenario
+    { scenarios : Scenarios
     , currentScenario : ScenarioID
     , currency : Currency
     }
@@ -91,9 +95,14 @@ newScenario =
     }
 
 
+newScenarios : Scenarios
+newScenarios =
+    Dict.fromList [ ( 1, newScenario ) ]
+
+
 init : Model
 init =
-    { scenarios = Dict.fromList [ ( 1, newScenario ) ]
+    { scenarios = Dict.empty
     , currentScenario = 1
     , currency = defaultCurrency
     }
@@ -104,10 +113,9 @@ maxMonths =
     100
 
 
-currentScenario : Model -> Scenario
+currentScenario : Model -> Maybe Scenario
 currentScenario model =
     Dict.get model.currentScenario model.scenarios
-        |> Maybe.withDefault newScenario
 
 
 updateGrowth : Scenario -> GrowthValue -> Scenario

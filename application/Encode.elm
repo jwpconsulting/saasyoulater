@@ -2,6 +2,7 @@ module Encode exposing (..)
 
 import Model exposing (..)
 import Json.Encode exposing (..)
+import Dict
 
 
 encodeCurrency : Currency -> String
@@ -18,6 +19,16 @@ encodeCurrency currency =
 
         JPY ->
             "jpy"
+
+
+encodeCurrencyJson : Currency -> Value
+encodeCurrencyJson =
+    encodeCurrency >> string
+
+
+encodeScenarios : Scenarios -> Value
+encodeScenarios scenarios =
+    object <| List.map (\( k, v ) -> ( toString k, encodeScenario v )) <| Dict.toList scenarios
 
 
 encodeScenario : Scenario -> Value
