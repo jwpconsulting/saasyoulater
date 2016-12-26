@@ -8276,6 +8276,36 @@ var _user$project$Model$firstScenarioID = function (scenarios) {
 		_elm_lang$core$Dict$keys(scenarios));
 };
 var _user$project$Model$currencyKey = 'currency';
+var _user$project$Model$setChurn = F2(
+	function (scenario, churnRate) {
+		var customerGrowth = scenario.customerGrowth;
+		var customerGrowth_ = _elm_lang$core$Native_Utils.update(
+			customerGrowth,
+			{churnRate: churnRate});
+		return _elm_lang$core$Native_Utils.update(
+			scenario,
+			{customerGrowth: customerGrowth_});
+	});
+var _user$project$Model$setStartValue = F2(
+	function (scenario, value) {
+		var customerGrowth = scenario.customerGrowth;
+		var customerGrowth_ = _elm_lang$core$Native_Utils.update(
+			customerGrowth,
+			{startValue: value});
+		return _elm_lang$core$Native_Utils.update(
+			scenario,
+			{customerGrowth: customerGrowth_});
+	});
+var _user$project$Model$updateGrowth = F2(
+	function (scenario, growth) {
+		var customerGrowth = scenario.customerGrowth;
+		var customerGrowth_ = _elm_lang$core$Native_Utils.update(
+			customerGrowth,
+			{growthRate: growth});
+		return _elm_lang$core$Native_Utils.update(
+			scenario,
+			{customerGrowth: customerGrowth_});
+	});
 var _user$project$Model$currentScenario = function (model) {
 	var _p0 = model.currentScenario;
 	if (_p0.ctor === 'Nothing') {
@@ -8292,13 +8322,25 @@ var _user$project$Model$currentScenario = function (model) {
 	}
 };
 var _user$project$Model$maxMonths = 100;
+var _user$project$Model$emptyRelative = {startValue: 10, growthRate: 0.4, churnRate: 3.0e-2};
+var _user$project$Model$newScenario = {months: 24, revenue: 30, customerGrowth: _user$project$Model$emptyRelative, revenueGrossMargin: 0.5, cac: 45, fixedCost: 100, name: _elm_lang$core$Maybe$Nothing, comment: _elm_lang$core$Maybe$Nothing};
+var _user$project$Model$newScenarios = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 1, _1: _user$project$Model$newScenario},
+		_1: {ctor: '[]'}
+	});
 var _user$project$Model$Model = F3(
 	function (a, b, c) {
 		return {scenarios: a, currentScenario: b, currency: c};
 	});
-var _user$project$Model$Scenario = F7(
-	function (a, b, c, d, e, f, g) {
-		return {months: a, churnRate: b, revenue: c, customerGrowth: d, revenueGrossMargin: e, cac: f, fixedCost: g};
+var _user$project$Model$CustomerGrowth = F3(
+	function (a, b, c) {
+		return {startValue: a, growthRate: b, churnRate: c};
+	});
+var _user$project$Model$Scenario = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {months: a, revenue: b, customerGrowth: c, revenueGrossMargin: d, cac: e, fixedCost: f, name: g, comment: h};
 	});
 var _user$project$Model$JPY = {ctor: 'JPY'};
 var _user$project$Model$AUD = {ctor: 'AUD'};
@@ -8327,59 +8369,40 @@ var _user$project$Model$init = {
 	currentScenario: _elm_lang$core$Maybe$Just(1),
 	currency: _user$project$Model$defaultCurrency
 };
-var _user$project$Model$Relative = F2(
-	function (a, b) {
-		return {ctor: 'Relative', _0: a, _1: b};
-	});
-var _user$project$Model$emptyRelative = A2(_user$project$Model$Relative, 10, 0.2);
-var _user$project$Model$newScenario = {months: 24, churnRate: 3.0e-2, revenue: 30, customerGrowth: _user$project$Model$emptyRelative, revenueGrossMargin: 0.75, cac: 50, fixedCost: 100};
-var _user$project$Model$newScenarios = _elm_lang$core$Dict$fromList(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 1, _1: _user$project$Model$newScenario},
-		_1: {ctor: '[]'}
-	});
-var _user$project$Model$updateGrowth = F2(
-	function (scenario, value) {
-		var customerGrowth = function () {
-			var _p3 = scenario.customerGrowth;
-			return A2(_user$project$Model$Relative, _p3._0, value);
-		}();
-		return _elm_lang$core$Native_Utils.update(
-			scenario,
-			{customerGrowth: customerGrowth});
-	});
-var _user$project$Model$setStartValue = F2(
-	function (scenario, value) {
-		var customerGrowth = function () {
-			var _p4 = scenario.customerGrowth;
-			return A2(_user$project$Model$Relative, value, _p4._1);
-		}();
-		return _elm_lang$core$Native_Utils.update(
-			scenario,
-			{customerGrowth: customerGrowth});
-	});
 
 var _user$project$Encode$encodeCustomerGrowth = function (customerGrowth) {
-	var _p0 = customerGrowth;
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
 			_0: {
 				ctor: '_Tuple2',
 				_0: 'start',
-				_1: _elm_lang$core$Json_Encode$int(_p0._0)
+				_1: _elm_lang$core$Json_Encode$int(customerGrowth.startValue)
 			},
 			_1: {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
 					_0: 'growth',
-					_1: _elm_lang$core$Json_Encode$float(_p0._1)
+					_1: _elm_lang$core$Json_Encode$float(customerGrowth.growthRate)
 				},
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'churn',
+						_1: _elm_lang$core$Json_Encode$float(customerGrowth.churnRate)
+					},
+					_1: {ctor: '[]'}
+				}
 			}
 		});
+};
+var _user$project$Encode$nullableString = function (_p0) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_elm_lang$core$Json_Encode$null,
+		A2(_elm_lang$core$Maybe$map, _elm_lang$core$Json_Encode$string, _p0));
 };
 var _user$project$Encode$encodeScenario = function (scenario) {
 	return _elm_lang$core$Json_Encode$object(
@@ -8394,45 +8417,53 @@ var _user$project$Encode$encodeScenario = function (scenario) {
 				ctor: '::',
 				_0: {
 					ctor: '_Tuple2',
-					_0: 'churnRate',
-					_1: _elm_lang$core$Json_Encode$float(scenario.churnRate)
+					_0: 'revenue',
+					_1: _elm_lang$core$Json_Encode$int(scenario.revenue)
 				},
 				_1: {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'revenue',
-						_1: _elm_lang$core$Json_Encode$int(scenario.revenue)
+						_0: 'customerGrowth',
+						_1: _user$project$Encode$encodeCustomerGrowth(scenario.customerGrowth)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'customerGrowth',
-							_1: _user$project$Encode$encodeCustomerGrowth(scenario.customerGrowth)
+							_0: 'revenueGrossMargin',
+							_1: _elm_lang$core$Json_Encode$float(scenario.revenueGrossMargin)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'revenueGrossMargin',
-								_1: _elm_lang$core$Json_Encode$float(scenario.revenueGrossMargin)
+								_0: 'cac',
+								_1: _elm_lang$core$Json_Encode$int(scenario.cac)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'cac',
-									_1: _elm_lang$core$Json_Encode$int(scenario.cac)
+									_0: 'fixedCost',
+									_1: _elm_lang$core$Json_Encode$int(scenario.fixedCost)
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'fixedCost',
-										_1: _elm_lang$core$Json_Encode$int(scenario.fixedCost)
+										_0: 'comment',
+										_1: _user$project$Encode$nullableString(scenario.comment)
 									},
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'name',
+											_1: _user$project$Encode$nullableString(scenario.name)
+										},
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}
@@ -8510,6 +8541,8 @@ var _user$project$LocalStorage$set = _elm_lang$core$Native_Platform.outgoingPort
 		return [v._0, v._1];
 	});
 
+var _user$project$Msg$SetComment = {ctor: 'SetComment'};
+var _user$project$Msg$SetName = {ctor: 'SetName'};
 var _user$project$Msg$SetFixedCost = {ctor: 'SetFixedCost'};
 var _user$project$Msg$SetCustomerStart = {ctor: 'SetCustomerStart'};
 var _user$project$Msg$SetMargin = {ctor: 'SetMargin'};
@@ -8614,21 +8647,29 @@ var _user$project$Decode$decodeScenarios = function (result) {
 		return _elm_lang$core$Result$Err(_p0._0);
 	}
 };
-var _user$project$Decode$customerGrowth = A3(
-	_elm_lang$core$Json_Decode$map2,
-	_user$project$Model$Relative,
+var _user$project$Decode$customerGrowth = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$Model$CustomerGrowth,
 	A2(_elm_lang$core$Json_Decode$field, 'start', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode$field, 'growth', _elm_lang$core$Json_Decode$float));
-var _user$project$Decode$scenario = A8(
-	_elm_lang$core$Json_Decode$map7,
+	A2(_elm_lang$core$Json_Decode$field, 'growth', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'churn', _elm_lang$core$Json_Decode$float));
+var _user$project$Decode$scenario = A9(
+	_elm_lang$core$Json_Decode$map8,
 	_user$project$Model$Scenario,
 	A2(_elm_lang$core$Json_Decode$field, 'months', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode$field, 'churnRate', _elm_lang$core$Json_Decode$float),
 	A2(_elm_lang$core$Json_Decode$field, 'revenue', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'customerGrowth', _user$project$Decode$customerGrowth),
 	A2(_elm_lang$core$Json_Decode$field, 'revenueGrossMargin', _elm_lang$core$Json_Decode$float),
 	A2(_elm_lang$core$Json_Decode$field, 'cac', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode$field, 'fixedCost', _elm_lang$core$Json_Decode$int));
+	A2(_elm_lang$core$Json_Decode$field, 'fixedCost', _elm_lang$core$Json_Decode$int),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'name',
+		_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$string)),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'comment',
+		_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$string)));
 var _user$project$Decode$scenarios = _elm_lang$core$Json_Decode$dict(_user$project$Decode$scenario);
 var _user$project$Decode$decodeCurrency = function (string) {
 	var _p10 = string;
@@ -8801,100 +8842,21 @@ var _user$project$Humanize$humanize = function (month) {
 	}
 };
 
-var _user$project$Update$setScenario = F4(
-	function (model, msg, scenarioID, value) {
-		var setScenario = F3(
-			function (scenario, msg, value) {
-				var _p0 = msg;
-				switch (_p0.ctor) {
-					case 'SetMonths':
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								months: A2(_user$project$Decode$decodeIntWithMaximum, value, _user$project$Model$maxMonths)
-							});
-					case 'SetChurnRate':
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								churnRate: _user$project$Decode$decodePercentage(value)
-							});
-					case 'SetCustomerGrowth':
-						return A2(
-							_user$project$Model$updateGrowth,
-							scenario,
-							_user$project$Decode$decodePercentage(value));
-					case 'SetRevenue':
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								revenue: _user$project$Decode$decodeInt(value)
-							});
-					case 'SetCAC':
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								cac: _user$project$Decode$decodeInt(value)
-							});
-					case 'SetMargin':
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								revenueGrossMargin: _user$project$Decode$decodePercentage(value)
-							});
-					case 'SetCustomerStart':
-						return A2(
-							_user$project$Model$setStartValue,
-							scenario,
-							_user$project$Decode$decodeInt(value));
-					default:
-						return _elm_lang$core$Native_Utils.update(
-							scenario,
-							{
-								fixedCost: _user$project$Decode$decodeInt(value)
-							});
-				}
-			});
-		var _p1 = A2(_elm_lang$core$Dict$get, scenarioID, model.scenarios);
-		if (_p1.ctor === 'Nothing') {
-			return A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				model,
-				{ctor: '[]'});
-		} else {
-			var scenarios = A3(
-				_elm_lang$core$Dict$insert,
-				scenarioID,
-				A3(setScenario, _p1._0, msg, value),
-				model.scenarios);
-			var model_ = _elm_lang$core$Native_Utils.update(
-				model,
-				{scenarios: scenarios});
-			return A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				model_,
-				{
-					ctor: '::',
-					_0: _user$project$Cmds$storeScenarios(model_),
-					_1: {ctor: '[]'}
-				});
-		}
-	});
 var _user$project$Update$localStorage = F2(
-	function (model, _p2) {
-		var _p3 = _p2;
-		var _p10 = _p3._1;
-		var _p4 = _p3._0;
-		switch (_p4) {
+	function (model, _p0) {
+		var _p1 = _p0;
+		var _p7 = _p1._1;
+		var _p2 = _p1._0;
+		switch (_p2) {
 			case 'currency':
-				var _p5 = _p10;
-				if (_p5.ctor === 'Just') {
+				var _p3 = _p7;
+				if (_p3.ctor === 'Just') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								currency: _user$project$Decode$decodeCurrency(_p5._0)
+								currency: _user$project$Decode$decodeCurrency(_p3._0)
 							}),
 						{ctor: '[]'});
 				} else {
@@ -8908,8 +8870,8 @@ var _user$project$Update$localStorage = F2(
 						});
 				}
 			case 'scenarios':
-				var _p6 = A2(_elm_lang$core$Debug$log, 'scenarios', _p10);
-				if (_p6.ctor === 'Nothing') {
+				var _p4 = _p7;
+				if (_p4.ctor === 'Nothing') {
 					var model_ = _elm_lang$core$Native_Utils.update(
 						model,
 						{scenarios: _user$project$Model$newScenarios});
@@ -8926,15 +8888,15 @@ var _user$project$Update$localStorage = F2(
 							_1: {ctor: '[]'}
 						});
 				} else {
-					var _p7 = _user$project$Decode$decodeScenarios(
-						A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Decode$scenarios, _p6._0));
-					if (_p7.ctor === 'Ok') {
-						var _p8 = _p7._0;
-						var model_ = _elm_lang$core$Native_Utils.eq(_p8, _elm_lang$core$Dict$empty) ? _elm_lang$core$Native_Utils.update(
+					var _p5 = _user$project$Decode$decodeScenarios(
+						A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Decode$scenarios, _p4._0));
+					if (_p5.ctor === 'Ok') {
+						var _p6 = _p5._0;
+						var model_ = _elm_lang$core$Native_Utils.eq(_p6, _elm_lang$core$Dict$empty) ? _elm_lang$core$Native_Utils.update(
 							model,
 							{scenarios: _user$project$Model$newScenarios}) : _elm_lang$core$Native_Utils.update(
 							model,
-							{scenarios: _p8});
+							{scenarios: _p6});
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -8962,27 +8924,119 @@ var _user$project$Update$localStorage = F2(
 					}
 				}
 			default:
-				var _p9 = A2(_elm_lang$core$Debug$log, 'unknown key', _p4);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
 					{ctor: '[]'});
 		}
 	});
+var _user$project$Update$maybeString = function (string) {
+	return _elm_lang$core$Native_Utils.eq(string, '') ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(string);
+};
+var _user$project$Update$setScenario = F4(
+	function (model, msg, scenarioID, value) {
+		var setScenario = F3(
+			function (scenario, msg, value) {
+				var _p8 = msg;
+				switch (_p8.ctor) {
+					case 'SetMonths':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								months: A2(_user$project$Decode$decodeIntWithMaximum, value, _user$project$Model$maxMonths)
+							});
+					case 'SetCustomerStart':
+						return A2(
+							_user$project$Model$setStartValue,
+							scenario,
+							_user$project$Decode$decodeInt(value));
+					case 'SetChurnRate':
+						return A2(
+							_user$project$Model$setChurn,
+							scenario,
+							_user$project$Decode$decodePercentage(value));
+					case 'SetCustomerGrowth':
+						return A2(
+							_user$project$Model$updateGrowth,
+							scenario,
+							_user$project$Decode$decodePercentage(value));
+					case 'SetRevenue':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								revenue: _user$project$Decode$decodeInt(value)
+							});
+					case 'SetCAC':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								cac: _user$project$Decode$decodeInt(value)
+							});
+					case 'SetMargin':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								revenueGrossMargin: _user$project$Decode$decodePercentage(value)
+							});
+					case 'SetFixedCost':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								fixedCost: _user$project$Decode$decodeInt(value)
+							});
+					case 'SetName':
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								name: _user$project$Update$maybeString(value)
+							});
+					default:
+						return _elm_lang$core$Native_Utils.update(
+							scenario,
+							{
+								comment: _user$project$Update$maybeString(value)
+							});
+				}
+			});
+		var _p9 = A2(_elm_lang$core$Dict$get, scenarioID, model.scenarios);
+		if (_p9.ctor === 'Nothing') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model,
+				{ctor: '[]'});
+		} else {
+			var scenarios = A3(
+				_elm_lang$core$Dict$insert,
+				scenarioID,
+				A3(setScenario, _p9._0, msg, value),
+				model.scenarios);
+			var model_ = _elm_lang$core$Native_Utils.update(
+				model,
+				{scenarios: scenarios});
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model_,
+				{
+					ctor: '::',
+					_0: _user$project$Cmds$storeScenarios(model_),
+					_1: {ctor: '[]'}
+				});
+		}
+	});
 var _user$project$Update$update = F2(
 	function (msg, model) {
-		var _p11 = msg;
-		switch (_p11.ctor) {
+		var _p10 = msg;
+		switch (_p10.ctor) {
 			case 'SetScenario':
-				return A4(_user$project$Update$setScenario, model, _p11._0, _p11._1, _p11._2);
+				return A4(_user$project$Update$setScenario, model, _p10._0, _p10._1, _p10._2);
 			case 'ChooseScenario':
-				var _p12 = _p11._0;
-				return A2(_elm_lang$core$Dict$member, _p12, model.scenarios) ? A2(
+				var _p11 = _p10._0;
+				return A2(_elm_lang$core$Dict$member, _p11, model.scenarios) ? A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{
-							currentScenario: _elm_lang$core$Maybe$Just(_p12)
+							currentScenario: _elm_lang$core$Maybe$Just(_p11)
 						}),
 					{ctor: '[]'}) : A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -9006,7 +9060,7 @@ var _user$project$Update$update = F2(
 						_1: {ctor: '[]'}
 					});
 			case 'SetCurrency':
-				var currency = _user$project$Decode$decodeCurrency(_p11._0);
+				var currency = _user$project$Decode$decodeCurrency(_p10._0);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -9018,9 +9072,9 @@ var _user$project$Update$update = F2(
 						_1: {ctor: '[]'}
 					});
 			case 'LocalStorageReceive':
-				return A2(_user$project$Update$localStorage, model, _p11._0);
+				return A2(_user$project$Update$localStorage, model, _p10._0);
 			default:
-				var scenarios = A2(_elm_lang$core$Dict$remove, _p11._0, model.scenarios);
+				var scenarios = A2(_elm_lang$core$Dict$remove, _p10._0, model.scenarios);
 				var currentScenario = _user$project$Model$firstScenarioID(scenarios);
 				var model_ = _elm_lang$core$Native_Utils.update(
 					model,
@@ -9040,7 +9094,7 @@ var _user$project$Math$percentInt = function (percent) {
 	return _elm_lang$core$Basics$round(percent * 100);
 };
 var _user$project$Math$averageLife = function (model) {
-	return _elm_lang$core$Basics$round(1 / model.churnRate);
+	return _elm_lang$core$Basics$round(1 / model.customerGrowth.churnRate);
 };
 var _user$project$Math$cltv = function (model) {
 	return _user$project$Math$averageLife(model) * model.revenue;
@@ -9081,21 +9135,19 @@ var _user$project$Math$months = function (months) {
 		months,
 		A2(_elm_lang$core$Basics$min, months, 12));
 };
-var _user$project$Math$effectiveGrowth = function (scenario) {
-	var _p1 = scenario.customerGrowth;
-	return 1 + (_p1._1 - scenario.churnRate);
+var _user$project$Math$effectiveGrowth = function (customerGrowth) {
+	return 1 + (customerGrowth.growthRate - customerGrowth.churnRate);
 };
 var _user$project$Math$customers = F2(
-	function (scenario, month) {
-		var _p2 = scenario.customerGrowth;
+	function (customerGrowth, month) {
 		return _elm_lang$core$Basics$round(
-			_elm_lang$core$Basics$toFloat(_p2._0) * Math.pow(
-				_user$project$Math$effectiveGrowth(scenario),
+			_elm_lang$core$Basics$toFloat(customerGrowth.startValue) * Math.pow(
+				_user$project$Math$effectiveGrowth(customerGrowth),
 				_elm_lang$core$Basics$toFloat(month - 1)));
 	});
 var _user$project$Math$revenue = F2(
-	function (model, month) {
-		return A2(_user$project$Math$customers, model, month) * model.revenue;
+	function (scenario, month) {
+		return A2(_user$project$Math$customers, scenario.customerGrowth, month) * scenario.revenue;
 	});
 var _user$project$Math$grossMargin = F2(
 	function (model, month) {
@@ -9104,8 +9156,8 @@ var _user$project$Math$grossMargin = F2(
 				A2(_user$project$Math$revenue, model, month)) * model.revenueGrossMargin);
 	});
 var _user$project$Math$customerGrowth = F2(
-	function (scenario, month) {
-		var c = _user$project$Math$customers(scenario);
+	function (customerGrowth, month) {
+		var c = _user$project$Math$customers(customerGrowth);
 		return A2(
 			_elm_lang$core$Basics$max,
 			0,
@@ -9113,7 +9165,7 @@ var _user$project$Math$customerGrowth = F2(
 	});
 var _user$project$Math$customerAcquisitionCost = F2(
 	function (scenario, month) {
-		return A2(_user$project$Math$customerGrowth, scenario, month) * scenario.cac;
+		return A2(_user$project$Math$customerGrowth, scenario.customerGrowth, month) * scenario.cac;
 	});
 var _user$project$Math$expenses = F2(
 	function (scenario, month) {
@@ -9149,10 +9201,10 @@ var _user$project$Math$breakEvenWithMonth = F2(
 				if (_elm_lang$core$Native_Utils.cmp(month, model.months) > -1) {
 					return _elm_lang$core$Maybe$Nothing;
 				} else {
-					var _v3 = model,
-						_v4 = month + 1;
-					model = _v3;
-					month = _v4;
+					var _v1 = model,
+						_v2 = month + 1;
+					model = _v1;
+					month = _v2;
 					continue breakEvenWithMonth;
 				}
 			}
@@ -9173,10 +9225,10 @@ var _user$project$Math$earningsBreakEvenWithMonth = F2(
 				if (_elm_lang$core$Native_Utils.cmp(month, model.months) > -1) {
 					return _elm_lang$core$Maybe$Nothing;
 				} else {
-					var _v5 = model,
-						_v6 = month + 1;
-					model = _v5;
-					month = _v6;
+					var _v3 = model,
+						_v4 = month + 1;
+					model = _v3;
+					month = _v4;
 					continue earningsBreakEvenWithMonth;
 				}
 			}
@@ -9606,117 +9658,139 @@ var _user$project$View$currencyOption = F2(
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$View$options = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$h3,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Options'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
+var _user$project$View$options = F3(
+	function (model, scenarioID, scenario) {
+		return {
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$h3,
+				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('form-group'),
+					_0: _elm_lang$html$Html$text('Options'),
 					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$label,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Currency'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$select,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('form-control'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(_user$project$Msg$SetCurrency),
-											_1: {ctor: '[]'}
-										}
-									},
-									A2(
-										_elm_lang$core$List$map,
-										_user$project$View$currencyOption(model.currency),
-										_user$project$Model$currencies)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
 				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$core$Maybe$withDefault,
-					A2(
-						_elm_lang$html$Html$span,
-						{ctor: '[]'},
-						{ctor: '[]'}),
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (s) {
-							return A2(
-								_elm_lang$html$Html$a,
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('form-group'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Currency'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$href('#'),
-									_1: {
+									_0: A2(
+										_elm_lang$html$Html$select,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('form-control'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(_user$project$Msg$SetCurrency),
+												_1: {ctor: '[]'}
+											}
+										},
+										A2(
+											_elm_lang$core$List$map,
+											_user$project$View$currencyOption(model.currency),
+											_user$project$Model$currencies)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$core$Maybe$withDefault,
+						A2(
+							_elm_lang$html$Html$span,
+							{ctor: '[]'},
+							{ctor: '[]'}),
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (s) {
+								return A2(
+									_elm_lang$html$Html$a,
+									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onClick(
-											_user$project$Msg$DeleteScenario(s)),
+										_0: _elm_lang$html$Html_Attributes$href('#'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('btn btn-danger btn-block'),
-											_1: {ctor: '[]'}
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Msg$DeleteScenario(s)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('btn btn-danger btn-block'),
+												_1: {ctor: '[]'}
+											}
 										}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Delete Scenario'),
-									_1: {ctor: '[]'}
-								});
-						},
-						model.currentScenario)),
-				_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Delete Scenario'),
+										_1: {ctor: '[]'}
+									});
+							},
+							model.currentScenario)),
+					_1: {ctor: '[]'}
+				}
 			}
-		}
-	};
-};
+		};
+	});
 var _user$project$View$numbers = F2(
 	function (currency, scenario) {
+		var thstyled = function (v) {
+			return A2(
+				_elm_lang$html$Html$th,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('text-center'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(v),
+					_1: {ctor: '[]'}
+				});
+		};
 		var breakEven = _user$project$Math$breakEven(scenario);
-		var months = A2(_elm_lang$core$List$range, 1, scenario.months);
+		var months = _user$project$Math$monthRange(scenario.months);
 		var hv = _user$project$Humanize$humanizeValue(currency);
 		var row = function (month) {
+			var tdright = _elm_lang$html$Html$td(
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('text-right'),
+					_1: {ctor: '[]'}
+				});
 			var trClass = _elm_lang$html$Html_Attributes$class(
-				function () {
-					var _p0 = breakEven;
-					if (_p0.ctor === 'Just') {
-						return (_elm_lang$core$Native_Utils.cmp(month, _p0._0) > -1) ? 'success' : 'warning';
-					} else {
-						return 'danger';
-					}
-				}());
+				A2(
+					_elm_lang$core$Maybe$withDefault,
+					'danger',
+					A2(
+						_elm_lang$core$Maybe$map,
+						function (breakEvenMonth) {
+							return (_elm_lang$core$Native_Utils.cmp(month, breakEvenMonth) > -1) ? 'success' : 'warning';
+						},
+						breakEven)));
 			return A2(
 				_elm_lang$html$Html$tr,
 				{
@@ -9724,72 +9798,55 @@ var _user$project$View$numbers = F2(
 					_0: trClass,
 					_1: {ctor: '[]'}
 				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$td,
-						{ctor: '[]'},
+				A2(
+					_elm_lang$core$List$map,
+					tdright,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(month)),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$td,
-							{ctor: '[]'},
-							{
+							_0: {
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(
-										A2(_user$project$Math$customers, scenario, month))),
+									_elm_lang$core$Basics$toString(month)),
 								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$td,
-								{ctor: '[]'},
-								hv(
-									A2(_user$project$Math$revenue, scenario, month))),
+							},
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$td,
-									{ctor: '[]'},
-									hv(
-										A2(_user$project$Math$grossMargin, scenario, month))),
+								_0: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(
+											A2(_user$project$Math$customers, scenario.customerGrowth, month))),
+									_1: {ctor: '[]'}
+								},
+								_1: {ctor: '[]'}
+							}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							hv,
+							{
+								ctor: '::',
+								_0: A2(_user$project$Math$revenue, scenario, month),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$td,
-										{ctor: '[]'},
-										hv(
-											A2(_user$project$Math$expenses, scenario, month))),
+									_0: A2(_user$project$Math$grossMargin, scenario, month),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$td,
-											{ctor: '[]'},
-											hv(
-												A2(_user$project$Math$earnings, scenario, month))),
+										_0: A2(_user$project$Math$expenses, scenario, month),
 										_1: {
 											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$td,
-												{ctor: '[]'},
-												hv(
-													A2(_user$project$Math$cumulativeEarnings, scenario, month))),
-											_1: {ctor: '[]'}
+											_0: A2(_user$project$Math$earnings, scenario, month),
+											_1: {
+												ctor: '::',
+												_0: A2(_user$project$Math$cumulativeEarnings, scenario, month),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
-							}
-						}
-					}
-				});
+							}))));
 		};
 		var rows = A2(
 			_elm_lang$core$List$map,
@@ -9824,84 +9881,38 @@ var _user$project$View$numbers = F2(
 								_0: A2(
 									_elm_lang$html$Html$tr,
 									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$th,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Month'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
+									A2(
+										_elm_lang$core$List$map,
+										thstyled,
+										{
 											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$th,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Customers'),
-													_1: {ctor: '[]'}
-												}),
+											_0: 'Month',
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$th,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Revenue'),
-														_1: {ctor: '[]'}
-													}),
+												_0: 'Customers',
 												_1: {
 													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$th,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Gross Margin'),
-															_1: {ctor: '[]'}
-														}),
+													_0: 'Revenue',
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$th,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('Expenses'),
-																_1: {ctor: '[]'}
-															}),
+														_0: 'Gross Margin',
 														_1: {
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$th,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('EBIT'),
-																	_1: {ctor: '[]'}
-																}),
+															_0: 'Expenses',
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$th,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('Cumulative EBIT'),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {ctor: '[]'}
+																_0: 'EBIT',
+																_1: {
+																	ctor: '::',
+																	_0: 'Cumulative EBIT',
+																	_1: {ctor: '[]'}
+																}
 															}
 														}
 													}
 												}
 											}
-										}
-									}),
+										})),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -10208,7 +10219,7 @@ var _user$project$View$numberInput = F5(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('col-xs-6'),
+				_0: _elm_lang$html$Html_Attributes$class('col-xs-4'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -10255,8 +10266,8 @@ var _user$project$View$numberInput = F5(
 var _user$project$View$controlLabel = F3(
 	function (model, labelType, labelText) {
 		var suff = function () {
-			var _p1 = labelType;
-			switch (_p1.ctor) {
+			var _p0 = labelType;
+			switch (_p0.ctor) {
 				case 'Percentage':
 					return ' (%)';
 				case 'Currency':
@@ -10275,7 +10286,7 @@ var _user$project$View$controlLabel = F3(
 			_elm_lang$html$Html$label,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-6'),
+				_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-8'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -10286,15 +10297,18 @@ var _user$project$View$controlLabel = F3(
 			});
 	});
 var _user$project$View$scenarioTab = F2(
-	function (currentScenario, id) {
-		var current = function () {
-			var _p2 = currentScenario;
-			if (_p2.ctor === 'Nothing') {
-				return false;
-			} else {
-				return _elm_lang$core$Native_Utils.eq(_p2._0, id);
-			}
-		}();
+	function (currentScenario, _p1) {
+		var _p2 = _p1;
+		var _p3 = _p2._0;
+		var current = A2(
+			_elm_lang$core$Maybe$withDefault,
+			false,
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (current) {
+					return _elm_lang$core$Native_Utils.eq(current, _p3);
+				},
+				currentScenario));
 		return A2(
 			_elm_lang$html$Html$li,
 			{
@@ -10313,19 +10327,21 @@ var _user$project$View$scenarioTab = F2(
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Events$onClick(
-								_user$project$Msg$ChooseScenario(id)),
+								_user$project$Msg$ChooseScenario(_p3)),
 							_1: {ctor: '[]'}
 						}
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Scenario '),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(id)),
-							_1: {ctor: '[]'}
-						}
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Maybe$withDefault,
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'Scenario ',
+									_elm_lang$core$Basics$toString(_p3)),
+								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Basics$identity, _p2._1.name))),
+						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			});
@@ -10417,7 +10433,7 @@ var _user$project$View$controls = F3(
 										ctor: '::',
 										_0: A5(
 											_user$project$View$numberInput,
-											_user$project$Math$percentInt(scenario.churnRate),
+											_user$project$Math$percentInt(scenario.customerGrowth.churnRate),
 											A2(_user$project$Msg$SetScenario, _user$project$Msg$SetChurnRate, id),
 											1,
 											100,
@@ -10441,10 +10457,7 @@ var _user$project$View$controls = F3(
 											ctor: '::',
 											_0: A5(
 												_user$project$View$numberInput,
-												function () {
-													var _p3 = scenario.customerGrowth;
-													return _p3._0;
-												}(),
+												scenario.customerGrowth.startValue,
 												A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerStart, id),
 												10,
 												1000,
@@ -10468,10 +10481,7 @@ var _user$project$View$controls = F3(
 												ctor: '::',
 												_0: A5(
 													_user$project$View$numberInput,
-													function () {
-														var _p4 = scenario.customerGrowth;
-														return _elm_lang$core$Basics$round(_p4._1 * 100);
-													}(),
+													_user$project$Math$percentInt(scenario.customerGrowth.growthRate),
 													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerGrowth, id),
 													0,
 													1000,
@@ -10514,15 +10524,15 @@ var _user$project$View$controls = F3(
 												},
 												{
 													ctor: '::',
-													_0: A3(_user$project$View$controlLabel, model, _user$project$View$Currency, 'Customer Acquisition Cost'),
+													_0: A3(_user$project$View$controlLabel, model, _user$project$View$Percentage, 'Gross Margin'),
 													_1: {
 														ctor: '::',
 														_0: A5(
 															_user$project$View$numberInput,
-															scenario.cac,
-															A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCAC, id),
+															_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
+															A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMargin, id),
 															0,
-															5000,
+															100,
 															5),
 														_1: {ctor: '[]'}
 													}
@@ -10538,15 +10548,15 @@ var _user$project$View$controls = F3(
 													},
 													{
 														ctor: '::',
-														_0: A3(_user$project$View$controlLabel, model, _user$project$View$Percentage, 'Gross Margin'),
+														_0: A3(_user$project$View$controlLabel, model, _user$project$View$Currency, 'Customer Acquisition Cost'),
 														_1: {
 															ctor: '::',
 															_0: A5(
 																_user$project$View$numberInput,
-																_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
-																A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMargin, id),
+																scenario.cac,
+																A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCAC, id),
 																0,
-																100,
+																5000,
 																5),
 															_1: {ctor: '[]'}
 														}
@@ -10585,7 +10595,97 @@ var _user$project$View$controls = F3(
 						}
 					}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('form-group'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Scenario Name'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('form-control'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(
+											A2(_user$project$Msg$SetScenario, _user$project$Msg$SetName, id)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$value(
+												A2(_elm_lang$core$Maybe$withDefault, '', scenario.name)),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('form-group'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$label,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Comment'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$textarea,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('form-control'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$placeholder('Scenario Comment'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(
+													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetComment, id)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$value(
+														A2(_elm_lang$core$Maybe$withDefault, '', scenario.comment)),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
 		};
 	});
 var _user$project$View$view = function (model) {
@@ -10630,7 +10730,7 @@ var _user$project$View$view = function (model) {
 							A2(
 								_elm_lang$core$List$map,
 								_user$project$View$scenarioTab(model.currentScenario),
-								_elm_lang$core$Dict$keys(model.scenarios)),
+								_elm_lang$core$Dict$toList(model.scenarios)),
 							{
 								ctor: '::',
 								_0: _user$project$View$newTab,
@@ -10646,8 +10746,8 @@ var _user$project$View$view = function (model) {
 								_1: {ctor: '[]'}
 							},
 							function () {
-								var _p5 = scenario;
-								if (_p5.ctor === 'Nothing') {
+								var _p4 = scenario;
+								if (_p4.ctor === 'Nothing') {
 									return {
 										ctor: '::',
 										_0: A2(
@@ -10665,7 +10765,8 @@ var _user$project$View$view = function (model) {
 										_1: {ctor: '[]'}
 									};
 								} else {
-									var _p6 = _p5._0._1;
+									var _p6 = _p4._0._1;
+									var _p5 = _p4._0._0;
 									return {
 										ctor: '::',
 										_0: A2(
@@ -10675,7 +10776,7 @@ var _user$project$View$view = function (model) {
 												_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3'),
 												_1: {ctor: '[]'}
 											},
-											A3(_user$project$View$controls, model, _p5._0._0, _p6)),
+											A3(_user$project$View$controls, model, _p5, _p6)),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -10688,7 +10789,7 @@ var _user$project$View$view = function (model) {
 												A2(
 													_elm_lang$core$Basics_ops['++'],
 													A2(_user$project$View$results, model.currency, _p6),
-													_user$project$View$options(model))),
+													A3(_user$project$View$options, model, _p5, _p6))),
 											_1: {
 												ctor: '::',
 												_0: A2(
