@@ -25,14 +25,14 @@ type alias EffectiveGrowth =
 effectiveGrowth : Scenario -> EffectiveGrowth
 effectiveGrowth scenario =
     case scenario.customerGrowth of
-        Relative _ growth ->
-            (1 + (growth - scenario.churnRate))
+        Relative _ growth churn ->
+            (1 + (growth - churn))
 
 
 customers : Scenario -> Month -> Int
 customers scenario month =
     case scenario.customerGrowth of
-        Relative start _ ->
+        Relative start _ _ ->
             round <|
                 toFloat start
                     * ((effectiveGrowth scenario)
@@ -137,7 +137,9 @@ months months =
 
 averageLife : Scenario -> Int
 averageLife model =
-    round (1 / model.churnRate)
+    case model.customerGrowth of
+        Relative _ _ churnRate ->
+            round (1 / churnRate)
 
 
 cltv : Scenario -> Int

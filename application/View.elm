@@ -145,7 +145,11 @@ controls model id scenario =
             ]
         , div [ class "form-group" ]
             [ controlLabel model Percentage "Churn Rate"
-            , numberInput (Math.percentInt scenario.churnRate)
+            , numberInput
+                (case scenario.customerGrowth of
+                    Model.Relative _ _ c ->
+                        (Math.percentInt c)
+                )
                 (SetScenario SetChurnRate id)
                 1
                 100
@@ -155,7 +159,7 @@ controls model id scenario =
             [ controlLabel model Number "Customers at Start"
             , numberInput
                 (case scenario.customerGrowth of
-                    Model.Relative s _ ->
+                    Model.Relative s _ _ ->
                         s
                 )
                 (SetScenario SetCustomerStart id)
@@ -167,8 +171,8 @@ controls model id scenario =
             [ controlLabel model Percentage "Customer Growth per Month"
             , numberInput
                 (case scenario.customerGrowth of
-                    Model.Relative _ g ->
-                        (round <| g * 100)
+                    Model.Relative _ g _ ->
+                        Math.percentInt g
                 )
                 (SetScenario SetCustomerGrowth id)
                 0

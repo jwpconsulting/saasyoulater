@@ -53,19 +53,20 @@ scenario : Decoder Scenario
 scenario =
     map7 Scenario
         (field "months" int)
-        (field "churnRate" float)
         (field "revenue" int)
         (field "customerGrowth" customerGrowth)
         (field "revenueGrossMargin" float)
         (field "cac" int)
         (field "fixedCost" int)
+        (field "name" (nullable string))
 
 
 customerGrowth : Decoder CustomerGrowth
 customerGrowth =
-    map2 Relative
+    map3 Relative
         (field "start" int)
         (field "growth" float)
+        (field "churn" float)
 
 
 scenarios : Decoder (Dict.Dict String Scenario)

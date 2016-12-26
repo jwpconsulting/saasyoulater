@@ -77,9 +77,7 @@ setScenario model msg scenarioID value =
                     }
 
                 SetChurnRate ->
-                    { scenario
-                        | churnRate = decodePercentage value
-                    }
+                    Model.setChurn scenario <| decodePercentage value
 
                 SetCustomerGrowth ->
                     Model.updateGrowth scenario <| decodePercentage value

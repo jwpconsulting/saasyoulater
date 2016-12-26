@@ -35,7 +35,6 @@ encodeScenario : Scenario -> Value
 encodeScenario scenario =
     object
         [ ( "months", int scenario.months )
-        , ( "churnRate", float scenario.churnRate )
         , ( "revenue", int scenario.revenue )
         , ( "customerGrowth", encodeCustomerGrowth scenario.customerGrowth )
         , ( "revenueGrossMargin", float scenario.revenueGrossMargin )
@@ -47,8 +46,9 @@ encodeScenario scenario =
 encodeCustomerGrowth : CustomerGrowth -> Value
 encodeCustomerGrowth customerGrowth =
     case customerGrowth of
-        Relative start growth ->
+        Relative start growth churn ->
             object
                 [ ( "start", int start )
                 , ( "growth", float growth )
+                , ( "churn", float churn )
                 ]

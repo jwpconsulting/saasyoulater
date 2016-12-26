@@ -64,34 +64,34 @@ currencies =
 
 
 type CustomerGrowth
-    = Relative StartValue GrowthValue
+    = Relative StartValue GrowthValue ChurnRate
 
 
 emptyRelative : CustomerGrowth
 emptyRelative =
-    Relative 10 0.2
+    Relative 10 0.2 0.03
 
 
 type alias Scenario =
     { months : Month
-    , churnRate : Percentage
     , revenue : Money
     , customerGrowth : CustomerGrowth
     , revenueGrossMargin : Percentage
     , cac : Money
     , fixedCost : Money
+    , name: Maybe String
     }
 
 
 newScenario : Scenario
 newScenario =
     { months = 24
-    , churnRate = 0.03
     , revenue = 30
     , customerGrowth = emptyRelative
     , revenueGrossMargin = 0.75
     , cac = 50
     , fixedCost = 100
+    , name = Nothing
     }
 
 
@@ -129,12 +129,12 @@ currentScenario model =
 
 
 updateGrowth : Scenario -> GrowthValue -> Scenario
-updateGrowth scenario value =
+updateGrowth scenario growth =
     let
         customerGrowth =
             case scenario.customerGrowth of
-                Relative start _ ->
-                    Relative start value
+                Relative start _ churnRate->
+                    Relative start growth churnRate
     in
         { scenario
             | customerGrowth = customerGrowth
@@ -146,13 +146,24 @@ setStartValue scenario value =
     let
         customerGrowth =
             case scenario.customerGrowth of
-                Relative _ growth ->
-                    Relative value growth
+                Relative _ growth churn ->
+                    Relative value growth churn
     in
         { scenario
             | customerGrowth = customerGrowth
         }
 
+setChurn : Scenario -> ChurnRate -> Scenario
+setChurn scenario churnRate =
+    let
+        customerGrowth =
+            case scenario.customerGrowth of
+                Relative start growth _->
+                    Relative start growth churnRate
+    in
+        { scenario
+            | customerGrowth = customerGrowth
+        }
 
 currencyKey : String
 currencyKey =
