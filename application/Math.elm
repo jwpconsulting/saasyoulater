@@ -22,27 +22,23 @@ type alias EffectiveGrowth =
     Float
 
 
-effectiveGrowth : Scenario -> EffectiveGrowth
-effectiveGrowth scenario =
-    case scenario.customerGrowth of
-        Relative _ growth churn ->
-            (1 + (growth - churn))
+effectiveGrowth : CustomerGrowth -> EffectiveGrowth
+effectiveGrowth customerGrowth =
+    (1 + (customerGrowth.growthRate - customerGrowth.churnRate))
 
 
-customers : Scenario -> Month -> Int
-customers scenario month =
-    case scenario.customerGrowth of
-        Relative start _ _ ->
-            round <|
-                toFloat start
-                    * ((effectiveGrowth scenario)
-                        ^ (toFloat <| month - 1)
-                      )
+customers : CustomerGrowth -> Month -> Int
+customers customerGrowth month =
+    round <|
+        toFloat customerGrowth.startValue
+            * ((effectiveGrowth customerGrowth)
+                ^ (toFloat <| month - 1)
+              )
 
 
 revenue : Scenario -> Month -> Int
-revenue model month =
-    (customers model month) * (model.revenue)
+revenue scenario month =
+    (customers scenario.customerGrowth month) * (scenario.revenue)
 
 
 grossMargin : Scenario -> Month -> Money
@@ -50,18 +46,18 @@ grossMargin model month =
     round <| toFloat (revenue model month) * model.revenueGrossMargin
 
 
-customerGrowth : Scenario -> Month -> Int
-customerGrowth scenario month =
+customerGrowth : CustomerGrowth -> Month -> Int
+customerGrowth customerGrowth month =
     let
         c =
-            customers scenario
+            customers customerGrowth
     in
         max 0 <| ((c month) - (c <| month - 1))
 
 
 customerAcquisitionCost : Scenario -> Month -> Money
 customerAcquisitionCost scenario month =
-    customerGrowth scenario month * scenario.cac
+    customerGrowth scenario.customerGrowth month * scenario.cac
 
 
 expenses : Scenario -> Month -> Int
@@ -137,9 +133,7 @@ months months =
 
 averageLife : Scenario -> Int
 averageLife model =
-    case model.customerGrowth of
-        Relative _ _ churnRate ->
-            round (1 / churnRate)
+    round (1 / model.customerGrowth.churnRate)
 
 
 cltv : Scenario -> Int

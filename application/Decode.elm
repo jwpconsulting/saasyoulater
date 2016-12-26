@@ -63,7 +63,7 @@ scenario =
 
 customerGrowth : Decoder CustomerGrowth
 customerGrowth =
-    map3 Relative
+    map3 CustomerGrowth
         (field "start" int)
         (field "growth" float)
         (field "churn" float)

@@ -146,10 +146,7 @@ controls model id scenario =
         , div [ class "form-group" ]
             [ controlLabel model Percentage "Churn Rate"
             , numberInput
-                (case scenario.customerGrowth of
-                    Model.Relative _ _ c ->
-                        (Math.percentInt c)
-                )
+                (Math.percentInt scenario.customerGrowth.churnRate)
                 (SetScenario SetChurnRate id)
                 1
                 100
@@ -158,10 +155,7 @@ controls model id scenario =
         , div [ class "form-group" ]
             [ controlLabel model Number "Customers at Start"
             , numberInput
-                (case scenario.customerGrowth of
-                    Model.Relative s _ _ ->
-                        s
-                )
+                scenario.customerGrowth.startValue
                 (SetScenario SetCustomerStart id)
                 10
                 1000
@@ -170,10 +164,7 @@ controls model id scenario =
         , div [ class "form-group" ]
             [ controlLabel model Percentage "Customer Growth per Month"
             , numberInput
-                (case scenario.customerGrowth of
-                    Model.Relative _ g _ ->
-                        Math.percentInt g
-                )
+                (Math.percentInt scenario.customerGrowth.growthRate)
                 (SetScenario SetCustomerGrowth id)
                 0
                 1000
@@ -282,7 +273,7 @@ numbers currency scenario =
             in
                 tr [ trClass ]
                     [ td [] [ toString month |> text ]
-                    , [ Math.customers scenario month |> toString |> text
+                    , [ Math.customers scenario.customerGrowth month |> toString |> text
                       ]
                         |> td []
                     , Math.revenue scenario month |> hv |> td []

@@ -45,10 +45,8 @@ encodeScenario scenario =
 
 encodeCustomerGrowth : CustomerGrowth -> Value
 encodeCustomerGrowth customerGrowth =
-    case customerGrowth of
-        Relative start growth churn ->
-            object
-                [ ( "start", int start )
-                , ( "growth", float growth )
-                , ( "churn", float churn )
-                ]
+    object
+        [ ( "start", int customerGrowth.startValue )
+        , ( "growth", float customerGrowth.growthRate )
+        , ( "churn", float customerGrowth.churnRate )
+        ]

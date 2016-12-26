@@ -27,7 +27,7 @@ type alias StartValue =
     Int
 
 
-type alias GrowthValue =
+type alias GrowthRate =
     Float
 
 
@@ -63,13 +63,19 @@ currencies =
     ]
 
 
-type CustomerGrowth
-    = Relative StartValue GrowthValue ChurnRate
+type alias CustomerGrowth =
+    { startValue : StartValue
+    , growthRate : GrowthRate
+    , churnRate : ChurnRate
+    }
 
 
 emptyRelative : CustomerGrowth
 emptyRelative =
-    Relative 10 0.2 0.03
+    { startValue = 10
+    , growthRate = 0.2
+    , churnRate = 0.03
+    }
 
 
 type alias Scenario =
@@ -79,7 +85,7 @@ type alias Scenario =
     , revenueGrossMargin : Percentage
     , cac : Money
     , fixedCost : Money
-    , name: Maybe String
+    , name : Maybe String
     }
 
 
@@ -128,13 +134,16 @@ currentScenario model =
                     Nothing
 
 
-updateGrowth : Scenario -> GrowthValue -> Scenario
+updateGrowth : Scenario -> GrowthRate -> Scenario
 updateGrowth scenario growth =
     let
         customerGrowth =
-            case scenario.customerGrowth of
-                Relative start _ churnRate->
-                    Relative start growth churnRate
+            scenario.customerGrowth
+
+        customerGrowth_ =
+            { customerGrowth
+                | growthRate = growth
+            }
     in
         { scenario
             | customerGrowth = customerGrowth
@@ -145,25 +154,33 @@ setStartValue : Scenario -> StartValue -> Scenario
 setStartValue scenario value =
     let
         customerGrowth =
-            case scenario.customerGrowth of
-                Relative _ growth churn ->
-                    Relative value growth churn
+            scenario.customerGrowth
+
+        customerGrowth_ =
+            { customerGrowth
+                | startValue = value
+            }
     in
         { scenario
             | customerGrowth = customerGrowth
         }
 
+
 setChurn : Scenario -> ChurnRate -> Scenario
 setChurn scenario churnRate =
     let
         customerGrowth =
-            case scenario.customerGrowth of
-                Relative start growth _->
-                    Relative start growth churnRate
+            scenario.customerGrowth
+
+        customerGrowth_ =
+            { customerGrowth
+                | churnRate = churnRate
+            }
     in
         { scenario
             | customerGrowth = customerGrowth
         }
+
 
 currencyKey : String
 currencyKey =
