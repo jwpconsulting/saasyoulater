@@ -13,6 +13,7 @@ type ScenarioMsg
     | SetCustomerStart
     | SetFixedCost
     | SetName
+    | SetComment
 
 
 type Msg

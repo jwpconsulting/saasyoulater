@@ -11,24 +11,34 @@ import Math
 emptyScenario : Model.Scenario
 emptyScenario =
     { months = 12
-    , churnRate = 0.5
     , revenue = 30
-    , customerGrowth = Model.Relative 0 1
+    , customerGrowth =
+        { startValue = 0
+        , growthRate = 1
+        , churnRate = 0.5
+        }
     , revenueGrossMargin = 0.75
     , cac = 50
     , fixedCost = 0
+    , comment = Nothing
+    , name = Nothing
     }
 
 
 constantScenario : Model.Scenario
 constantScenario =
     { months = 12
-    , churnRate = 0
     , revenue = 30
-    , customerGrowth = Model.Relative 10 0
+    , customerGrowth =
+        { startValue = 10
+        , growthRate = 0
+        , churnRate = 0
+        }
     , revenueGrossMargin = 1
     , cac = 50
     , fixedCost = 100
+    , comment = Nothing
+    , name = Nothing
     }
 
 
@@ -38,10 +48,10 @@ all =
         [ describe "effectiveGrowth"
             [ test "1.5 effectiveGrowth for emptyScenario" <|
                 \() ->
-                    Expect.equal 1.5 <| Math.effectiveGrowth emptyScenario
+                    Expect.equal 1.5 <| Math.effectiveGrowth emptyScenario.customerGrowth
             , test "1 effectiveGrowth for constantScenario" <|
                 \() ->
-                    Expect.equal 1 <| Math.effectiveGrowth constantScenario
+                    Expect.equal 1 <| Math.effectiveGrowth constantScenario.customerGrowth
             ]
         , describe "earnings"
             [ describe "emptyScenario"
@@ -104,22 +114,22 @@ all =
                 [ test "10 customers at start" <|
                     \() ->
                         Expect.equal 10 <|
-                            Math.customers constantScenario Math.firstMonth
+                            Math.customers constantScenario.customerGrowth Math.firstMonth
                 , test "10 customers at end" <|
                     \() ->
                         Expect.equal 10 <|
-                            Math.customers constantScenario
+                            Math.customers constantScenario.customerGrowth
                                 constantScenario.months
                 ]
             , describe "emptyScenario"
                 [ test "0 customers at start" <|
                     \() ->
                         Expect.equal 0 <|
-                            Math.customers emptyScenario Math.firstMonth
+                            Math.customers emptyScenario.customerGrowth Math.firstMonth
                 , test "0 customers at end" <|
                     \() ->
                         Expect.equal 0 <|
-                            Math.customers emptyScenario emptyScenario.months
+                            Math.customers emptyScenario.customerGrowth emptyScenario.months
                 ]
             ]
         ]

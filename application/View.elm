@@ -65,15 +65,12 @@ newTab =
 
 
 scenarioTab : Maybe ScenarioID -> ( ScenarioID, Scenario ) -> Html Msg
-scenarioTab currentScenario ( id, scenario ) =
+scenarioTab currentScenario ( scenarioID, scenario ) =
     let
         current =
-            case currentScenario of
-                Nothing ->
-                    False
-
-                Just current ->
-                    current == id
+            currentScenario
+                |> Maybe.map (\current -> current == scenarioID)
+                |> Maybe.withDefault False
     in
         li
             [ class <|
@@ -84,16 +81,12 @@ scenarioTab currentScenario ( id, scenario ) =
             ]
             [ a
                 [ href "#"
-                , onClick (ChooseScenario id)
+                , onClick (ChooseScenario scenarioID)
                 ]
-                [ text <|
-                    (case scenario.name of
-                        Nothing ->
-                            "Scenario " ++ (toString id)
-
-                        Just name ->
-                            name
-                    )
+                [ scenario.name
+                    |> Maybe.map identity
+                    |> Maybe.withDefault ("Scenario " ++ (toString scenarioID))
+                    |> text
                 ]
             ]
 
@@ -118,12 +111,12 @@ controlLabel model labelType labelText =
                 Number ->
                     ""
     in
-        label [ class "control-label col-xs-6" ] [ text <| labelText ++ suff ]
+        label [ class "control-label col-xs-8" ] [ text <| labelText ++ suff ]
 
 
 numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
 numberInput numberValue message min max step =
-    div [ class "col-xs-6" ]
+    div [ class "col-xs-4" ]
         [ input
             [ type_ "number"
             , class "form-control"
@@ -209,6 +202,27 @@ controls model id scenario =
                 100
             ]
         ]
+    , div [ class "form-group" ]
+        [ label [] [ text "Scenario Name" ]
+        , input
+            [ class "form-control"
+            , onInput (SetScenario SetName id)
+            , value <| Maybe.withDefault "" <| scenario.name
+            ]
+            []
+        ]
+    , div [ class "form-group" ]
+        [ label [] [ text "Comment" ]
+        , textarea
+            [ class "form-control"
+            , placeholder "Scenario Comment"
+            , onInput (SetScenario SetComment id)
+            , scenario.comment
+                |> Maybe.withDefault ""
+                |> value
+            ]
+            []
+        ]
     ]
 
 
@@ -257,7 +271,7 @@ numbers currency scenario =
             humanizeValue currency
 
         months =
-            List.range 1 scenario.months
+            Math.monthRange scenario.months
 
         breakEven =
             Math.breakEven scenario
@@ -265,45 +279,56 @@ numbers currency scenario =
         row month =
             let
                 trClass =
-                    class
-                        (case breakEven of
-                            Just breakEvenMonth ->
+                    breakEven
+                        |> Maybe.map
+                            (\breakEvenMonth ->
                                 if month >= breakEvenMonth then
                                     "success"
                                 else
                                     "warning"
+                            )
+                        |> Maybe.withDefault "danger"
+                        |> class
 
-                            Nothing ->
-                                "danger"
-                        )
+                tdright =
+                    td [ class "text-right" ]
             in
-                tr [ trClass ]
-                    [ td [] [ toString month |> text ]
-                    , [ Math.customers scenario.customerGrowth month |> toString |> text
-                      ]
-                        |> td []
-                    , Math.revenue scenario month |> hv |> td []
-                    , Math.grossMargin scenario month |> hv |> td []
-                    , Math.expenses scenario month |> hv |> td []
-                    , Math.earnings scenario month |> hv |> td []
-                    , Math.cumulativeEarnings scenario month |> hv |> td []
-                    ]
+                tr [ trClass ] <|
+                    List.map tdright
+                        ([ [ toString month |> text ]
+                         , [ Math.customers scenario.customerGrowth month
+                                |> toString
+                                |> text
+                           ]
+                         ]
+                            ++ List.map hv
+                                [ Math.revenue scenario month
+                                , Math.grossMargin scenario month
+                                , Math.expenses scenario month
+                                , Math.earnings scenario month
+                                , Math.cumulativeEarnings scenario month
+                                ]
+                        )
 
         rows =
             List.map row (Math.months scenario.months)
+
+        thstyled v =
+            th [ class "text-center" ] [ text v ]
     in
         [ h2 [] [ text "Numbers" ]
         , Html.table [ class "table table-hover table-condensed" ]
             [ thead []
-                [ tr []
-                    [ th [] [ text "Month" ]
-                    , th [] [ text "Customers" ]
-                    , th [] [ text "Revenue" ]
-                    , th [] [ text "Gross Margin" ]
-                    , th [] [ text "Expenses" ]
-                    , th [] [ text "EBIT" ]
-                    , th [] [ text "Cumulative EBIT" ]
-                    ]
+                [ tr [] <|
+                    List.map thstyled
+                        [ "Month"
+                        , "Customers"
+                        , "Revenue"
+                        , "Gross Margin"
+                        , "Expenses"
+                        , "EBIT"
+                        , "Cumulative EBIT"
+                        ]
                 ]
             , tbody [] rows
             ]
@@ -325,15 +350,6 @@ options model scenarioID scenario =
                     Model.currencies
                 )
             ]
-        ]
-    , div [ class "form-group" ]
-        [ label [] [ text "Scenario Name" ]
-        , input
-            [ class "form-control"
-            , onInput (SetScenario SetName scenarioID)
-            , value <| Maybe.withDefault "" <| scenario.name
-            ]
-            []
         ]
     , Maybe.withDefault (span [] []) <|
         Maybe.map

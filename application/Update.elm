@@ -8,6 +8,14 @@ import Json.Decode
 import Cmds exposing (..)
 
 
+maybeString : String -> Maybe String
+maybeString string =
+    if string == "" then
+        Nothing
+    else
+        Just string
+
+
 localStorage : Model -> ( String, Maybe String ) -> ( Model, Cmd Msg )
 localStorage model ( key, value ) =
     case key of
@@ -23,7 +31,7 @@ localStorage model ( key, value ) =
                     model ! [ storeCurrency model.currency ]
 
         "scenarios" ->
-            case Debug.log "scenarios" value of
+            case value of
                 Nothing ->
                     let
                         model_ =
@@ -60,10 +68,8 @@ localStorage model ( key, value ) =
                                 }
                                     ! [ storeScenarios model_ ]
 
-        key ->
-            case Debug.log "unknown key" key of
-                _ ->
-                    model ! []
+        _ ->
+            model ! []
 
 
 setScenario : Model -> ScenarioMsg -> ScenarioID -> String -> ( Model, Cmd Msg )
@@ -75,6 +81,9 @@ setScenario model msg scenarioID value =
                     { scenario
                         | months = decodeIntWithMaximum value maxMonths
                     }
+
+                SetCustomerStart ->
+                    Model.setStartValue scenario <| decodeInt value
 
                 SetChurnRate ->
                     Model.setChurn scenario <| decodePercentage value
@@ -97,9 +106,6 @@ setScenario model msg scenarioID value =
                         | revenueGrossMargin = decodePercentage value
                     }
 
-                SetCustomerStart ->
-                    Model.setStartValue scenario <| decodeInt value
-
                 SetFixedCost ->
                     { scenario
                         | fixedCost = decodeInt value
@@ -107,14 +113,12 @@ setScenario model msg scenarioID value =
 
                 SetName ->
                     { scenario
-                        | name =
-                            (case value of
-                                "" ->
-                                    Nothing
+                        | name = maybeString value
+                    }
 
-                                v ->
-                                    Just v
-                            )
+                SetComment ->
+                    { scenario
+                        | comment = maybeString value
                     }
     in
         case Dict.get scenarioID model.scenarios of

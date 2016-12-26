@@ -73,7 +73,7 @@ type alias CustomerGrowth =
 emptyRelative : CustomerGrowth
 emptyRelative =
     { startValue = 10
-    , growthRate = 0.2
+    , growthRate = 0.4
     , churnRate = 0.03
     }
 
@@ -86,6 +86,7 @@ type alias Scenario =
     , cac : Money
     , fixedCost : Money
     , name : Maybe String
+    , comment : Maybe String
     }
 
 
@@ -94,10 +95,11 @@ newScenario =
     { months = 24
     , revenue = 30
     , customerGrowth = emptyRelative
-    , revenueGrossMargin = 0.75
-    , cac = 50
+    , revenueGrossMargin = 0.5
+    , cac = 45
     , fixedCost = 100
     , name = Nothing
+    , comment = Nothing
     }
 
 
@@ -146,7 +148,7 @@ updateGrowth scenario growth =
             }
     in
         { scenario
-            | customerGrowth = customerGrowth
+            | customerGrowth = customerGrowth_
         }
 
 
@@ -162,7 +164,7 @@ setStartValue scenario value =
             }
     in
         { scenario
-            | customerGrowth = customerGrowth
+            | customerGrowth = customerGrowth_
         }
 
 
@@ -178,7 +180,7 @@ setChurn scenario churnRate =
             }
     in
         { scenario
-            | customerGrowth = customerGrowth
+            | customerGrowth = customerGrowth_
         }
 
 

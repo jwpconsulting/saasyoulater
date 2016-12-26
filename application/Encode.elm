@@ -31,6 +31,11 @@ encodeScenarios scenarios =
     object <| List.map (\( k, v ) -> ( toString k, encodeScenario v )) <| Dict.toList scenarios
 
 
+nullableString : Maybe String -> Value
+nullableString =
+    Maybe.map string >> Maybe.withDefault null
+
+
 encodeScenario : Scenario -> Value
 encodeScenario scenario =
     object
@@ -40,14 +45,8 @@ encodeScenario scenario =
         , ( "revenueGrossMargin", float scenario.revenueGrossMargin )
         , ( "cac", int scenario.cac )
         , ( "fixedCost", int scenario.fixedCost )
-        , ( "name"
-          , case scenario.name of
-                Just name ->
-                    string name
-
-                Nothing ->
-                    null
-          )
+        , ( "comment", nullableString scenario.comment )
+        , ( "name", nullableString scenario.name )
         ]
 
 

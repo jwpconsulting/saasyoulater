@@ -51,7 +51,7 @@ decodeCurrency string =
 
 scenario : Decoder Scenario
 scenario =
-    map7 Scenario
+    map8 Scenario
         (field "months" int)
         (field "revenue" int)
         (field "customerGrowth" customerGrowth)
@@ -59,6 +59,7 @@ scenario =
         (field "cac" int)
         (field "fixedCost" int)
         (field "name" (nullable string))
+        (field "comment" (nullable string))
 
 
 customerGrowth : Decoder CustomerGrowth
@@ -74,7 +75,7 @@ scenarios =
     dict scenario
 
 
-decodeScenarios : Result String (Dict.Dict String Scenario) -> Result String (Dict.Dict Int Scenario)
+decodeScenarios : Result String (Dict.Dict String Scenario) -> Result String Scenarios
 decodeScenarios result =
     case result of
         Ok raw ->
