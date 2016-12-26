@@ -25,7 +25,7 @@ view model =
                 ]
             , ul [ class "nav nav-tabs" ] <|
                 (List.map (scenarioTab model.currentScenario) <|
-                    Dict.keys model.scenarios
+                    Dict.toList model.scenarios
                 )
                     ++ [ newTab ]
             , div [ class "row" ]
@@ -40,7 +40,7 @@ view model =
                             (controls model id scenario)
                         , div [ class "col-xs-6 col-md-2 col-md-push-7" ] <|
                             (results model.currency scenario)
-                                ++ options model
+                                ++ options model id scenario
                         , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
                             (numbers model.currency scenario)
                         ]
@@ -64,8 +64,8 @@ newTab =
         ]
 
 
-scenarioTab : Maybe ScenarioID -> ScenarioID -> Html Msg
-scenarioTab currentScenario id =
+scenarioTab : Maybe ScenarioID -> ( ScenarioID, Scenario ) -> Html Msg
+scenarioTab currentScenario ( id, scenario ) =
     let
         current =
             case currentScenario of
@@ -86,8 +86,14 @@ scenarioTab currentScenario id =
                 [ href "#"
                 , onClick (ChooseScenario id)
                 ]
-                [ text "Scenario "
-                , text <| toString id
+                [ text <|
+                    (case scenario.name of
+                        Nothing ->
+                            "Scenario " ++ (toString id)
+
+                        Just name ->
+                            name
+                    )
                 ]
             ]
 
@@ -179,19 +185,19 @@ controls model id scenario =
                 10
             ]
         , div [ class "form-group" ]
-            [ controlLabel model Currency "Customer Acquisition Cost"
-            , numberInput scenario.cac
-                (SetScenario SetCAC id)
-                0
-                5000
-                5
-            ]
-        , div [ class "form-group" ]
             [ controlLabel model Percentage "Gross Margin"
             , numberInput (scenario.revenueGrossMargin * 100 |> round)
                 (SetScenario SetMargin id)
                 0
                 100
+                5
+            ]
+        , div [ class "form-group" ]
+            [ controlLabel model Currency "Customer Acquisition Cost"
+            , numberInput scenario.cac
+                (SetScenario SetCAC id)
+                0
+                5000
                 5
             ]
         , div [ class "form-group" ]
@@ -304,8 +310,8 @@ numbers currency scenario =
         ]
 
 
-options : Model -> List (Html Msg)
-options model =
+options : Model -> ScenarioID -> Scenario -> List (Html Msg)
+options model scenarioID scenario =
     [ h3 [] [ text "Options" ]
     , div [ class "form-group" ]
         [ label [] [ text "Currency" ]
@@ -319,6 +325,15 @@ options model =
                     Model.currencies
                 )
             ]
+        ]
+    , div [ class "form-group" ]
+        [ label [] [ text "Scenario Name" ]
+        , input
+            [ class "form-control"
+            , onInput (SetScenario SetName scenarioID)
+            , value <| Maybe.withDefault "" <| scenario.name
+            ]
+            []
         ]
     , Maybe.withDefault (span [] []) <|
         Maybe.map

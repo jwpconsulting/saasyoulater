@@ -40,6 +40,14 @@ encodeScenario scenario =
         , ( "revenueGrossMargin", float scenario.revenueGrossMargin )
         , ( "cac", int scenario.cac )
         , ( "fixedCost", int scenario.fixedCost )
+        , ( "name"
+          , case scenario.name of
+                Just name ->
+                    string name
+
+                Nothing ->
+                    null
+          )
         ]
 
 

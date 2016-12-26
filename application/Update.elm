@@ -104,6 +104,18 @@ setScenario model msg scenarioID value =
                     { scenario
                         | fixedCost = decodeInt value
                     }
+
+                SetName ->
+                    { scenario
+                        | name =
+                            (case value of
+                                "" ->
+                                    Nothing
+
+                                v ->
+                                    Just v
+                            )
+                    }
     in
         case Dict.get scenarioID model.scenarios of
             Nothing ->
