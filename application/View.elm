@@ -111,12 +111,12 @@ controlLabel model labelType labelText =
                 Number ->
                     ""
     in
-        label [ class "control-label col-xs-8" ] [ text <| labelText ++ suff ]
+        label [ class "control-label col-xs-7" ] [ text <| labelText ++ suff ]
 
 
 numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
 numberInput numberValue message min max step =
-    div [ class "col-xs-4" ]
+    div [ class "col-xs-5" ]
         [ input
             [ type_ "number"
             , class "form-control"
