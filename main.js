@@ -10219,7 +10219,7 @@ var _user$project$View$numberInput = F5(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('col-xs-4'),
+				_0: _elm_lang$html$Html_Attributes$class('col-xs-5'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -10286,7 +10286,7 @@ var _user$project$View$controlLabel = F3(
 			_elm_lang$html$Html$label,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-8'),
+				_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-7'),
 				_1: {ctor: '[]'}
 			},
 			{
