@@ -1,6 +1,7 @@
 module Model exposing (..)
 
 import Dict exposing (Dict)
+import Currency.Currency exposing (..)
 
 
 type alias ScenarioID =
@@ -45,22 +46,6 @@ type alias Money =
 
 type alias Percentage =
     Float
-
-
-type Currency
-    = USD
-    | EUR
-    | AUD
-    | JPY
-
-
-currencies : List Currency
-currencies =
-    [ defaultCurrency
-    , EUR
-    , AUD
-    , JPY
-    ]
 
 
 type alias CustomerGrowth =

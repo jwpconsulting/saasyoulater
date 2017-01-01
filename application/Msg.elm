@@ -1,6 +1,6 @@
 module Msg exposing (..)
 
-import Model exposing (ScenarioID, Currency)
+import Model exposing (ScenarioID)
 
 
 type ScenarioMsg

@@ -3,7 +3,9 @@ module Cmds exposing (..)
 import Encode exposing (..)
 import Json.Encode
 import LocalStorage
-import Model exposing (Model, Currency)
+import Model exposing (Model)
+import Currency.Encode exposing (encodeCurrency)
+import Currency.Currency exposing (Currency)
 import Msg exposing (..)
 
 
@@ -38,5 +40,5 @@ storeCurrency : Currency -> Cmd Msg
 storeCurrency currency =
     LocalStorage.set
         ( Model.currencyKey
-        , Json.Encode.encode 0 <| encodeCurrencyJson currency
+        , encodeCurrency currency
         )

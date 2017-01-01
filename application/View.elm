@@ -3,13 +3,14 @@ module View exposing (view)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
-import Model exposing (Model, Scenario, ScenarioID, Currency)
+import Model exposing (Model, Scenario, ScenarioID)
 import Dict
 import Math
 import Msg exposing (..)
 import Humanize exposing (..)
-import Localize exposing (localizeCurrency, currencyName)
-import Encode exposing (encodeCurrency)
+import Currency.Currency exposing (Currency, currencies)
+import Currency.Localize exposing (localizeCurrency, currencyName)
+import Currency.Encode exposing (encodeCurrency)
 
 
 view : Model -> Html Msg
@@ -379,9 +380,7 @@ options model scenarioID scenario =
                     , onInput SetCurrency
                     ]
                   <|
-                    (List.map (currencyOption model.currency)
-                        Model.currencies
-                    )
+                    (List.map (currencyOption model.currency) currencies)
                 ]
             ]
         , div [ class "form-group" ]

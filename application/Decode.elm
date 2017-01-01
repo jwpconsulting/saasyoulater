@@ -30,25 +30,6 @@ decodePercentage string =
             0
 
 
-decodeCurrency : String -> Currency
-decodeCurrency string =
-    case string of
-        "aud" ->
-            AUD
-
-        "eur" ->
-            EUR
-
-        "jpy" ->
-            JPY
-
-        "usd" ->
-            USD
-
-        _ ->
-            USD
-
-
 scenario : Decoder Scenario
 scenario =
     map8 Scenario

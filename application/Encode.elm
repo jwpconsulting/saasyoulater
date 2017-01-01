@@ -5,27 +5,6 @@ import Json.Encode exposing (..)
 import Dict
 
 
-encodeCurrency : Currency -> String
-encodeCurrency currency =
-    case currency of
-        USD ->
-            "usd"
-
-        EUR ->
-            "eur"
-
-        AUD ->
-            "aud"
-
-        JPY ->
-            "jpy"
-
-
-encodeCurrencyJson : Currency -> Value
-encodeCurrencyJson =
-    encodeCurrency >> string
-
-
 encodeScenarios : Scenarios -> Value
 encodeScenarios scenarios =
     object <| List.map (\( k, v ) -> ( toString k, encodeScenario v )) <| Dict.toList scenarios

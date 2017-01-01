@@ -1,6 +1,6 @@
-module Localize exposing (..)
+module Currency.Localize exposing (..)
 
-import Model exposing (Currency(..))
+import Currency.Currency exposing (Currency(..))
 
 
 localizeCurrency : Currency -> String
@@ -18,6 +18,9 @@ localizeCurrency currency =
         JPY ->
             "¥"
 
+        TRY ->
+            "₺"
+
 
 currencyName : Currency -> String
 currencyName currency =
@@ -33,3 +36,6 @@ currencyName currency =
 
         JPY ->
             "JPY"
+
+        TRY ->
+            "TRY"

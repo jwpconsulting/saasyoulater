@@ -27,7 +27,7 @@ $(BUILD)/CNAME: CNAME
 	cp $< $@
 
 format:
-	elm-format-0.18 $(APPLICATION)/*.elm $(TEST)/*.elm --yes
+	elm-format-0.18 $(APPLICATION) $(TEST)/*.elm --yes
 
 clean:
 	rm -rf elm-stuff/build-artifacts/

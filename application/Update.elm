@@ -6,6 +6,7 @@ import Dict
 import Decode exposing (..)
 import Json.Decode
 import Cmds exposing (..)
+import Currency.Decode exposing (decodeCurrency)
 
 
 maybeString : String -> Maybe String
@@ -22,10 +23,13 @@ localStorage model ( key, value ) =
         "currency" ->
             case value of
                 Just value ->
-                    { model
-                        | currency = decodeCurrency value
-                    }
-                        ! []
+                    let
+                        currency =
+                            decodeCurrency value
+                                |> Debug.log value
+                                |> Maybe.withDefault Model.defaultCurrency
+                    in
+                        { model | currency = currency } ! []
 
                 Nothing ->
                     model ! [ storeCurrency model.currency ]
@@ -170,7 +174,7 @@ update msg model =
         SetCurrency value ->
             let
                 currency =
-                    decodeCurrency value
+                    decodeCurrency value |> Maybe.withDefault Model.defaultCurrency
             in
                 { model | currency = currency } ! [ storeCurrency currency ]
 
