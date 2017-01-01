@@ -1,0 +1,26 @@
+general:
+  branches:
+    ignore:
+      - gh-pages # list of branches to ignore
+
+dependencies:
+  pre:
+    - script/sysconf
+  post:
+    - elm-package install -y:
+        pwd: "tests"
+    - elm-package install -y
+  cache_directories:
+    - "elm-stuff"
+    - "tests/elm-stuff"
+    - "~/sysconfcpus"
+
+compile:
+  override:
+    - $HOME/sysconfcpus/bin/sysconfcpus -n 1 elm-make application/Main.elm --yes --output /dev/null
+    - $HOME/sysconfcpus/bin/sysconfcpus -n 1 elm-make Main.elm --yes --output /dev/null:
+        pwd: "tests"
+
+test:
+  override:
+    - $HOME/sysconfcpus/bin/sysconfcpus elm-test
