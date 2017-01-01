@@ -3,7 +3,7 @@
 TEST=tests
 APPLICATION=application
 BUILD=build
-TARGET=build/main.js build/index.html build/CNAME
+TARGET=build/main.js build/index.html build/CNAME build/circle.yml
 SRC=$(APPLICATION)/Main.elm $(wildcard $(APPLICATION)/*.elm) $(wildcard $(APPLICATION)/Native/*.js)
 ELM_MAKE=elm-make
 ELM_MAKE_FLAG=--warn --yes
@@ -24,6 +24,9 @@ $(BUILD)/index.html: pages/index.html
 	cp $< $@
 
 $(BUILD)/CNAME: CNAME
+	cp $< $@
+
+$(BUILD)/circle.yml: circle.yml
 	cp $< $@
 
 format:
