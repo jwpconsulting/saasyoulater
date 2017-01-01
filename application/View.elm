@@ -28,29 +28,26 @@ view model =
                     Dict.toList model.scenarios
                 )
                     ++ [ newTab ]
-            , div [ class "row" ]
-                (case scenario of
-                    Nothing ->
-                        [ div [ class "col-xs-12" ]
-                            [ text "Loading scenarios" ]
-                        ]
-
-                    Just ( id, scenario ) ->
-                        [ div [ class "col-xs-6 col-md-3" ]
-                            (controls model id scenario)
-                        , div [ class "col-xs-6 col-md-2 col-md-push-7" ] <|
-                            (results model.currency scenario)
-                                ++ options model id scenario
-                        , div [ class "col-xs-12 col-md-7 col-md-pull-2" ]
-                            (numbers model.currency scenario)
-                        ]
-                )
-            , hr [] []
             ]
+                ++ (case scenario of
+                        Nothing ->
+                            [ text "Loading scenarios" ]
+
+                        Just ( id, scenario ) ->
+                            [ div [ class "row" ]
+                                [ div [ class "col-xs-6 col-md-2" ]
+                                    [ (controls model id scenario) ]
+                                , div [ class "col-xs-6 col-md-3 col-md-push-7" ] <|
+                                    (results model.currency scenario)
+                                        ++ options model id scenario
+                                , div [ class "col-xs-12 col-md-7 col-md-pull-3" ]
+                                    (numbers model.currency scenario)
+                                ]
+                            ]
+                   )
+                ++ [ hr [] [] ]
                 ++ help
-                ++ [ hr [] []
-                   , footer
-                   ]
+                ++ [ hr [] [], footer ]
 
 
 newTab : Html Msg
@@ -97,168 +94,198 @@ type LabelType
     | Number
 
 
-controlLabel : Model -> LabelType -> String -> Html Msg
-controlLabel model labelType labelText =
-    let
-        suff =
-            case labelType of
-                Percentage ->
-                    " (%)"
-
-                Currency ->
-                    " (" ++ localizeCurrency model.currency ++ ")"
-
-                Number ->
-                    ""
-    in
-        label [ class "control-label col-xs-7" ] [ text <| labelText ++ suff ]
+type NumberRange
+    = NumberRange Int Int Int
 
 
-numberInput : Int -> (String -> Msg) -> Int -> Int -> Int -> Html Msg
-numberInput numberValue message min max step =
-    div [ class "col-xs-5" ]
-        [ input
-            [ type_ "number"
-            , class "form-control"
-            , numberValue |> toString |> value
-            , onInput message
-            , min |> toString |> Html.Attributes.min
+labelText : Model -> LabelType -> String
+labelText model labelType =
+    case labelType of
+        Percentage ->
+            "%"
+
+        Currency ->
+            localizeCurrency model.currency
+
+        Number ->
+            ""
+
+
+controlLabel : String -> Html Msg
+controlLabel l =
+    label [ class "control-label" ]
+        [ (l) |> text ]
+
+
+numberRange : NumberRange -> List (Html.Attribute Msg)
+numberRange range =
+    case range of
+        NumberRange min max step ->
+            [ min |> toString |> Html.Attributes.min
             , max |> toString |> Html.Attributes.max
             , step |> toString |> Html.Attributes.step
             ]
-            []
-        ]
 
 
-controls : Model -> Int -> Scenario -> List (Html Msg)
+numberInput : String -> Int -> (String -> Msg) -> NumberRange -> Html Msg
+numberInput addon numberValue message range =
+    let
+        i =
+            input
+                ([ type_ "number"
+                 , class "form-control text-right"
+                 , numberValue |> toString |> value
+                 , onInput message
+                 ]
+                    ++ numberRange range
+                )
+                []
+    in
+        case addon of
+            "" ->
+                i
+
+            _ ->
+                div [ class "input-group" ]
+                    [ span [ class "input-group-addon" ] [ text addon ]
+                    , i
+                    ]
+
+
+controls : Model -> Int -> Scenario -> Html Msg
 controls model id scenario =
-    [ div [ class "form-horizontal" ]
-        [ h2 [] [ text "Parameters" ]
-        , div [ class "form-group" ]
-            [ controlLabel model Number "Months"
-            , numberInput scenario.months
-                (SetScenario SetMonths id)
-                1
-                100
-                1
+    let
+        lt =
+            labelText model
+
+        controlClass =
+            class "form-group"
+
+        controlDiv =
+            div [ controlClass ]
+
+        msg =
+            SetScenario id
+    in
+        Html.form []
+            [ h2 [] [ text "Controls" ]
+            , controlDiv
+                [ controlLabel "Months"
+                , numberInput
+                    (lt Number)
+                    scenario.months
+                    (msg SetMonths)
+                  <|
+                    NumberRange 1 100 1
+                ]
+            , controlDiv
+                [ controlLabel "Churn Rate"
+                , numberInput
+                    (lt Percentage)
+                    (Math.percentInt scenario.customerGrowth.churnRate)
+                    (msg SetChurnRate)
+                  <|
+                    NumberRange 1 100 1
+                ]
+            , controlDiv
+                [ controlLabel "Customers at Start"
+                , numberInput
+                    (lt Number)
+                    scenario.customerGrowth.startValue
+                    (msg SetCustomerStart)
+                  <|
+                    NumberRange 10 1000 10
+                ]
+            , controlDiv
+                [ controlLabel "C. Growth MoM"
+                , numberInput
+                    (lt Percentage)
+                    (Math.percentInt scenario.customerGrowth.growthRate)
+                    (msg SetCustomerGrowth)
+                  <|
+                    NumberRange 0 1000 10
+                ]
+            , controlDiv
+                [ controlLabel "Rev. per Customer"
+                , numberInput
+                    (lt Currency)
+                    scenario.revenue
+                    (msg SetRevenue)
+                  <|
+                    NumberRange 0 1000 10
+                ]
+            , controlDiv
+                [ controlLabel "Gross Margin"
+                , numberInput
+                    (lt Percentage)
+                    (scenario.revenueGrossMargin * 100 |> round)
+                    (msg SetMargin)
+                  <|
+                    NumberRange 0 100 5
+                ]
+            , controlDiv
+                [ controlLabel "CAC"
+                , numberInput
+                    (lt Currency)
+                    scenario.cac
+                    (msg SetCAC)
+                  <|
+                    NumberRange 0 5000 5
+                ]
+            , controlDiv
+                [ controlLabel "Fixed Cost"
+                , numberInput
+                    (lt Currency)
+                    scenario.fixedCost
+                    (msg SetFixedCost)
+                  <|
+                    NumberRange 0 10000 100
+                ]
             ]
-        , div [ class "form-group" ]
-            [ controlLabel model Percentage "Churn Rate"
-            , numberInput
-                (Math.percentInt scenario.customerGrowth.churnRate)
-                (SetScenario SetChurnRate id)
-                1
-                100
-                1
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Number "Customers at Start"
-            , numberInput
-                scenario.customerGrowth.startValue
-                (SetScenario SetCustomerStart id)
-                10
-                1000
-                10
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Percentage "Customer Growth per Month"
-            , numberInput
-                (Math.percentInt scenario.customerGrowth.growthRate)
-                (SetScenario SetCustomerGrowth id)
-                0
-                1000
-                10
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Currency "Revenue per Customer per Month"
-            , numberInput scenario.revenue
-                (SetScenario SetRevenue id)
-                0
-                1000
-                10
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Percentage "Gross Margin"
-            , numberInput (scenario.revenueGrossMargin * 100 |> round)
-                (SetScenario SetMargin id)
-                0
-                100
-                5
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Currency "Customer Acquisition Cost"
-            , numberInput scenario.cac
-                (SetScenario SetCAC id)
-                0
-                5000
-                5
-            ]
-        , div [ class "form-group" ]
-            [ controlLabel model Currency "Fixed Cost "
-            , numberInput (scenario.fixedCost)
-                (SetScenario SetFixedCost id)
-                0
-                10000
-                100
-            ]
-        ]
-    , div [ class "form-group" ]
-        [ label [] [ text "Scenario Name" ]
-        , input
-            [ class "form-control"
-            , onInput (SetScenario SetName id)
-            , value <| Maybe.withDefault "" <| scenario.name
-            ]
-            []
-        ]
-    , div [ class "form-group" ]
-        [ label [] [ text "Comment" ]
-        , textarea
-            [ class "form-control"
-            , placeholder "Scenario Comment"
-            , onInput (SetScenario SetComment id)
-            , scenario.comment
-                |> Maybe.withDefault ""
-                |> value
-            ]
-            []
-        ]
-    ]
+
+
+wikiMsg : List (Html msg)
+wikiMsg =
+    [ text "Wikipedia Article" ]
 
 
 controlsHelp : List (Html Msg)
 controlsHelp =
-    [ h4 [] [ text "Explanation of Parameters" ]
+    [ h4 [] [ text "Explanation of Controls" ]
     , dl []
         [ dt [] [ text "Months" ]
         , dd [] [ text "Length of business forecast" ]
         , dt [] [ text "Churn Rate" ]
         , dd [] [ text "Percentage of customers leaving monthly" ]
-        , dt [] [ text "Customer Growth" ]
+        , dt [] [ text "Customers at Start" ]
+        , dd [] [ text "How many customers exist at start." ]
+        , dt [] [ text "Customer Growth Month over Month (MoM)" ]
         , dd []
-            [ text "With relative growth the user base will grow by X% every month."
-            ]
-        , dt [] [ text "Customer Growth per Month" ]
-        , dd [] [ text "Number of customers signing up in one month, either relative or absolute, depending on the setting." ]
-        , dt [] [ text "Revenue per customer per Month" ]
-        , dd [] [ text "Revenue for one customer through subscription fees or similar" ]
-        , dt [] [ text "Customer Acquisition Cost" ]
+            [ text "Defines the monthly growth in percent, i.e., 3 % means your customer base will grow to 103% after a month." ]
+        , dt [] [ text "Revenue per customer" ]
+        , dd [] [ text "Monthly revenue from one customer" ]
+        , dt [] [ text "Customer Acquisition Cost (CAC)" ]
         , dd []
             [ text "Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer."
-            , a [ href "https://en.wikipedia.org/wiki/Customer_acquisition_cost" ]
-                [ text " (Wikipedia)" ]
+            ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Customer_acquisition_cost" ]
+                wikiMsg
             ]
         , dt [] [ text "Gross Margin" ]
         , dd []
-            [ text "Difference between revenue and cost."
-            , a [ href "https://en.wikipedia.org/wiki/Gross_margin" ]
-                [ text " (Wikipedia)" ]
+            [ text "Difference between revenue and cost." ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Gross_margin" ]
+                wikiMsg
             ]
         , dt [] [ text "Fixed cost" ]
         , dd []
             [ text "Business expenses that are not dependent on the amount of customers."
-            , a [ href "https://en.wikipedia.org/wiki/Fixed_cost" ]
-                [ text " (Wikipedia)" ]
+            ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Fixed_cost" ]
+                wikiMsg
             ]
         ]
     ]
@@ -317,52 +344,80 @@ numbers currency scenario =
             th [ class "text-center" ] [ text v ]
     in
         [ h2 [] [ text "Numbers" ]
-        , Html.table [ class "table table-hover table-condensed" ]
-            [ thead []
-                [ tr [] <|
-                    List.map thstyled
-                        [ "Month"
-                        , "Customers"
-                        , "Revenue"
-                        , "Gross Margin"
-                        , "Expenses"
-                        , "EBIT"
-                        , "Cumulative EBIT"
-                        ]
+        , div [ class "table-responsive" ]
+            [ Html.table [ class "table table-hover table-condensed" ]
+                [ thead []
+                    [ tr [] <|
+                        List.map thstyled
+                            [ "Month"
+                            , "Customers"
+                            , "Revenue"
+                            , "Gross Margin"
+                            , "Expenses"
+                            , "EBIT"
+                            , "Cumulative EBIT"
+                            ]
+                    ]
+                , tbody [] rows
                 ]
-            , tbody [] rows
             ]
         ]
 
 
 options : Model -> ScenarioID -> Scenario -> List (Html Msg)
 options model scenarioID scenario =
-    [ h3 [] [ text "Options" ]
-    , div [ class "form-group" ]
-        [ label [] [ text "Currency" ]
-        , div []
-            [ select
-                [ class "form-control"
-                , onInput SetCurrency
-                ]
-              <|
-                (List.map (currencyOption model.currency)
-                    Model.currencies
-                )
-            ]
-        ]
-    , Maybe.withDefault (span [] []) <|
-        Maybe.map
-            (\s ->
-                a
-                    [ href "#"
-                    , onClick (DeleteScenario s)
-                    , class "btn btn-danger btn-block"
+    let
+        msg =
+            SetScenario scenarioID
+    in
+        [ h3 [] [ text "Options" ]
+        , div [ class "form-group" ]
+            [ label [] [ text "Currency" ]
+            , div []
+                [ select
+                    [ class "form-control"
+                    , onInput SetCurrency
                     ]
-                    [ text "Delete Scenario" ]
-            )
-            model.currentScenario
-    ]
+                  <|
+                    (List.map (currencyOption model.currency)
+                        Model.currencies
+                    )
+                ]
+            ]
+        , div [ class "form-group" ]
+            [ label [] [ text "Scenario Name" ]
+            , input
+                [ class "form-control"
+                , placeholder "Scenario Name"
+                , onInput (msg SetName)
+                , value <| Maybe.withDefault "" <| scenario.name
+                ]
+                []
+            ]
+        , div [ class "form-group" ]
+            [ label [] [ text "Comment" ]
+            , textarea
+                [ class "form-control"
+                , placeholder "Scenario Comment"
+                , onInput (msg SetComment)
+                , scenario.comment
+                    |> Maybe.withDefault ""
+                    |> value
+                ]
+                []
+            ]
+        , Maybe.withDefault (span [] []) <|
+            Maybe.map
+                (\s ->
+                    a
+                        [ href "#"
+                        , onClick (DeleteScenario s)
+                        , class "btn btn-danger btn-xs btn-block"
+                        ]
+                        [ text "Delete Scenario" ]
+                )
+                model.currentScenario
+        ]
 
 
 currencyOption : Currency -> Currency -> Html Msg
@@ -427,13 +482,15 @@ resultsHelp =
     , dl []
         [ dt [] [ text "EBIT" ]
         , dd []
-            [ text "Earnings before interest and tax. "
-            , a [ href "https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes" ] [ text "(Wikipedia)" ]
+            [ text "Earnings before interest and tax. " ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes" ]
+                wikiMsg
             ]
         , dt [] [ text "EBIT positive" ]
-        , dd [] [ text "Month at which EBIT cross 0." ]
+        , dd [] [ text "Month at which EBIT cross 0. This will be the first month you make profit (before tax and interest)" ]
         , dt [] [ text "Cumulative EBIT positive" ]
-        , dd [] [ text "Month at which cumulative EBIT cross 0." ]
+        , dd [] [ text "Month at which cumulative EBIT cross 0. This will be the first month your SaaS businesses net worth is positive, not counting taxes and interest." ]
         , dt [] [ text "Average Customer Lifetime" ]
         , dd [] [ text "Average number of months a customer stays with this business." ]
         , dt [] [ text "Customer Lifetime Value" ]

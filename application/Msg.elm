@@ -17,7 +17,7 @@ type ScenarioMsg
 
 
 type Msg
-    = SetScenario ScenarioMsg ScenarioID String
+    = SetScenario ScenarioID ScenarioMsg String
     | ChooseScenario ScenarioID
     | NewScenario
     | SetCurrency String

@@ -141,7 +141,7 @@ setScenario model msg scenarioID value =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SetScenario msg scenarioID value ->
+        SetScenario scenarioID msg value ->
             setScenario model msg scenarioID value
 
         ChooseScenario id ->
