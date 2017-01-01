@@ -9028,7 +9028,7 @@ var _user$project$Update$update = F2(
 		var _p10 = msg;
 		switch (_p10.ctor) {
 			case 'SetScenario':
-				return A4(_user$project$Update$setScenario, model, _p10._0, _p10._1, _p10._2);
+				return A4(_user$project$Update$setScenario, model, _p10._1, _p10._0, _p10._2);
 			case 'ChooseScenario':
 				var _p11 = _p10._0;
 				return A2(_elm_lang$core$Dict$member, _p11, model.scenarios) ? A2(
@@ -9296,194 +9296,6 @@ var _user$project$View$footer = A2(
 			}
 		}
 	});
-var _user$project$View$resultsHelp = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$h4,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Explanation of Results'),
-			_1: {ctor: '[]'}
-		}),
-	_1: {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$dl,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dt,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('EBIT'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dd,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Earnings before interest and tax. '),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$a,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('(Wikipedia)'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dt,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('EBIT positive'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$dd,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Month at which EBIT cross 0.'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$dt,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Cumulative EBIT positive'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$dd,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Month at which cumulative EBIT cross 0.'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$dt,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Average Customer Lifetime'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$dd,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Average number of months a customer stays with this business.'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$dt,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Customer Lifetime Value'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$dd,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Average revenue earned through one customer over the whole lifetime.'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$dt,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('LTV over CAC'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$dd,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Ratio of Lifetime Value over Customer Acquisition Cost. Less than 1 means acquisition will not yield in profit.'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {
-																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$dt,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('Minimum Cumulative EBIT'),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$dd,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('Lowest point in cumulative EBIT. Bank account needs to be able to shoulder this.'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {ctor: '[]'}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}),
-		_1: {ctor: '[]'}
-	}
-};
 var _user$project$View$results = F2(
 	function (currency, scenario) {
 		var ltvcac = _user$project$Humanize$humanizeRatio(
@@ -9660,6 +9472,7 @@ var _user$project$View$currencyOption = F2(
 	});
 var _user$project$View$options = F3(
 	function (model, scenarioID, scenario) {
+		var msg = _user$project$Msg$SetScenario(scenarioID);
 		return {
 			ctor: '::',
 			_0: A2(
@@ -9719,38 +9532,132 @@ var _user$project$View$options = F3(
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$core$Maybe$withDefault,
-						A2(
-							_elm_lang$html$Html$span,
-							{ctor: '[]'},
-							{ctor: '[]'}),
-						A2(
-							_elm_lang$core$Maybe$map,
-							function (s) {
-								return A2(
-									_elm_lang$html$Html$a,
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('form-group'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$label,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Scenario Name'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$input,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$href('#'),
+										_0: _elm_lang$html$Html_Attributes$class('form-control'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(
-												_user$project$Msg$DeleteScenario(s)),
+											_0: _elm_lang$html$Html_Attributes$placeholder('Scenario Name'),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('btn btn-danger btn-block'),
-												_1: {ctor: '[]'}
+												_0: _elm_lang$html$Html_Events$onInput(
+													msg(_user$project$Msg$SetName)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$value(
+														A2(_elm_lang$core$Maybe$withDefault, '', scenario.name)),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('form-group'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$label,
+									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Delete Scenario'),
+										_0: _elm_lang$html$Html$text('Comment'),
 										_1: {ctor: '[]'}
-									});
-							},
-							model.currentScenario)),
-					_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$textarea,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('form-control'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$placeholder('Scenario Comment'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onInput(
+														msg(_user$project$Msg$SetComment)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$value(
+															A2(_elm_lang$core$Maybe$withDefault, '', scenario.comment)),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$core$Maybe$withDefault,
+								A2(
+									_elm_lang$html$Html$span,
+									{ctor: '[]'},
+									{ctor: '[]'}),
+								A2(
+									_elm_lang$core$Maybe$map,
+									function (s) {
+										return A2(
+											_elm_lang$html$Html$a,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$href('#'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$Msg$DeleteScenario(s)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('btn btn-danger btn-xs btn-block'),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Delete Scenario'),
+												_1: {ctor: '[]'}
+											});
+									},
+									model.currentScenario)),
+							_1: {ctor: '[]'}
+						}
+					}
 				}
 			}
 		};
@@ -9865,69 +9772,85 @@ var _user$project$View$numbers = F2(
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$table,
+					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('table table-hover table-condensed'),
+						_0: _elm_lang$html$Html_Attributes$class('table-responsive'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
 						_0: A2(
-							_elm_lang$html$Html$thead,
-							{ctor: '[]'},
+							_elm_lang$html$Html$table,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('table table-hover table-condensed'),
+								_1: {ctor: '[]'}
+							},
 							{
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$tr,
+									_elm_lang$html$Html$thead,
 									{ctor: '[]'},
-									A2(
-										_elm_lang$core$List$map,
-										thstyled,
-										{
-											ctor: '::',
-											_0: 'Month',
-											_1: {
-												ctor: '::',
-												_0: 'Customers',
-												_1: {
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$tr,
+											{ctor: '[]'},
+											A2(
+												_elm_lang$core$List$map,
+												thstyled,
+												{
 													ctor: '::',
-													_0: 'Revenue',
+													_0: 'Month',
 													_1: {
 														ctor: '::',
-														_0: 'Gross Margin',
+														_0: 'Customers',
 														_1: {
 															ctor: '::',
-															_0: 'Expenses',
+															_0: 'Revenue',
 															_1: {
 																ctor: '::',
-																_0: 'EBIT',
+																_0: 'Gross Margin',
 																_1: {
 																	ctor: '::',
-																	_0: 'Cumulative EBIT',
-																	_1: {ctor: '[]'}
+																	_0: 'Expenses',
+																	_1: {
+																		ctor: '::',
+																		_0: 'EBIT',
+																		_1: {
+																			ctor: '::',
+																			_0: 'Cumulative EBIT',
+																			_1: {ctor: '[]'}
+																		}
+																	}
 																}
 															}
 														}
 													}
-												}
-											}
-										})),
-								_1: {ctor: '[]'}
+												})),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$tbody,
+										{ctor: '[]'},
+										rows),
+									_1: {ctor: '[]'}
+								}
 							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$tbody,
-								{ctor: '[]'},
-								rows),
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			}
 		};
 	});
+var _user$project$View$wikiMsg = {
+	ctor: '::',
+	_0: _elm_lang$html$Html$text('Wikipedia Article'),
+	_1: {ctor: '[]'}
+};
 var _user$project$View$controlsHelp = {
 	ctor: '::',
 	_0: A2(
@@ -9935,7 +9858,7 @@ var _user$project$View$controlsHelp = {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Explanation of Parameters'),
+			_0: _elm_lang$html$Html$text('Explanation of Controls'),
 			_1: {ctor: '[]'}
 		}),
 	_1: {
@@ -9990,7 +9913,7 @@ var _user$project$View$controlsHelp = {
 									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Customer Growth'),
+										_0: _elm_lang$html$Html$text('Customers at Start'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
@@ -10000,7 +9923,7 @@ var _user$project$View$controlsHelp = {
 										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('With relative growth the user base will grow by X% every month.'),
+											_0: _elm_lang$html$Html$text('How many customers exist at start.'),
 											_1: {ctor: '[]'}
 										}),
 									_1: {
@@ -10010,7 +9933,7 @@ var _user$project$View$controlsHelp = {
 											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Customer Growth per Month'),
+												_0: _elm_lang$html$Html$text('Customer Growth Month over Month (MoM)'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
@@ -10020,7 +9943,7 @@ var _user$project$View$controlsHelp = {
 												{ctor: '[]'},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('Number of customers signing up in one month, either relative or absolute, depending on the setting.'),
+													_0: _elm_lang$html$Html$text('Defines the monthly growth in percent, i.e., 3 % means your customer base will grow to 103% after a month.'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
@@ -10030,7 +9953,7 @@ var _user$project$View$controlsHelp = {
 													{ctor: '[]'},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text('Revenue per customer per Month'),
+														_0: _elm_lang$html$Html$text('Revenue per customer'),
 														_1: {ctor: '[]'}
 													}),
 												_1: {
@@ -10040,7 +9963,7 @@ var _user$project$View$controlsHelp = {
 														{ctor: '[]'},
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text('Revenue for one customer through subscription fees or similar'),
+															_0: _elm_lang$html$Html$text('Monthly revenue from one customer'),
 															_1: {ctor: '[]'}
 														}),
 													_1: {
@@ -10050,7 +9973,7 @@ var _user$project$View$controlsHelp = {
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html$text('Customer Acquisition Cost'),
+																_0: _elm_lang$html$Html$text('Customer Acquisition Cost (CAC)'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {
@@ -10061,7 +9984,14 @@ var _user$project$View$controlsHelp = {
 																{
 																	ctor: '::',
 																	_0: _elm_lang$html$Html$text('Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer.'),
-																	_1: {
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$dd,
+																	{ctor: '[]'},
+																	{
 																		ctor: '::',
 																		_0: A2(
 																			_elm_lang$html$Html$a,
@@ -10070,57 +10000,27 @@ var _user$project$View$controlsHelp = {
 																				_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Customer_acquisition_cost'),
 																				_1: {ctor: '[]'}
 																			},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text(' (Wikipedia)'),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {ctor: '[]'}
-																	}
-																}),
-															_1: {
-																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$dt,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('Gross Margin'),
+																			_user$project$View$wikiMsg),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {
 																	ctor: '::',
 																	_0: A2(
-																		_elm_lang$html$Html$dd,
+																		_elm_lang$html$Html$dt,
 																		{ctor: '[]'},
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('Difference between revenue and cost.'),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$a,
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Gross_margin'),
-																						_1: {ctor: '[]'}
-																					},
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html$text(' (Wikipedia)'),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {ctor: '[]'}
-																			}
+																			_0: _elm_lang$html$Html$text('Gross Margin'),
+																			_1: {ctor: '[]'}
 																		}),
 																	_1: {
 																		ctor: '::',
 																		_0: A2(
-																			_elm_lang$html$Html$dt,
+																			_elm_lang$html$Html$dd,
 																			{ctor: '[]'},
 																			{
 																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('Fixed cost'),
+																				_0: _elm_lang$html$Html$text('Difference between revenue and cost.'),
 																				_1: {ctor: '[]'}
 																			}),
 																		_1: {
@@ -10130,26 +10030,249 @@ var _user$project$View$controlsHelp = {
 																				{ctor: '[]'},
 																				{
 																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('Business expenses that are not dependent on the amount of customers.'),
+																					_0: A2(
+																						_elm_lang$html$Html$a,
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Gross_margin'),
+																							_1: {ctor: '[]'}
+																						},
+																						_user$project$View$wikiMsg),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$dt,
+																					{ctor: '[]'},
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html$text('Fixed cost'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$dd,
+																						{ctor: '[]'},
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html$text('Business expenses that are not dependent on the amount of customers.'),
+																							_1: {ctor: '[]'}
+																						}),
 																					_1: {
 																						ctor: '::',
 																						_0: A2(
-																							_elm_lang$html$Html$a,
+																							_elm_lang$html$Html$dd,
+																							{ctor: '[]'},
 																							{
 																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Fixed_cost'),
-																								_1: {ctor: '[]'}
-																							},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text(' (Wikipedia)'),
+																								_0: A2(
+																									_elm_lang$html$Html$a,
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Fixed_cost'),
+																										_1: {ctor: '[]'}
+																									},
+																									_user$project$View$wikiMsg),
 																								_1: {ctor: '[]'}
 																							}),
 																						_1: {ctor: '[]'}
 																					}
-																				}),
-																			_1: {ctor: '[]'}
+																				}
+																			}
 																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}),
+		_1: {ctor: '[]'}
+	}
+};
+var _user$project$View$resultsHelp = {
+	ctor: '::',
+	_0: A2(
+		_elm_lang$html$Html$h4,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Explanation of Results'),
+			_1: {ctor: '[]'}
+		}),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$dl,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$dt,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('EBIT'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$dd,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Earnings before interest and tax. '),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$dd,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$a,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes'),
+										_1: {ctor: '[]'}
+									},
+									_user$project$View$wikiMsg),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$dt,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('EBIT positive'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$dd,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Month at which EBIT cross 0. This will be the first month you make profit (before tax and interest)'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$dt,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Cumulative EBIT positive'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$dd,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Month at which cumulative EBIT cross 0. This will be the first month your SaaS businesses net worth is positive, not counting taxes and interest.'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$dt,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Average Customer Lifetime'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$dd,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Average number of months a customer stays with this business.'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$dt,
+														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Customer Lifetime Value'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$dd,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Average revenue earned through one customer over the whole lifetime.'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$dt,
+																{ctor: '[]'},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('LTV over CAC'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$dd,
+																	{ctor: '[]'},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text('Ratio of Lifetime Value over Customer Acquisition Cost. Less than 1 means acquisition will not yield in profit.'),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$dt,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text('Minimum Cumulative EBIT'),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$dd,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('Lowest point in cumulative EBIT. Bank account needs to be able to shoulder this.'),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
 																	}
 																}
 															}
@@ -10213,100 +10336,121 @@ var _user$project$View$help = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$View$numberInput = F5(
-	function (numberValue, message, min, max, step) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
+var _user$project$View$numberRange = function (range) {
+	var _p0 = range;
+	return {
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$min(
+			_elm_lang$core$Basics$toString(_p0._0)),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$max(
+				_elm_lang$core$Basics$toString(_p0._1)),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('col-xs-5'),
+				_0: _elm_lang$html$Html_Attributes$step(
+					_elm_lang$core$Basics$toString(_p0._2)),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
+			}
+		}
+	};
+};
+var _user$project$View$numberInput = F4(
+	function (addon, numberValue, message, range) {
+		var i = A2(
+			_elm_lang$html$Html$input,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('number'),
+					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('number'),
+						_0: _elm_lang$html$Html_Attributes$class('form-control text-right'),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('form-control'),
+							_0: _elm_lang$html$Html_Attributes$value(
+								_elm_lang$core$Basics$toString(numberValue)),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$value(
-									_elm_lang$core$Basics$toString(numberValue)),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(message),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$min(
-											_elm_lang$core$Basics$toString(min)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$max(
-												_elm_lang$core$Basics$toString(max)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$step(
-													_elm_lang$core$Basics$toString(step)),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								}
+								_0: _elm_lang$html$Html_Events$onInput(message),
+								_1: {ctor: '[]'}
 							}
 						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			});
+					}
+				},
+				_user$project$View$numberRange(range)),
+			{ctor: '[]'});
+		var _p1 = addon;
+		if (_p1 === '') {
+			return i;
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('input-group'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('input-group-addon'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(addon),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: i,
+						_1: {ctor: '[]'}
+					}
+				});
+		}
 	});
-var _user$project$View$controlLabel = F3(
-	function (model, labelType, labelText) {
-		var suff = function () {
-			var _p0 = labelType;
-			switch (_p0.ctor) {
-				case 'Percentage':
-					return ' (%)';
-				case 'Currency':
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						' (',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_user$project$Localize$localizeCurrency(model.currency),
-							')'));
-				default:
-					return '';
-			}
-		}();
-		return A2(
-			_elm_lang$html$Html$label,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('control-label col-xs-7'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					A2(_elm_lang$core$Basics_ops['++'], labelText, suff)),
-				_1: {ctor: '[]'}
-			});
+var _user$project$View$controlLabel = function (l) {
+	return A2(
+		_elm_lang$html$Html$label,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('control-label'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(l),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View$labelText = F2(
+	function (model, labelType) {
+		var _p2 = labelType;
+		switch (_p2.ctor) {
+			case 'Percentage':
+				return '%';
+			case 'Currency':
+				return _user$project$Localize$localizeCurrency(model.currency);
+			default:
+				return '';
+		}
 	});
 var _user$project$View$scenarioTab = F2(
-	function (currentScenario, _p1) {
-		var _p2 = _p1;
-		var _p3 = _p2._0;
+	function (currentScenario, _p3) {
+		var _p4 = _p3;
+		var _p5 = _p4._0;
 		var current = A2(
 			_elm_lang$core$Maybe$withDefault,
 			false,
 			A2(
 				_elm_lang$core$Maybe$map,
 				function (current) {
-					return _elm_lang$core$Native_Utils.eq(current, _p3);
+					return _elm_lang$core$Native_Utils.eq(current, _p5);
 				},
 				currentScenario));
 		return A2(
@@ -10327,7 +10471,7 @@ var _user$project$View$scenarioTab = F2(
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Events$onClick(
-								_user$project$Msg$ChooseScenario(_p3)),
+								_user$project$Msg$ChooseScenario(_p5)),
 							_1: {ctor: '[]'}
 						}
 					},
@@ -10339,8 +10483,8 @@ var _user$project$View$scenarioTab = F2(
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									'Scenario ',
-									_elm_lang$core$Basics$toString(_p3)),
-								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Basics$identity, _p2._1.name))),
+									_elm_lang$core$Basics$toString(_p5)),
+								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Basics$identity, _p4._1.name))),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -10372,221 +10516,171 @@ var _user$project$View$newTab = A2(
 var _user$project$View$Number = {ctor: 'Number'};
 var _user$project$View$Currency = {ctor: 'Currency'};
 var _user$project$View$Percentage = {ctor: 'Percentage'};
+var _user$project$View$NumberRange = F3(
+	function (a, b, c) {
+		return {ctor: 'NumberRange', _0: a, _1: b, _2: c};
+	});
 var _user$project$View$controls = F3(
 	function (model, id, scenario) {
-		return {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
+		var msg = _user$project$Msg$SetScenario(id);
+		var controlClass = _elm_lang$html$Html_Attributes$class('form-group');
+		var controlDiv = _elm_lang$html$Html$div(
+			{
+				ctor: '::',
+				_0: controlClass,
+				_1: {ctor: '[]'}
+			});
+		var lt = _user$project$View$labelText(model);
+		return A2(
+			_elm_lang$html$Html$form,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h2,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Controls'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('form-horizontal'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$h2,
-						{ctor: '[]'},
+					_0: controlDiv(
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Parameters'),
-							_1: {ctor: '[]'}
+							_0: _user$project$View$controlLabel('Months'),
+							_1: {
+								ctor: '::',
+								_0: A4(
+									_user$project$View$numberInput,
+									lt(_user$project$View$Number),
+									scenario.months,
+									msg(_user$project$Msg$SetMonths),
+									A3(_user$project$View$NumberRange, 1, 100, 1)),
+								_1: {ctor: '[]'}
+							}
 						}),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
+						_0: controlDiv(
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('form-group'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A3(_user$project$View$controlLabel, model, _user$project$View$Number, 'Months'),
+								_0: _user$project$View$controlLabel('Churn Rate'),
 								_1: {
 									ctor: '::',
-									_0: A5(
+									_0: A4(
 										_user$project$View$numberInput,
-										scenario.months,
-										A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMonths, id),
-										1,
-										100,
-										1),
+										lt(_user$project$View$Percentage),
+										_user$project$Math$percentInt(scenario.customerGrowth.churnRate),
+										msg(_user$project$Msg$SetChurnRate),
+										A3(_user$project$View$NumberRange, 1, 100, 1)),
 									_1: {ctor: '[]'}
 								}
 							}),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
+							_0: controlDiv(
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('form-group'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A3(_user$project$View$controlLabel, model, _user$project$View$Percentage, 'Churn Rate'),
+									_0: _user$project$View$controlLabel('Customers at Start'),
 									_1: {
 										ctor: '::',
-										_0: A5(
+										_0: A4(
 											_user$project$View$numberInput,
-											_user$project$Math$percentInt(scenario.customerGrowth.churnRate),
-											A2(_user$project$Msg$SetScenario, _user$project$Msg$SetChurnRate, id),
-											1,
-											100,
-											1),
+											lt(_user$project$View$Number),
+											scenario.customerGrowth.startValue,
+											msg(_user$project$Msg$SetCustomerStart),
+											A3(_user$project$View$NumberRange, 10, 1000, 10)),
 										_1: {ctor: '[]'}
 									}
 								}),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
+								_0: controlDiv(
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('form-group'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A3(_user$project$View$controlLabel, model, _user$project$View$Number, 'Customers at Start'),
+										_0: _user$project$View$controlLabel('C. Growth MoM'),
 										_1: {
 											ctor: '::',
-											_0: A5(
+											_0: A4(
 												_user$project$View$numberInput,
-												scenario.customerGrowth.startValue,
-												A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerStart, id),
-												10,
-												1000,
-												10),
+												lt(_user$project$View$Percentage),
+												_user$project$Math$percentInt(scenario.customerGrowth.growthRate),
+												msg(_user$project$Msg$SetCustomerGrowth),
+												A3(_user$project$View$NumberRange, 0, 1000, 10)),
 											_1: {ctor: '[]'}
 										}
 									}),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
+									_0: controlDiv(
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('form-group'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: A3(_user$project$View$controlLabel, model, _user$project$View$Percentage, 'Customer Growth per Month'),
+											_0: _user$project$View$controlLabel('Rev. per Customer'),
 											_1: {
 												ctor: '::',
-												_0: A5(
+												_0: A4(
 													_user$project$View$numberInput,
-													_user$project$Math$percentInt(scenario.customerGrowth.growthRate),
-													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCustomerGrowth, id),
-													0,
-													1000,
-													10),
+													lt(_user$project$View$Currency),
+													scenario.revenue,
+													msg(_user$project$Msg$SetRevenue),
+													A3(_user$project$View$NumberRange, 0, 1000, 10)),
 												_1: {ctor: '[]'}
 											}
 										}),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
+										_0: controlDiv(
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('form-group'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A3(_user$project$View$controlLabel, model, _user$project$View$Currency, 'Revenue per Customer per Month'),
+												_0: _user$project$View$controlLabel('Gross Margin'),
 												_1: {
 													ctor: '::',
-													_0: A5(
+													_0: A4(
 														_user$project$View$numberInput,
-														scenario.revenue,
-														A2(_user$project$Msg$SetScenario, _user$project$Msg$SetRevenue, id),
-														0,
-														1000,
-														10),
+														lt(_user$project$View$Percentage),
+														_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
+														msg(_user$project$Msg$SetMargin),
+														A3(_user$project$View$NumberRange, 0, 100, 5)),
 													_1: {ctor: '[]'}
 												}
 											}),
 										_1: {
 											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$div,
+											_0: controlDiv(
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('form-group'),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: A3(_user$project$View$controlLabel, model, _user$project$View$Percentage, 'Gross Margin'),
+													_0: _user$project$View$controlLabel('CAC'),
 													_1: {
 														ctor: '::',
-														_0: A5(
+														_0: A4(
 															_user$project$View$numberInput,
-															_elm_lang$core$Basics$round(scenario.revenueGrossMargin * 100),
-															A2(_user$project$Msg$SetScenario, _user$project$Msg$SetMargin, id),
-															0,
-															100,
-															5),
+															lt(_user$project$View$Currency),
+															scenario.cac,
+															msg(_user$project$Msg$SetCAC),
+															A3(_user$project$View$NumberRange, 0, 5000, 5)),
 														_1: {ctor: '[]'}
 													}
 												}),
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$div,
+												_0: controlDiv(
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('form-group'),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: A3(_user$project$View$controlLabel, model, _user$project$View$Currency, 'Customer Acquisition Cost'),
+														_0: _user$project$View$controlLabel('Fixed Cost'),
 														_1: {
 															ctor: '::',
-															_0: A5(
+															_0: A4(
 																_user$project$View$numberInput,
-																scenario.cac,
-																A2(_user$project$Msg$SetScenario, _user$project$Msg$SetCAC, id),
-																0,
-																5000,
-																5),
+																lt(_user$project$View$Currency),
+																scenario.fixedCost,
+																msg(_user$project$Msg$SetFixedCost),
+																A3(_user$project$View$NumberRange, 0, 10000, 100)),
 															_1: {ctor: '[]'}
 														}
 													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$div,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('form-group'),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: A3(_user$project$View$controlLabel, model, _user$project$View$Currency, 'Fixed Cost '),
-															_1: {
-																ctor: '::',
-																_0: A5(
-																	_user$project$View$numberInput,
-																	scenario.fixedCost,
-																	A2(_user$project$Msg$SetScenario, _user$project$Msg$SetFixedCost, id),
-																	0,
-																	10000,
-																	100),
-																_1: {ctor: '[]'}
-															}
-														}),
-													_1: {ctor: '[]'}
-												}
+												_1: {ctor: '[]'}
 											}
 										}
 									}
@@ -10594,99 +10688,8 @@ var _user$project$View$controls = F3(
 							}
 						}
 					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('form-group'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$label,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Scenario Name'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('form-control'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onInput(
-											A2(_user$project$Msg$SetScenario, _user$project$Msg$SetName, id)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(
-												A2(_elm_lang$core$Maybe$withDefault, '', scenario.name)),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('form-group'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$label,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Comment'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$textarea,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('form-control'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Scenario Comment'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													A2(_user$project$Msg$SetScenario, _user$project$Msg$SetComment, id)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(
-														A2(_elm_lang$core$Maybe$withDefault, '', scenario.comment)),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
 				}
-			}
-		};
+			});
 	});
 var _user$project$View$view = function (model) {
 	var scenario = _user$project$Model$currentScenario(model);
@@ -10736,102 +10739,101 @@ var _user$project$View$view = function (model) {
 								_0: _user$project$View$newTab,
 								_1: {ctor: '[]'}
 							})),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('row'),
-								_1: {ctor: '[]'}
-							},
-							function () {
-								var _p4 = scenario;
-								if (_p4.ctor === 'Nothing') {
-									return {
+					_1: {ctor: '[]'}
+				}
+			},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				function () {
+					var _p6 = scenario;
+					if (_p6.ctor === 'Nothing') {
+						return {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading scenarios'),
+							_1: {ctor: '[]'}
+						};
+					} else {
+						var _p8 = _p6._0._1;
+						var _p7 = _p6._0._0;
+						return {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('row'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-2'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A3(_user$project$View$controls, model, _p7, _p8),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('col-xs-12'),
+												_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3 col-md-push-7'),
 												_1: {ctor: '[]'}
 											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Loading scenarios'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									};
-								} else {
-									var _p6 = _p4._0._1;
-									var _p5 = _p4._0._0;
-									return {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-3'),
-												_1: {ctor: '[]'}
-											},
-											A3(_user$project$View$controls, model, _p5, _p6)),
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												A2(_user$project$View$results, model.currency, _p8),
+												A3(_user$project$View$options, model, _p7, _p8))),
 										_1: {
 											ctor: '::',
 											_0: A2(
 												_elm_lang$html$Html$div,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('col-xs-6 col-md-2 col-md-push-7'),
+													_0: _elm_lang$html$Html_Attributes$class('col-xs-12 col-md-7 col-md-pull-3'),
 													_1: {ctor: '[]'}
 												},
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													A2(_user$project$View$results, model.currency, _p6),
-													A3(_user$project$View$options, model, _p5, _p6))),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$div,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('col-xs-12 col-md-7 col-md-pull-2'),
-														_1: {ctor: '[]'}
-													},
-													A2(_user$project$View$numbers, model.currency, _p6)),
-												_1: {ctor: '[]'}
-											}
+												A2(_user$project$View$numbers, model.currency, _p8)),
+											_1: {ctor: '[]'}
 										}
-									};
-								}
-							}()),
-						_1: {
+									}
+								}),
+							_1: {ctor: '[]'}
+						};
+					}
+				}(),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$hr,
+							{ctor: '[]'},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_user$project$View$help,
+						{
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$hr,
 								{ctor: '[]'},
 								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			},
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_user$project$View$help,
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$hr,
-						{ctor: '[]'},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: _user$project$View$footer,
-						_1: {ctor: '[]'}
-					}
-				})));
+							_1: {
+								ctor: '::',
+								_0: _user$project$View$footer,
+								_1: {ctor: '[]'}
+							}
+						})))));
 };
 
 var _user$project$Subscriptions$subscriptions = function (model) {
