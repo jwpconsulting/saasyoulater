@@ -8334,19 +8334,18 @@ var _user$project$Model$updateGrowth = F2(
 			{customerGrowth: customerGrowth_});
 	});
 var _user$project$Model$currentScenario = function (model) {
-	var _p0 = model.currentScenario;
-	if (_p0.ctor === 'Nothing') {
-		return _elm_lang$core$Maybe$Nothing;
-	} else {
-		var _p2 = _p0._0;
-		var _p1 = A2(_elm_lang$core$Dict$get, _p2, model.scenarios);
-		if (_p1.ctor === 'Just') {
-			return _elm_lang$core$Maybe$Just(
-				{ctor: '_Tuple2', _0: _p2, _1: _p1._0});
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	}
+	return A2(
+		_elm_lang$core$Maybe$andThen,
+		function (id) {
+			var _p0 = A2(_elm_lang$core$Dict$get, id, model.scenarios);
+			if (_p0.ctor === 'Just') {
+				return _elm_lang$core$Maybe$Just(
+					{ctor: '_Tuple2', _0: id, _1: _p0._0});
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		},
+		model.currentScenario);
 };
 var _user$project$Model$maxMonths = 100;
 var _user$project$Model$emptyRelative = {startValue: 10, growthRate: 0.4, churnRate: 3.0e-2};
@@ -8858,39 +8857,38 @@ var _user$project$Humanize$humanize = function (month) {
 var _user$project$Update$localStorage = F2(
 	function (model, _p0) {
 		var _p1 = _p0;
-		var _p8 = _p1._1;
+		var _p6 = _p1._1;
 		var _p2 = _p1._0;
 		switch (_p2) {
 			case 'currency':
-				var _p3 = _p8;
-				if (_p3.ctor === 'Just') {
-					var _p4 = _p3._0;
-					var currency = A2(
-						_elm_lang$core$Maybe$withDefault,
-						_user$project$Model$defaultCurrency,
-						A2(
-							_elm_lang$core$Debug$log,
-							_p4,
-							_user$project$Currency_Decode$decodeCurrency(_p4)));
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							model,
-							{currency: currency}),
-						{ctor: '[]'});
-				} else {
-					return A2(
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						model,
 						{
 							ctor: '::',
 							_0: _user$project$Cmds$storeCurrency(model.currency),
 							_1: {ctor: '[]'}
-						});
-				}
+						}),
+					A2(
+						_elm_lang$core$Maybe$map,
+						function (value) {
+							var currency = A2(
+								_elm_lang$core$Maybe$withDefault,
+								_user$project$Model$defaultCurrency,
+								_user$project$Currency_Decode$decodeCurrency(value));
+							return A2(
+								_elm_lang$core$Platform_Cmd_ops['!'],
+								_elm_lang$core$Native_Utils.update(
+									model,
+									{currency: currency}),
+								{ctor: '[]'});
+						},
+						_p6));
 			case 'scenarios':
-				var _p5 = _p8;
-				if (_p5.ctor === 'Nothing') {
+				var _p3 = _p6;
+				if (_p3.ctor === 'Nothing') {
 					var model_ = _elm_lang$core$Native_Utils.update(
 						model,
 						{scenarios: _user$project$Model$newScenarios});
@@ -8907,15 +8905,15 @@ var _user$project$Update$localStorage = F2(
 							_1: {ctor: '[]'}
 						});
 				} else {
-					var _p6 = _user$project$Decode$decodeScenarios(
-						A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Decode$scenarios, _p5._0));
-					if (_p6.ctor === 'Ok') {
-						var _p7 = _p6._0;
-						var model_ = _elm_lang$core$Native_Utils.eq(_p7, _elm_lang$core$Dict$empty) ? _elm_lang$core$Native_Utils.update(
+					var _p4 = _user$project$Decode$decodeScenarios(
+						A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Decode$scenarios, _p3._0));
+					if (_p4.ctor === 'Ok') {
+						var _p5 = _p4._0;
+						var model_ = _elm_lang$core$Native_Utils.eq(_p5, _elm_lang$core$Dict$empty) ? _elm_lang$core$Native_Utils.update(
 							model,
 							{scenarios: _user$project$Model$newScenarios}) : _elm_lang$core$Native_Utils.update(
 							model,
-							{scenarios: _p7});
+							{scenarios: _p5});
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -8956,8 +8954,8 @@ var _user$project$Update$setScenario = F4(
 	function (model, msg, scenarioID, value) {
 		var setScenario = F3(
 			function (scenario, msg, value) {
-				var _p9 = msg;
-				switch (_p9.ctor) {
+				var _p7 = msg;
+				switch (_p7.ctor) {
 					case 'SetMonths':
 						return _elm_lang$core$Native_Utils.update(
 							scenario,
@@ -9017,45 +9015,48 @@ var _user$project$Update$setScenario = F4(
 							});
 				}
 			});
-		var _p10 = A2(_elm_lang$core$Dict$get, scenarioID, model.scenarios);
-		if (_p10.ctor === 'Nothing') {
-			return A2(
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			A2(
 				_elm_lang$core$Platform_Cmd_ops['!'],
 				model,
-				{ctor: '[]'});
-		} else {
-			var scenarios = A3(
-				_elm_lang$core$Dict$insert,
-				scenarioID,
-				A3(setScenario, _p10._0, msg, value),
-				model.scenarios);
-			var model_ = _elm_lang$core$Native_Utils.update(
-				model,
-				{scenarios: scenarios});
-			return A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				model_,
-				{
-					ctor: '::',
-					_0: _user$project$Cmds$storeScenarios(model_),
-					_1: {ctor: '[]'}
-				});
-		}
+				{ctor: '[]'}),
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (scenario) {
+					var scenarios = A3(
+						_elm_lang$core$Dict$insert,
+						scenarioID,
+						A3(setScenario, scenario, msg, value),
+						model.scenarios);
+					var model_ = _elm_lang$core$Native_Utils.update(
+						model,
+						{scenarios: scenarios});
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model_,
+						{
+							ctor: '::',
+							_0: _user$project$Cmds$storeScenarios(model_),
+							_1: {ctor: '[]'}
+						});
+				},
+				A2(_elm_lang$core$Dict$get, scenarioID, model.scenarios)));
 	});
 var _user$project$Update$update = F2(
 	function (msg, model) {
-		var _p11 = msg;
-		switch (_p11.ctor) {
+		var _p8 = msg;
+		switch (_p8.ctor) {
 			case 'SetScenario':
-				return A4(_user$project$Update$setScenario, model, _p11._1, _p11._0, _p11._2);
+				return A4(_user$project$Update$setScenario, model, _p8._1, _p8._0, _p8._2);
 			case 'ChooseScenario':
-				var _p12 = _p11._0;
-				return A2(_elm_lang$core$Dict$member, _p12, model.scenarios) ? A2(
+				var _p9 = _p8._0;
+				return A2(_elm_lang$core$Dict$member, _p9, model.scenarios) ? A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{
-							currentScenario: _elm_lang$core$Maybe$Just(_p12)
+							currentScenario: _elm_lang$core$Maybe$Just(_p9)
 						}),
 					{ctor: '[]'}) : A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -9082,7 +9083,7 @@ var _user$project$Update$update = F2(
 				var currency = A2(
 					_elm_lang$core$Maybe$withDefault,
 					_user$project$Model$defaultCurrency,
-					_user$project$Currency_Decode$decodeCurrency(_p11._0));
+					_user$project$Currency_Decode$decodeCurrency(_p8._0));
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -9094,9 +9095,9 @@ var _user$project$Update$update = F2(
 						_1: {ctor: '[]'}
 					});
 			case 'LocalStorageReceive':
-				return A2(_user$project$Update$localStorage, model, _p11._0);
+				return A2(_user$project$Update$localStorage, model, _p8._0);
 			default:
-				var scenarios = A2(_elm_lang$core$Dict$remove, _p11._0, model.scenarios);
+				var scenarios = A2(_elm_lang$core$Dict$remove, _p8._0, model.scenarios);
 				var currentScenario = _user$project$Model$firstScenarioID(scenarios);
 				var model_ = _elm_lang$core$Native_Utils.update(
 					model,
@@ -9873,6 +9874,17 @@ var _user$project$View$wikiMsg = {
 	_0: _elm_lang$html$Html$text('Wikipedia Article'),
 	_1: {ctor: '[]'}
 };
+var _user$project$View$wikiAnchor = function (article) {
+	return A2(
+		_elm_lang$html$Html$a,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$href(
+				A2(_elm_lang$core$Basics_ops['++'], 'https://en.wikipedia.org/wiki/', article)),
+			_1: {ctor: '[]'}
+		},
+		_user$project$View$wikiMsg);
+};
 var _user$project$View$controlsHelp = {
 	ctor: '::',
 	_0: A2(
@@ -10015,14 +10027,7 @@ var _user$project$View$controlsHelp = {
 																	{ctor: '[]'},
 																	{
 																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$a,
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Customer_acquisition_cost'),
-																				_1: {ctor: '[]'}
-																			},
-																			_user$project$View$wikiMsg),
+																		_0: _user$project$View$wikiAnchor('Customer_acquisition_cost'),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {
@@ -10052,14 +10057,7 @@ var _user$project$View$controlsHelp = {
 																				{ctor: '[]'},
 																				{
 																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$a,
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Gross_margin'),
-																							_1: {ctor: '[]'}
-																						},
-																						_user$project$View$wikiMsg),
+																					_0: _user$project$View$wikiAnchor('Gross_margin'),
 																					_1: {ctor: '[]'}
 																				}),
 																			_1: {
@@ -10089,14 +10087,7 @@ var _user$project$View$controlsHelp = {
 																							{ctor: '[]'},
 																							{
 																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$a,
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Fixed_cost'),
-																										_1: {ctor: '[]'}
-																									},
-																									_user$project$View$wikiMsg),
+																								_0: _user$project$View$wikiAnchor('Fixed_cost'),
 																								_1: {ctor: '[]'}
 																							}),
 																						_1: {ctor: '[]'}
@@ -10164,14 +10155,7 @@ var _user$project$View$resultsHelp = {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$a,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$href('https://en.wikipedia.org/wiki/Earnings_before_interest_and_taxes'),
-										_1: {ctor: '[]'}
-									},
-									_user$project$View$wikiMsg),
+								_0: _user$project$View$wikiAnchor('Earnings_before_interest_and_taxes'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -10313,51 +10297,48 @@ var _user$project$View$resultsHelp = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$View$help = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$h2,
-		{ctor: '[]'},
+var _user$project$View$help = function () {
+	var col = _elm_lang$html$Html$div(
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Help'),
+			_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
 			_1: {ctor: '[]'}
-		}),
-	_1: {
+		});
+	return {
 		ctor: '::',
 		_0: A2(
-			_elm_lang$html$Html$div,
+			_elm_lang$html$Html$h2,
+			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('row'),
+				_0: _elm_lang$html$Html$text('Help'),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('row'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					col,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
-						_1: {ctor: '[]'}
-					},
-					_user$project$View$controlsHelp),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
+						_0: _user$project$View$controlsHelp,
+						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('col-md-6'),
+							_0: _user$project$View$resultsHelp,
 							_1: {ctor: '[]'}
-						},
-						_user$project$View$resultsHelp),
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {ctor: '[]'}
-	}
-};
+						}
+					})),
+			_1: {ctor: '[]'}
+		}
+	};
+}();
 var _user$project$View$numberRange = function (range) {
 	var _p0 = range;
 	return {
@@ -10545,11 +10526,10 @@ var _user$project$View$NumberRange = F3(
 var _user$project$View$controls = F3(
 	function (model, id, scenario) {
 		var msg = _user$project$Msg$SetScenario(id);
-		var controlClass = _elm_lang$html$Html_Attributes$class('form-group');
 		var controlDiv = _elm_lang$html$Html$div(
 			{
 				ctor: '::',
-				_0: controlClass,
+				_0: _elm_lang$html$Html_Attributes$class('form-group'),
 				_1: {ctor: '[]'}
 			});
 		var lt = _user$project$View$labelText(model);
@@ -10735,7 +10715,7 @@ var _user$project$View$view = function (model) {
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(' - SaaS Business Model Calculator'),
+									_0: _elm_lang$html$Html$text(' SaaS Business Model Calculator'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
@@ -10766,20 +10746,16 @@ var _user$project$View$view = function (model) {
 			},
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				function () {
-					var _p6 = scenario;
-					if (_p6.ctor === 'Nothing') {
-						return {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Loading scenarios'),
-							_1: {ctor: '[]'}
-						};
-					} else {
-						var _p8 = _p6._0._1;
-						var _p7 = _p6._0._0;
-						return {
-							ctor: '::',
-							_0: A2(
+				{
+					ctor: '::',
+					_0: function () {
+						var _p6 = scenario;
+						if (_p6.ctor === 'Nothing') {
+							return _elm_lang$html$Html$text('Loading scenarios');
+						} else {
+							var _p8 = _p6._0._1;
+							var _p7 = _p6._0._0;
+							return A2(
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
@@ -10826,11 +10802,11 @@ var _user$project$View$view = function (model) {
 											_1: {ctor: '[]'}
 										}
 									}
-								}),
-							_1: {ctor: '[]'}
-						};
-					}
-				}(),
+								});
+						}
+					}(),
+					_1: {ctor: '[]'}
+				},
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					{
