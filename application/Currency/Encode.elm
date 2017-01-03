@@ -29,6 +29,8 @@ encodeCurrency currency =
         UAH ->
             "uah"
 
+        INR ->
+            "inr"
 
 encodeCurrencyJson : Currency -> Value
 encodeCurrencyJson =

@@ -12,6 +12,7 @@ type Currency
     | JPY
     | TRY
     | UAH
+    | INR
 
 
 currencies : List Currency
@@ -22,4 +23,5 @@ currencies =
     , JPY
     , TRY
     , UAH
+    , INR
     ]

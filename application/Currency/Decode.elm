@@ -24,5 +24,8 @@ decodeCurrency string =
         "uah" ->
             Just UAH
 
+        "inr" ->
+            Just INR
+
         _ ->
             Nothing

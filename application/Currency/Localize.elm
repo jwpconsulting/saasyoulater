@@ -24,6 +24,9 @@ localizeCurrency currency =
         UAH ->
             "₴"
 
+        INR ->
+            "₹"
+
 
 currencyName : Currency -> String
 currencyName currency =
@@ -45,3 +48,6 @@ currencyName currency =
 
         UAH ->
             "Ukrainian hryvnia"
+
+        INR ->
+            "Indian rupee"
