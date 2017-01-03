@@ -5,7 +5,8 @@
     "license": "BSD-3-Clause",
     "source-directories": [
         ".",
-        "../application"
+        "../application",
+        "../application/Currency"
     ],
     "exposed-modules": [],
     "dependencies": {

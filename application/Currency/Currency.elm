@@ -7,21 +7,23 @@ module Currency.Currency
 
 type Currency
     = USD
-    | EUR
     | AUD
+    | EUR
+    | INR
     | JPY
     | TRY
     | UAH
-    | INR
+    | VND
 
 
 currencies : List Currency
 currencies =
     [ USD
-    , EUR
     , AUD
+    , EUR
+    , INR
     , JPY
     , TRY
     , UAH
-    , INR
+    , VND
     ]

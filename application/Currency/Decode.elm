@@ -27,5 +27,8 @@ decodeCurrency string =
         "inr" ->
             Just INR
 
+        "vnd" ->
+            Just VND
+
         _ ->
             Nothing
