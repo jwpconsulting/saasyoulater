@@ -8256,31 +8256,41 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Currency_Currency$VND = {ctor: 'VND'};
 var _user$project$Currency_Currency$UAH = {ctor: 'UAH'};
 var _user$project$Currency_Currency$TRY = {ctor: 'TRY'};
 var _user$project$Currency_Currency$JPY = {ctor: 'JPY'};
-var _user$project$Currency_Currency$AUD = {ctor: 'AUD'};
+var _user$project$Currency_Currency$INR = {ctor: 'INR'};
 var _user$project$Currency_Currency$EUR = {ctor: 'EUR'};
+var _user$project$Currency_Currency$AUD = {ctor: 'AUD'};
 var _user$project$Currency_Currency$USD = {ctor: 'USD'};
 var _user$project$Currency_Currency$currencies = {
 	ctor: '::',
 	_0: _user$project$Currency_Currency$USD,
 	_1: {
 		ctor: '::',
-		_0: _user$project$Currency_Currency$EUR,
+		_0: _user$project$Currency_Currency$AUD,
 		_1: {
 			ctor: '::',
-			_0: _user$project$Currency_Currency$AUD,
+			_0: _user$project$Currency_Currency$EUR,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Currency_Currency$JPY,
+				_0: _user$project$Currency_Currency$INR,
 				_1: {
 					ctor: '::',
-					_0: _user$project$Currency_Currency$TRY,
+					_0: _user$project$Currency_Currency$JPY,
 					_1: {
 						ctor: '::',
-						_0: _user$project$Currency_Currency$UAH,
-						_1: {ctor: '[]'}
+						_0: _user$project$Currency_Currency$TRY,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Currency_Currency$UAH,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Currency_Currency$VND,
+								_1: {ctor: '[]'}
+							}
+						}
 					}
 				}
 			}
@@ -8548,8 +8558,12 @@ var _user$project$Currency_Encode$encodeCurrency = function (currency) {
 			return 'jpy';
 		case 'TRY':
 			return 'try';
-		default:
+		case 'UAH':
 			return 'uah';
+		case 'INR':
+			return 'inr';
+		default:
+			return 'vnd';
 	}
 };
 var _user$project$Currency_Encode$encodeCurrencyJson = function (_p1) {
@@ -8632,6 +8646,10 @@ var _user$project$Currency_Decode$decodeCurrency = function (string) {
 			return _elm_lang$core$Maybe$Just(_user$project$Currency_Currency$TRY);
 		case 'uah':
 			return _elm_lang$core$Maybe$Just(_user$project$Currency_Currency$UAH);
+		case 'inr':
+			return _elm_lang$core$Maybe$Just(_user$project$Currency_Currency$INR);
+		case 'vnd':
+			return _elm_lang$core$Maybe$Just(_user$project$Currency_Currency$VND);
 		default:
 			return _elm_lang$core$Maybe$Nothing;
 	}
@@ -8650,8 +8668,12 @@ var _user$project$Currency_Localize$currencyName = function (currency) {
 			return 'Japanese yen';
 		case 'TRY':
 			return 'Turkish lira';
-		default:
+		case 'UAH':
 			return 'Ukrainian hryvnia';
+		case 'VND':
+			return 'Vietnamese dong';
+		default:
+			return 'Indian rupee';
 	}
 };
 var _user$project$Currency_Localize$localizeCurrency = function (currency) {
@@ -8667,8 +8689,12 @@ var _user$project$Currency_Localize$localizeCurrency = function (currency) {
 			return '¥';
 		case 'TRY':
 			return '₺';
-		default:
+		case 'UAH':
 			return '₴';
+		case 'INR':
+			return '₹';
+		default:
+			return '₫';
 	}
 };
 
