@@ -6,6 +6,7 @@ import Fuzz exposing (list, int, tuple, string)
 import String
 import Model
 import Math
+import TestCurrency
 
 
 emptyScenario : Model.Scenario
@@ -42,8 +43,8 @@ constantScenario =
     }
 
 
-all : Test
-all =
+math : Test
+math =
     describe "Math"
         [ describe "effectiveGrowth"
             [ test "1.5 effectiveGrowth for emptyScenario" <|
@@ -133,3 +134,8 @@ all =
                 ]
             ]
         ]
+
+
+all : Test
+all =
+    describe "All tests" [ math, TestCurrency.currency ]
