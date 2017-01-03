@@ -8549,7 +8549,7 @@ var _user$project$Currency_Encode$encodeCurrency = function (currency) {
 		case 'TRY':
 			return 'try';
 		default:
-			return 'hryvnia';
+			return 'uah';
 	}
 };
 var _user$project$Currency_Encode$encodeCurrencyJson = function (_p1) {
