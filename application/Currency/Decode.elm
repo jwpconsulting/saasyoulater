@@ -21,5 +21,8 @@ decodeCurrency string =
         "try" ->
             Just TRY
 
+        "uah" ->
+            Just UAH
+
         _ ->
             Nothing

@@ -11,6 +11,7 @@ type Currency
     | AUD
     | JPY
     | TRY
+    | UAH
 
 
 currencies : List Currency
@@ -20,4 +21,5 @@ currencies =
     , AUD
     , JPY
     , TRY
+    , UAH
     ]

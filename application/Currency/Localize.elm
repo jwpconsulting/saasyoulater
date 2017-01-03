@@ -21,6 +21,9 @@ localizeCurrency currency =
         TRY ->
             "₺"
 
+        UAH ->
+            "₴"
+
 
 currencyName : Currency -> String
 currencyName currency =
@@ -39,3 +42,6 @@ currencyName currency =
 
         TRY ->
             "Turkish lira"
+
+        UAH ->
+            "Ukrainian hryvnia"
