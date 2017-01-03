@@ -245,53 +245,6 @@ controls model id scenario =
             ]
 
 
-wikiMsg : List (Html msg)
-wikiMsg =
-    [ text "Wikipedia Article" ]
-
-
-controlsHelp : List (Html Msg)
-controlsHelp =
-    [ h4 [] [ text "Explanation of Controls" ]
-    , dl []
-        [ dt [] [ text "Months" ]
-        , dd [] [ text "Length of business forecast" ]
-        , dt [] [ text "Churn Rate" ]
-        , dd [] [ text "Percentage of customers leaving monthly" ]
-        , dt [] [ text "Customers at Start" ]
-        , dd [] [ text "How many customers exist at start." ]
-        , dt [] [ text "Customer Growth Month over Month (MoM)" ]
-        , dd []
-            [ text "Defines the monthly growth in percent, i.e., 3 % means your customer base will grow to 103% after a month." ]
-        , dt [] [ text "Revenue per customer" ]
-        , dd [] [ text "Monthly revenue from one customer" ]
-        , dt [] [ text "Customer Acquisition Cost (CAC)" ]
-        , dd []
-            [ text "Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer."
-            ]
-        , dd []
-            [ a [ href "https://en.wikipedia.org/wiki/Customer_acquisition_cost" ]
-                wikiMsg
-            ]
-        , dt [] [ text "Gross Margin" ]
-        , dd []
-            [ text "Difference between revenue and cost." ]
-        , dd []
-            [ a [ href "https://en.wikipedia.org/wiki/Gross_margin" ]
-                wikiMsg
-            ]
-        , dt [] [ text "Fixed cost" ]
-        , dd []
-            [ text "Business expenses that are not dependent on the amount of customers."
-            ]
-        , dd []
-            [ a [ href "https://en.wikipedia.org/wiki/Fixed_cost" ]
-                wikiMsg
-            ]
-        ]
-    ]
-
-
 numbers : Currency -> Scenario -> List (Html Msg)
 numbers currency scenario =
     let
@@ -475,6 +428,52 @@ results currency scenario =
         ]
 
 
+
+-- HELP
+
+
+controlsHelp : List (Html Msg)
+controlsHelp =
+    [ h4 [] [ text "Explanation of Controls" ]
+    , dl []
+        [ dt [] [ text "Months" ]
+        , dd [] [ text "Length of business forecast" ]
+        , dt [] [ text "Churn Rate" ]
+        , dd [] [ text "Percentage of customers leaving monthly" ]
+        , dt [] [ text "Customers at Start" ]
+        , dd [] [ text "How many customers exist at start." ]
+        , dt [] [ text "Customer Growth Month over Month (MoM)" ]
+        , dd []
+            [ text "Defines the monthly growth in percent, i.e., 3 % means your customer base will grow to 103% after a month." ]
+        , dt [] [ text "Revenue per customer" ]
+        , dd [] [ text "Monthly revenue from one customer" ]
+        , dt [] [ text "Gross Margin" ]
+        , dd []
+            [ text "Difference between revenue and cost." ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Gross_margin" ]
+                wikiMsg
+            ]
+        , dt [] [ text "Customer Acquisition Cost (CAC)" ]
+        , dd []
+            [ text "Customer Acquisition Cost is the cost associated in convincing a customer to subscribe to your SaaS. Typically this will be your marketing budget per customer."
+            ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Customer_acquisition_cost" ]
+                wikiMsg
+            ]
+        , dt [] [ text "Fixed cost" ]
+        , dd []
+            [ text "Business expenses that are not dependent on the amount of customers."
+            ]
+        , dd []
+            [ a [ href "https://en.wikipedia.org/wiki/Fixed_cost" ]
+                wikiMsg
+            ]
+        ]
+    ]
+
+
 resultsHelp : List (Html Msg)
 resultsHelp =
     [ h4 [] [ text "Explanation of Results" ]
@@ -500,6 +499,11 @@ resultsHelp =
         , dd [] [ text "Lowest point in cumulative EBIT. Bank account needs to be able to shoulder this." ]
         ]
     ]
+
+
+wikiMsg : List (Html msg)
+wikiMsg =
+    [ text "Wikipedia Article" ]
 
 
 help : List (Html Msg)
