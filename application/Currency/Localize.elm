@@ -26,16 +26,16 @@ currencyName : Currency -> String
 currencyName currency =
     case currency of
         EUR ->
-            "EUR"
+            "Euro"
 
         USD ->
-            "USD"
+            "United States dollar"
 
         AUD ->
-            "AUD"
+            "Australian dollar"
 
         JPY ->
-            "JPY"
+            "Japanese yen"
 
         TRY ->
-            "TRY"
+            "Turkish lira"
