@@ -57,7 +57,14 @@ customerGrowth customerGrowth month =
 
 customerAcquisitionCost : Scenario -> Month -> Money
 customerAcquisitionCost scenario month =
-    customerGrowth scenario.customerGrowth month * scenario.cac
+    let
+        customersLastMonth =
+            customers scenario.customerGrowth <| month - 1
+
+        customersAdded =
+            (toFloat customersLastMonth) * scenario.customerGrowth.growthRate
+    in
+        -((round customersAdded) * scenario.cac)
 
 
 expenses : Scenario -> Month -> Int

@@ -35,6 +35,7 @@ encodeCurrency currency =
         VND ->
             "vnd"
 
+
 encodeCurrencyJson : Currency -> Value
 encodeCurrencyJson =
     encodeCurrency >> string

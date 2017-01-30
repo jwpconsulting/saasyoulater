@@ -43,6 +43,23 @@ constantScenario =
     }
 
 
+constantLossyScenario : Model.Scenario
+constantLossyScenario =
+    { months = 12
+    , revenue = 30
+    , customerGrowth =
+        { startValue = 10
+        , growthRate = 1
+        , churnRate = 1
+        }
+    , revenueGrossMargin = 1
+    , cac = 50
+    , fixedCost = 100
+    , comment = Nothing
+    , name = Nothing
+    }
+
+
 math : Test
 math =
     describe "Math"
@@ -53,6 +70,14 @@ math =
             , test "1 effectiveGrowth for constantScenario" <|
                 \() ->
                     Expect.equal 1 <| Math.effectiveGrowth constantScenario.customerGrowth
+            ]
+        , describe "customerAcquisitionCost"
+            [ test "0 for constantScenario" <|
+                \() ->
+                    Expect.equal 0 <| Math.customerAcquisitionCost constantScenario constantScenario.months
+            , test "10 * 50 for constantLossyScenario" <|
+                \() ->
+                    Expect.equal -500 <| Math.customerAcquisitionCost constantLossyScenario constantLossyScenario.months
             ]
         , describe "earnings"
             [ describe "emptyScenario"
