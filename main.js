@@ -9228,7 +9228,7 @@ var _user$project$Math$customerAcquisitionCost = F2(
 	function (scenario, month) {
 		var customersLastMonth = A2(_user$project$Math$customers, scenario.customerGrowth, month - 1);
 		var customersAdded = _elm_lang$core$Basics$toFloat(customersLastMonth) * scenario.customerGrowth.growthRate;
-		return _elm_lang$core$Basics$round(customersAdded) * scenario.cac;
+		return 0 - (_elm_lang$core$Basics$round(customersAdded) * scenario.cac);
 	});
 var _user$project$Math$expenses = F2(
 	function (scenario, month) {
