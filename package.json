@@ -1,7 +1,7 @@
 {
   "name": "saasulator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Saas you later",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -23,5 +23,5 @@
   "bugs": {
     "url": "https://github.com/justuswilhelm/saasulator/issues"
   },
-  "homepage": "https://github.com/justuswilhelm/saasulator#readme"
+  "homepage": "https://saasyoulater.com"
 }
