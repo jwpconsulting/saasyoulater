@@ -6,12 +6,14 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview --port 3000",
-    "test": "npm run test:integration && npm run test:unit",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "prettier --check . && eslint .",
-    "format": "prettier --write .",
-    "test:integration": "playwright test",
-    "test:unit": "vitest"
+    "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check && npm run check:vitest && npm run check:playwright",
+    "check:svelte-check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:prettier": "prettier --check .",
+    "check:eslint": "eslint .",
+    "check:vitest": "vitest run",
+    "check:playwright": "playwright test",
+    "fix": "npm run fix:prettier",
+    "fix:prettier": "prettier --write ."
   },
   "dependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
