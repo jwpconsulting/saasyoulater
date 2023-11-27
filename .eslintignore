@@ -1,5 +1,3 @@
-# NPM
 node_modules
-# SvelteKit
 build
 .svelte-kit

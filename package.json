@@ -1,27 +1,40 @@
 {
-  "name": "saasulator",
-  "version": "1.0.0",
-  "description": "Saas you later",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
+  "name": "saas-you-later",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "preview": "vite preview --port 3000",
+    "test": "npm run test:integration && npm run test:unit",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write .",
+    "test:integration": "playwright test",
+    "test:unit": "vitest"
   },
   "dependencies": {
-    "elm": "^0.18.0",
-    "elm-test": "^0.18.2"
+    "@sveltejs/adapter-auto": "^2.0.0",
+    "@sveltejs/adapter-static": "^2.0.3",
+    "@sveltejs/kit": "^1.27.4",
+    "svelte": "^4.2.7",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0",
+    "vite": "^4.4.2"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@playwright/test": "^1.28.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-svelte": "^2.30.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "svelte-check": "^3.6.0",
+    "svelte-language-server": "^0.16.1",
+    "typescript-language-server": "^4.1.2",
+    "vitest": "^0.32.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/justuswilhelm/saasulator.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/justuswilhelm/saasulator/issues"
-  },
-  "homepage": "https://saasyoulater.com"
+  "type": "module"
 }
