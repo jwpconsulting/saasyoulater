@@ -362,9 +362,9 @@
             </dd>
             <dt>Customer Acquisition Cost (CAC)</dt>
             <dd>
-                Customer Acquisition Cost is the cost associated in convincing a
-                customer to subscribe to your SaaS. Typically this will be your
-                marketing budget per customer.
+                Customer Acquisition Cost is the cost associated in convincing
+                a customer to subscribe to your SaaS. Typically this will be
+                your marketing budget per customer.
             </dd>
             <dd>
                 <a
