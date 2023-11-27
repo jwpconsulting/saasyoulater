@@ -13,6 +13,7 @@
     "check:eslint": "eslint .",
     "check:vitest": "vitest run",
     "check:playwright": "playwright test",
+    "check:playwright:install": "playwright install firefox",
     "format": "npm run fix:prettier",
     "fix": "npm run fix:prettier",
     "fix:prettier": "prettier --write ."

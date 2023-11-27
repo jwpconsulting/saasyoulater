@@ -36,6 +36,33 @@ npm run dev
 You can then open SYL in your browser at
 [http://localhost:3000](http://localhost:3000).
 
+## Testing
+
+To test locally, install the headless Firefox that
+[Playwright](https://playwright.dev/) uses by running
+
+```
+npm run check:playwright:install
+```
+
+You might want to use a desktop firewall like
+[OpenSnitch](https://github.com/evilsocket/opensnitch) to stop Firefox from
+phoning home to their location service or getpocket.com.
+
+To test everything then, run
+
+```
+npm test
+```
+
+This will
+
+- prettify,
+- lint,
+- check types,
+- run unit tests, and
+- run playwright e2e tests.
+
 ## Building
 
 To build SYL, run
