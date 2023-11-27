@@ -11,4 +11,4 @@ indent_size = 4
 # TODO make this indent_size = 4
 [*.{svelte,ts,json,js,html,yaml,yml}]
 indent_style = space
-indent_size = 2
+indent_size = 4
