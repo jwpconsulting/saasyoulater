@@ -1,20 +1,9 @@
+<script lang="ts">
+    import Currency from "./form/Currency.svelte";
+</script>
+
 <h3>Options</h3>
-<div class="form-group">
-    <label>Currency</label>
-    <div>
-        <select class="form-control"
-            ><option value="usd">United States dollar ($)</option><option
-                value="aud">Australian dollar ($)</option
-            ><option value="eur">Euro (€)</option><option value="inr"
-                >Indian rupee (₹)</option
-            ><option value="jpy">Japanese yen (¥)</option><option value="try"
-                >Turkish lira (₺)</option
-            ><option value="uah">Ukrainian hryvnia (₴)</option><option
-                value="vnd">Vietnamese dong (₫)</option
-            ></select
-        >
-    </div>
-</div>
+<Currency />
 <div class="form-group">
     <label>Scenario Name</label><input
         class="form-control"
