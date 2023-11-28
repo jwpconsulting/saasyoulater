@@ -1,93 +1,63 @@
+<script lang="ts">
+    import NumberInput from "./form/NumberInput.svelte";
+    const currency = "$";
+</script>
+
 <form>
     <h2>Controls</h2>
-    <div class="form-group">
-        <label class="control-label">Months</label><input
-            type="number"
-            class="form-control text-right"
-            min="1"
-            max="100"
-            step="1"
-        />
-    </div>
-    <div class="form-group">
-        <label class="control-label">Churn Rate</label>
-        <div class="input-group">
-            <span class="input-group-addon">%</span><input
-                type="number"
-                class="form-control text-right"
-                min="1"
-                max="100"
-                step="1"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Customers at Start</label><input
-            type="number"
-            class="form-control text-right"
-            min="10"
-            max="1000"
-            step="10"
-        />
-    </div>
-    <div class="form-group">
-        <label class="control-label">C. Growth MoM</label>
-        <div class="input-group">
-            <span class="input-group-addon">%</span><input
-                type="number"
-                class="form-control text-right"
-                min="0"
-                max="1000"
-                step="10"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Rev. per Customer</label>
-        <div class="input-group">
-            <span class="input-group-addon">$</span><input
-                type="number"
-                class="form-control text-right"
-                min="0"
-                max="1000"
-                step="10"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Gross Margin</label>
-        <div class="input-group">
-            <span class="input-group-addon">%</span><input
-                type="number"
-                class="form-control text-right"
-                min="0"
-                max="100"
-                step="5"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">CAC</label>
-        <div class="input-group">
-            <span class="input-group-addon">$</span><input
-                type="number"
-                class="form-control text-right"
-                min="0"
-                max="5000"
-                step="5"
-            />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Fixed Cost</label>
-        <div class="input-group">
-            <span class="input-group-addon">$</span><input
-                type="number"
-                class="form-control text-right"
-                min="0"
-                max="10000"
-                step="100"
-            />
-        </div>
-    </div>
+    <NumberInput min={1} max={100} label="Months" value={24} />
+    <NumberInput
+        min={1}
+        max={100}
+        label="Churn Rate"
+        prefixUnit="%"
+        value={3}
+    />
+    <NumberInput
+        min={10}
+        max={100}
+        step={10}
+        label="Customers at Start"
+        value={10}
+    />
+    <NumberInput
+        min={0}
+        max={1000}
+        step={10}
+        label="C. Growth MoM"
+        prefixUnit="%"
+        value={40}
+    />
+    <NumberInput
+        min={0}
+        max={1000}
+        step={10}
+        label="Rev. per Customer"
+        prefixUnit={currency}
+        value={30}
+    />
+    <NumberInput
+        min={0}
+        max={100}
+        step={5}
+        label="Gross Margin"
+        prefixUnit="%"
+        value={50}
+    />
+    <NumberInput
+        min={0}
+        max={5000}
+        step={5}
+        label="CAC"
+        prefixUnit={currency}
+        value={50}
+    />
+    <NumberInput
+        min={0}
+        max={10000}
+        step={100}
+        label="Fixed Cost"
+        prefixUnit={currency}
+        value={100}
+    />
 </form>
