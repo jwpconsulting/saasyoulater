@@ -1,3 +1,7 @@
+<script lang="ts">
+    // TODO refactor nav tabs into component
+</script>
+
 <h1>SaaS You Later<small> - SaaS Business Model Calculator</small></h1>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#">Scenario 1</a></li>

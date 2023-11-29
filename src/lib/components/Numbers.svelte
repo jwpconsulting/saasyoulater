@@ -1,3 +1,8 @@
+<script lang="ts">
+    // TODO: make array containing values below
+    // TODO: Recreate table from these values
+</script>
+
 <h2>Numbers</h2>
 <div class="table-responsive">
     <table class="table table-hover table-condensed">
