@@ -1,163 +1,161 @@
 <script lang="ts">
+    // TODO the coloring is not necessarily correct. Refer to View.elm
+    // TODO color cum. ebit
     const currency = "$";
+    const data = [
+        {
+            month: 1,
+            customers: 10,
+            revenue: 300,
+            grossMargin: 150,
+            expenses: 235,
+            ebit: -85,
+            cumulativeEbit: -85,
+        },
+        {
+            month: 3,
+            customers: 19,
+            revenue: 570,
+            grossMargin: 285,
+            expenses: 370,
+            ebit: -85,
+            cumulativeEbit: -240,
+        },
+        {
+            month: 5,
+            customers: 35,
+            revenue: 1050,
+            grossMargin: 525,
+            expenses: 550,
+            ebit: -25,
+            cumulativeEbit: -335,
+        },
+        {
+            month: 7,
+            customers: 66,
+            revenue: 1980,
+            grossMargin: 990,
+            expenses: 955,
+            ebit: 35,
+            cumulativeEbit: -310,
+        },
+        {
+            month: 9,
+            customers: 124,
+            revenue: 3720,
+            grossMargin: 1860,
+            expenses: 1720,
+            ebit: 140,
+            cumulativeEbit: -75,
+        },
+        {
+            month: 11,
+            customers: 233,
+            revenue: 6990,
+            grossMargin: 3495,
+            expenses: 3160,
+            ebit: 335,
+            cumulativeEbit: 460,
+        },
+        {
+            month: 14,
+            customers: 599,
+            revenue: 17970,
+            grossMargin: 8985,
+            expenses: 7975,
+            ebit: 1010,
+            cumulativeEbit: 2665,
+        },
+        {
+            month: 16,
+            customers: 1124,
+            revenue: 33720,
+            grossMargin: 16860,
+            expenses: 14860,
+            ebit: 2000,
+            cumulativeEbit: 6080,
+        },
+        {
+            month: 18,
+            customers: 2110,
+            revenue: 63300,
+            grossMargin: 31650,
+            expenses: 27820,
+            ebit: 3830,
+            cumulativeEbit: 12660,
+        },
+        {
+            month: 20,
+            customers: 3960,
+            revenue: 118800,
+            grossMargin: 59400,
+            expenses: 52120,
+            ebit: 7280,
+            cumulativeEbit: 25210,
+        },
+        {
+            month: 22,
+            customers: 7432,
+            revenue: 222960,
+            grossMargin: 111480,
+            expenses: 97750,
+            ebit: 13730,
+            cumulativeEbit: 48935,
+        },
+        {
+            month: 24,
+            customers: 13950,
+            revenue: 418500,
+            grossMargin: 209250,
+            expenses: 183385,
+            ebit: 25865,
+            cumulativeEbit: 93645,
+        },
+    ];
 </script>
 
-<tbody
-    ><tr class="warning"
-        ><td class="text-right">1</td><td class="text-right">10</td><td
-            class="text-right"
-            ><strong class="text-success">300</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">150</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">235</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-85</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-85</strong> {currency}</td
-        ></tr
-    ><tr class="warning"
-        ><td class="text-right">3</td><td class="text-right">19</td><td
-            class="text-right"
-            ><strong class="text-success">570</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">285</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">370</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-85</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-240</strong> {currency}</td
-        ></tr
-    ><tr class="warning"
-        ><td class="text-right">5</td><td class="text-right">35</td><td
-            class="text-right"
-            ><strong class="text-success">1050</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">525</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">550</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-25</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-335</strong> {currency}</td
-        ></tr
-    ><tr class="warning"
-        ><td class="text-right">7</td><td class="text-right">66</td><td
-            class="text-right"
-            ><strong class="text-success">1980</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">990</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">955</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">35</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-310</strong> {currency}</td
-        ></tr
-    ><tr class="warning"
-        ><td class="text-right">9</td><td class="text-right">124</td><td
-            class="text-right"
-            ><strong class="text-success">3720</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">1860</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">1720</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">140</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-warning">-75</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">11</td><td class="text-right">233</td><td
-            class="text-right"
-            ><strong class="text-success">6990</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">3495</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">3160</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">335</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">460</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">14</td><td class="text-right">599</td><td
-            class="text-right"
-            ><strong class="text-success">17970</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">8985</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">7975</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">1010</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">2665</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">16</td><td class="text-right">1124</td><td
-            class="text-right"
-            ><strong class="text-success">33720</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">16860</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">14860</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">2000</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">6080</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">18</td><td class="text-right">2110</td><td
-            class="text-right"
-            ><strong class="text-success">63300</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">31650</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">27820</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">3830</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">12660</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">20</td><td class="text-right">3960</td><td
-            class="text-right"
-            ><strong class="text-success">118800</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">59400</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">52120</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">7280</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">25210</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">22</td><td class="text-right">7432</td><td
-            class="text-right"
-            ><strong class="text-success">222960</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">111480</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">97750</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">13730</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">48935</strong> {currency}</td
-        ></tr
-    ><tr class="success"
-        ><td class="text-right">24</td><td class="text-right">13950</td><td
-            class="text-right"
-            ><strong class="text-success">418500</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">209250</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">183385</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">25865</strong> {currency}</td
-        ><td class="text-right"
-            ><strong class="text-success">93645</strong> {currency}</td
-        ></tr
-    ></tbody
->
+<tbody>
+    {#each data as row}
+        <tr
+            class:warning={row.cumulativeEbit < 0}
+            class:success={row.cumulativeEbit >= 0}
+        >
+            <td class="text-right">{row.month}</td>
+            <td class="text-right">{row.customers}</td>
+            <td class="text-right">
+                <strong class:text-success={row.revenue >= 0}>
+                    {row.revenue}
+                </strong>
+                {currency}
+            </td>
+            <td class="text-right">
+                <strong class:text-success={row.grossMargin >= 0}>
+                    {row.grossMargin}
+                </strong>
+                {currency}
+            </td>
+            <td class="text-right">
+                <strong class="text-success">{row.expenses}</strong>
+                {currency}
+            </td>
+            <td class="text-right">
+                <strong
+                    class:text-success={row.ebit >= 0}
+                    class:text-warning={row.ebit < 0}
+                >
+                    {row.ebit}
+                </strong>
+                {currency}
+            </td>
+            <td class="text-right">
+                <strong
+                    class:text-success={row.cumulativeEbit >= 0}
+                    class:text-warning={row.cumulativeEbit < 0}
+                >
+                    {row.cumulativeEbit}
+                </strong>
+                {currency}
+            </td>
+        </tr>
+    {/each}
+</tbody>
