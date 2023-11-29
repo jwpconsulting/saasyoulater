@@ -1,15 +1,11 @@
 <script lang="ts">
     import Currency from "./form/Currency.svelte";
+    import TextInput from "./form/TextInput.svelte";
 </script>
 
 <h3>Options</h3>
 <Currency />
-<div class="form-group">
-    <label>Scenario Name</label><input
-        class="form-control"
-        placeholder="Scenario Name"
-    />
-</div>
+<TextInput label="Scenario Name" />
 <div class="form-group">
     <label>Comment</label><textarea
         class="form-control"
