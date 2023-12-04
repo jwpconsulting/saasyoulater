@@ -1,34 +1,6 @@
 import type { Writable, Readable, Updater } from "svelte/store";
 import { derived, writable } from "svelte/store";
-
-type Month = number;
-type Money = number;
-type Percentage = number;
-
-interface CustomerGrowth {
-    // Add a setter here that ensures 0 <= startValue
-    startValue: number;
-    // Add a setter here that ensures 0 <= growthRate <= 100
-    growthRate: number;
-    // Add a setter here that ensures 0 <= churnRate <= 100
-    churnRate: number;
-}
-
-interface Scenario {
-    // Add a setter here that ensures that months > 0
-    months: Month;
-    // Add a setter here that ensures 0 <= revenue
-    revenue: Money;
-    customerGrowth: CustomerGrowth;
-    // Add a setter here that ensures 0 <= revenueGrossMargin <= 100
-    revenueGrossMargin: Percentage;
-    // Add a setter here that ensures 0 <= cac
-    cac: Money;
-    // Add a setter here that ensures 0 <= fixedCost
-    fixedCost: Money;
-    name?: string;
-    comment?: string;
-}
+import type { Scenario } from "$lib/types";
 
 // Default values here are derived from newScenario in applicaton/Model.elm
 const defaultScenario = (): Scenario => {
