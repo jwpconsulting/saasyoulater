@@ -9,7 +9,7 @@ import type {
 } from "$lib/types";
 
 // firstMonth : Month
-const firstMonth: Month = 1;
+export const firstMonth: Month = 1;
 
 // monthRange : Month -> List Month
 export function monthRange(month: Month): Month[] {
@@ -32,7 +32,7 @@ export function effectiveGrowth(
 export function customers(customerGrowth: CustomerGrowth, month: Month): Int {
     return Math.round(
         customerGrowth.startValue *
-            Math.exp((effectiveGrowth(customerGrowth), month - 1)),
+            Math.pow(effectiveGrowth(customerGrowth), month - 1),
     );
 }
 
