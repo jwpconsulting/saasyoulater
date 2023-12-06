@@ -18,13 +18,13 @@ const emptyScenario: Scenario = {
         //         { startValue = 0
         startValue: 0,
         //         , growthRate = 1
-        growthRate: 1,
+        growthRate: 100,
         //         , churnRate = 0.5
-        churnRate: 0.5,
+        churnRate: 50,
     },
     //         }
     //     , revenueGrossMargin = 0.75
-    revenueGrossMargin: 0.75,
+    revenueGrossMargin: 75,
     //     , cac = 50
     cac: 50,
     //     , fixedCost = 0
@@ -54,7 +54,7 @@ const constantScenario: Scenario = {
         //         }
     },
     //     , revenueGrossMargin = 1
-    revenueGrossMargin: 1,
+    revenueGrossMargin: 100,
     //     , cac = 50
     cac: 50,
     //     , fixedCost = 100
@@ -78,13 +78,13 @@ const constantLossyScenario: Scenario = {
         //         { startValue = 10
         startValue: 10,
         //         , growthRate = 1
-        growthRate: 1,
+        growthRate: 100,
         //         , churnRate = 1
-        churnRate: 1,
+        churnRate: 100,
         //         }
     },
     //     , revenueGrossMargin = 1
-    revenueGrossMargin: 1,
+    revenueGrossMargin: 100,
     //     , cac = 50
     cac: 50,
     //     , fixedCost = 100

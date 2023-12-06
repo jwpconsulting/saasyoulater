@@ -25,7 +25,9 @@ export function cohortMonth(cohort: Int, month: Int): Float {
 export function effectiveGrowth(
     customerGrowth: CustomerGrowth,
 ): EffectiveGrowth {
-    return 1 + (customerGrowth.growthRate - customerGrowth.churnRate);
+    return (
+        1 + intPercent(customerGrowth.growthRate - customerGrowth.churnRate)
+    );
 }
 
 // customers : CustomerGrowth -> Month -> Int
@@ -43,7 +45,9 @@ export function revenue(scenario: Scenario, month: Month): Int {
 
 // grossMargin : Scenario -> Month -> Money
 export function grossMargin(model: Scenario, month: Month): Money {
-    return Math.round(revenue(model, month) * model.revenueGrossMargin);
+    return Math.round(
+        revenue(model, month) * intPercent(model.revenueGrossMargin),
+    );
 }
 
 // customerGrowth : CustomerGrowth -> Month -> Int
@@ -63,7 +67,7 @@ export function customerAcquisitionCost(
     const customersLastMonth = customers(scenario.customerGrowth, month - 1);
 
     const customersAdded =
-        customersLastMonth * scenario.customerGrowth.growthRate;
+        customersLastMonth * intPercent(scenario.customerGrowth.growthRate);
     return Math.round(customersAdded) * scenario.cac;
 }
 
@@ -175,7 +179,7 @@ export function months(months: Month): Int[] {
 // averageLife : Scenario -> Int
 export function averageLife(model: Scenario): Int {
     // round (1 / model.customerGrowth.churnRate)
-    return Math.round(1 / model.customerGrowth.churnRate);
+    return Math.round(1 / intPercent(model.customerGrowth.churnRate));
 }
 
 // cltv : Scenario -> Int
@@ -204,4 +208,8 @@ export function minimumCumulativeEarnings(model: Scenario): Int {
 export function percentInt(percent: Float): Int {
     // percent * 100 |> round
     return Math.round(percent * 100);
+}
+export function intPercent(int: Int): Float {
+    // percent * 100 |> round
+    return int / 100;
 }
