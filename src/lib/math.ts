@@ -157,12 +157,11 @@ export function linspace(start: Int, stop: Int, n: Int): Int[] {
         // in
         // (List.range 0 (n - 1))
         return (
-            new Array(n - 1)
+            [...Array(n).keys()]
                 // |> List.map toFloat
                 // |> List.map (\n -> (toFloat start) + n * h)
-                .map((n) => start + n * h)
                 // |> List.map round
-                .map(Math.round)
+                .map((n) => Math.round(start + n * h))
         );
     }
 }

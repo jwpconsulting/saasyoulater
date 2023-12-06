@@ -335,6 +335,27 @@ describe("Math", () => {
         // ]
     });
     // ]
+    describe("linspace", () => {
+        test("it gives correct values", () => {
+            expect(math.linspace(0, 1, 0)).toStrictEqual([]);
+            expect(math.linspace(0, 1, 1)).toStrictEqual([1]);
+            expect(math.linspace(10, 50, 5)).toStrictEqual([
+                10, 20, 30, 40, 50,
+            ]);
+        });
+    });
+    describe("months", () => {
+        test("it gives correct values", () => {
+            expect(math.months(0)).toStrictEqual([]);
+            expect(math.months(1)).toStrictEqual([1]);
+            expect(math.months(12)).toStrictEqual([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            ]);
+            expect(math.months(24)).toStrictEqual([
+                1, 3, 5, 7, 9, 11, 14, 16, 18, 20, 22, 24,
+            ]);
+        });
+    });
 });
 
 // all : Test
