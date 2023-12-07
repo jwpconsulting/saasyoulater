@@ -1,0 +1,12 @@
+#!/bin/bash
+if ! npm run format
+then
+    echo "Coulnd't run npm run format"
+    exit 1
+fi
+
+if ! npm run check:no-playwright
+then
+    echo "Couldn't run npm check:no-playwright"
+    exit 1
+fi
