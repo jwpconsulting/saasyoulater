@@ -1,40 +1,13 @@
 <script lang="ts">
-    import type { Month } from "$lib/types";
-    import { currentScenario as scenario } from "$lib/stores/scenario";
-    import * as math from "$lib/math";
+    import { currentResults } from "$lib/stores/scenario";
 
     // TODO the coloring is not necessarily correct. Refer to View.elm
     // TODO color cum. ebit
     const currency = "$";
-    interface Datum {
-        month: Month;
-        customers: number;
-        revenue: number;
-        grossMargin: number;
-        expenses: number;
-        ebit: number;
-        cumulativeEbit: number;
-    }
-    let data: Datum[] = [];
-    $: {
-        const months = math.months($scenario.months);
-        console.log(months);
-        data = months.map((month: number) => {
-            return {
-                month,
-                customers: math.customers($scenario.customerGrowth, month),
-                revenue: math.revenue($scenario, month),
-                grossMargin: math.grossMargin($scenario, month),
-                expenses: math.expenses($scenario, month),
-                ebit: math.earnings($scenario, month),
-                cumulativeEbit: math.cumulativeEarnings($scenario, month),
-            };
-        });
-    }
 </script>
 
 <tbody>
-    {#each data as row}
+    {#each $currentResults.data as row}
         <tr
             class:warning={row.cumulativeEbit < 0}
             class:success={row.cumulativeEbit >= 0}

@@ -35,3 +35,23 @@ export interface Scenario {
     name?: string;
     comment?: string;
 }
+
+export interface Datum {
+    month: Month;
+    customers: number;
+    revenue: number;
+    grossMargin: number;
+    expenses: number;
+    ebit: number;
+    cumulativeEbit: number;
+}
+
+export interface Results {
+    data: Datum[];
+    breakEven: Money | undefined;
+    earningsBreakEven: Money | undefined;
+    averageLife: Money;
+    cltv: Money;
+    ltvcac: Money;
+    minimumCumulativeEarnings: Money;
+}
