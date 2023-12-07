@@ -55,3 +55,13 @@ export interface Results {
     ltvcac: Money;
     minimumCumulativeEarnings: Money;
 }
+
+type Currency = "USD" | "AUD" | "EUR" | "INR" | "JPY" | "TRY" | "UAH" | "VND";
+
+export type ScenarioId = string;
+
+export interface Model {
+    scenarios: Map<ScenarioId, Scenario>;
+    currentScenario: ScenarioId | undefined;
+    currency: Currency;
+}
