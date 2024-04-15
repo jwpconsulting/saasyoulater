@@ -73,3 +73,19 @@ export interface Model {
     currentScenario: ScenarioId | undefined;
     currency: Currency;
 }
+
+interface CurrencyDefinition {
+    shortName: string;
+    longName: string;
+}
+
+export const currencyDefinitions: Record<Currency, CurrencyDefinition> = {
+    USD: { longName: "United States dollar ($)", shortName: "$" },
+    AUD: { longName: "Australian dollar ($)", shortName: "" },
+    EUR: { longName: "Euro (€)", shortName: "€" },
+    INR: { longName: "Indian rupee (₹)", shortName: "₹" },
+    JPY: { longName: "Japanese yen (¥)", shortName: "¥" },
+    TRY: { longName: "Turkish lira (₺)", shortName: "₺" },
+    UAH: { longName: "Ukrainian hryvnia (₴)", shortName: "₴" },
+    VND: { longName: "Vietnamese dong (₫)", shortName: "₫" },
+};

@@ -1,21 +1,26 @@
 <script lang="ts">
-    const currencies: [string, string][] = [
-        ["usd", "United States dollar ($)"],
-        ["aud", "Australian dollar ($)"],
-        ["eur", "Euro (€)"],
-        ["inr", "Indian rupee (₹)"],
-        ["jpy", "Japanese yen (¥)"],
-        ["try", "Turkish lira (₺)"],
-        ["uah", "Ukrainian hryvnia (₴)"],
-        ["vnd", "Vietnamese dong (₫)"],
-    ];
+    import type { Currency } from "$lib/types";
+    import { currencyDefinitions } from "$lib/types";
+    import { setCurrency } from "$lib/stores/model";
+
+    function select(
+        event: Event & { currentTarget: EventTarget & HTMLSelectElement },
+    ) {
+        const value: Currency = event.currentTarget.value as Currency;
+        console.log(value);
+        setCurrency(value);
+    }
+
+    $: options = Object.entries(currencyDefinitions).map(
+        ([code, { longName }]) => [code, longName],
+    );
 </script>
 
 <div class="form-group">
     <label>Currency</label>
     <div>
-        <select class="form-control">
-            {#each currencies as [value, name]}
+        <select on:change={select} class="form-control">
+            {#each options as [value, name]}
                 <option {value}>{name}</option>
             {/each}
         </select>

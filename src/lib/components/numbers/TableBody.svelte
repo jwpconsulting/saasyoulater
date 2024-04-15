@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { currentResults } from "$lib/stores/model";
+    import { currentResults, model } from "$lib/stores/model";
+    import { currencyDefinitions } from "$lib/types";
 
     // TODO the coloring is not necessarily correct. Refer to View.elm
     // TODO color cum. ebit
-    const currency = "$";
+    $: currency = currencyDefinitions[$model.currency].shortName;
 </script>
 
 {#if $currentResults}
