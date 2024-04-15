@@ -69,7 +69,6 @@ export type Currency =
 export type ScenarioId = number;
 
 export interface Model {
-    scenarios: Map<ScenarioId, Scenario>;
     currentScenario: ScenarioId | undefined;
     currency: Currency;
 }

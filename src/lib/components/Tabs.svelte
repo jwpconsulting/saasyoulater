@@ -1,11 +1,16 @@
 <script lang="ts">
-    import { chooseScenario, model, newScenario } from "$lib/stores/model";
+    import {
+        chooseScenario,
+        model,
+        scenarios,
+        newScenario,
+    } from "$lib/stores/model";
 
-    $: scenarios = [...$model.scenarios];
+    $: s = [...($scenarios ?? [])];
 </script>
 
 <ul class="nav nav-tabs">
-    {#each scenarios as [number, { name }] (number)}
+    {#each s as [number, { name }] (number)}
         <li class:active={$model.currentScenario === number}>
             <a href="#" on:click={() => chooseScenario(number)}
                 >{name ?? `Scenario ${number}`}</a

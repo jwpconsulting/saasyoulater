@@ -3,10 +3,12 @@ import type { Writable, Readable } from "svelte/store";
 import { derived, readonly, writable } from "svelte/store";
 import type { Datum, Results, Scenario } from "$lib/types";
 import * as math from "$lib/math";
+import { scenarioSerializer } from "$lib/localStorage";
+
+import { persisted } from "svelte-persisted-store";
 
 function defaultModel(): Model {
     return {
-        scenarios: new Map([[1, defaultScenario()]]),
         currentScenario: 1,
         currency: "usd",
     };
@@ -31,43 +33,61 @@ const defaultScenario = (): Scenario => {
 const _model = writable<Model>(defaultModel());
 export const model = readonly(_model);
 
+const _scenarios = persisted<Map<number, Scenario> | undefined>(
+    "scenarios",
+    undefined,
+    { serializer: scenarioSerializer },
+);
+export const scenarios = readonly(_scenarios);
+
 export function setScenario(scenarioId: ScenarioId, scenario: Scenario) {
-    _model.update(($model) => {
-        if (!$model.scenarios.has(scenarioId)) {
+    _scenarios.update(($scenarios) => {
+        if ($scenarios === undefined) {
+            $scenarios = new Map();
+        }
+        if (!$scenarios.has(scenarioId)) {
             throw new Error("Scenario not found");
         }
-        return {
-            ...$model,
-            scenarios: $model.scenarios.set(scenarioId, scenario),
-        };
+        return $scenarios.set(scenarioId, scenario);
     });
 }
 
 export function chooseScenario(scenarioId: ScenarioId) {
-    _model.update(($model) => {
-        if (!$model.scenarios.has(scenarioId)) {
+    _scenarios.update(($scenarios) => {
+        if ($scenarios === undefined) {
+            throw new Error("Expected $scenarios");
+        }
+        if (!$scenarios.has(scenarioId)) {
             throw new Error("Scenario not found");
         }
-        return {
-            ...$model,
-            currentScenario: scenarioId,
-        };
+        _model.update(($model) => {
+            return {
+                ...$model,
+                currentScenario: scenarioId,
+            };
+        });
+        return $scenarios;
     });
 }
 
 // TODO
 // newScenario
 export function newScenario() {
-    _model.update(($model): Model => {
+    _scenarios.update(($scenarios) => {
+        if (!$scenarios) {
+            throw new Error("Expected $scenarios");
+        }
         const newScenario = defaultScenario();
-        const lastKey = [...$model.scenarios.keys()].at(-1) ?? 0;
+        const lastKey = [...$scenarios.keys()].at(-1) ?? 0;
         const scenarioId = lastKey + 1;
-        const scenarios = $model.scenarios.set(scenarioId, newScenario);
-        return {
-            ...$model,
-            scenarios,
-            currentScenario: scenarioId,
-        };
+        const scenarios = $scenarios.set(scenarioId, newScenario);
+        _model.update(($model) => {
+            return {
+                ...$model,
+                currentScenario: scenarioId,
+            };
+        });
+        return scenarios;
     });
 }
 
@@ -81,54 +101,74 @@ export function setCurrency(currency: Currency) {
 }
 
 export function deleteScenario(scenarioId: ScenarioId) {
-    _model.update(($model) => {
-        const deleted = $model.scenarios.delete(scenarioId);
+    _scenarios.update(($scenarios) => {
+        if ($scenarios === undefined) {
+            throw new Error("Expected $scenarios");
+        }
+        const deleted = $scenarios.delete(scenarioId);
         if (!deleted) {
             throw new Error("scenarioId wasn't in scenarios");
         }
-        return $model;
+        return $scenarios;
     });
 }
 
 const _currentScenario: Readable<Scenario | undefined> = derived<
-    typeof model,
+    [typeof model, typeof scenarios],
     Scenario | undefined
->(model, ($model, set) => {
+>([model, scenarios], ([$model, $scenarios], set) => {
+    if ($scenarios === undefined) {
+        set(undefined);
+        return;
+    }
     const current = $model.currentScenario;
     if (current === undefined) {
         set(undefined);
         return;
     }
-    const scenario = $model.scenarios.get(current);
+    const scenario = $scenarios.get(current);
     if (scenario === undefined) {
-        throw new Error("Expected scenario");
+        set(undefined);
+    } else {
+        set(scenario);
     }
-    set(scenario);
 });
 export const currentScenario: Writable<Scenario | undefined> = {
     subscribe: _currentScenario.subscribe,
     set(newScenario: Scenario) {
-        _model.update(($model) => {
-            const { currentScenario } = $model;
-            if (!currentScenario) {
-                throw new Error("Expected currentScenario");
+        _scenarios.update(($scenarios) => {
+            if ($scenarios === undefined) {
+                throw new Error("Expected scenarios");
             }
-            $model.scenarios.set(currentScenario, newScenario);
-            return $model;
+            _model.update(($model) => {
+                const { currentScenario } = $model;
+                if (!currentScenario) {
+                    throw new Error("Expected currentScenario");
+                }
+                _scenarios.set($scenarios.set(currentScenario, newScenario));
+                return $model;
+            });
+            return $scenarios;
         });
     },
     update(updater: (v: Scenario | undefined) => Scenario) {
-        _model.update(($model) => {
-            const { currentScenario } = $model;
-            if (!currentScenario) {
-                throw new Error("Expected currentScenario");
+        _scenarios.update(($scenarios) => {
+            if ($scenarios === undefined) {
+                throw new Error("Expected scenarios");
             }
-            const scenario = $model.scenarios.get(currentScenario);
-            if (scenario === undefined) {
-                throw new Error("Expected scenario");
-            }
-            $model.scenarios.set(currentScenario, updater(scenario));
-            return $model;
+            _model.update(($model) => {
+                const { currentScenario } = $model;
+                if (!currentScenario) {
+                    throw new Error("Expected currentScenario");
+                }
+                const scenario = $scenarios.get(currentScenario);
+                if (scenario !== undefined) {
+                    $scenarios.set(currentScenario, updater(scenario));
+                }
+                _scenarios.set($scenarios);
+                return $model;
+            });
+            return $scenarios;
         });
     },
 };
