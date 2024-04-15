@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { chooseScenario, model, newScenario } from "$lib/stores/model";
 
     $: scenarios = [...$model.scenarios];
