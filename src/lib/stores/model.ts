@@ -1,39 +1,16 @@
-import type { Model, ScenarioId } from "$lib/types";
+import type { Model, ScenarioId, Currency } from "$lib/types";
 import { derived, readonly, writable } from "svelte/store";
 import type { Datum, Results, Scenario } from "$lib/types";
 import * as math from "$lib/math";
 
-
 function defaultModel(): Model {
     return {
-        scenarios: new Map(),
-        currentScenario: undefined,
+        scenarios: new Map([[1, defaultScenario()]]),
+        currentScenario: 1,
         currency: "USD",
     };
 }
 
-const _model = writable<Model>(defaultModel());
-export const model = readonly(_model);
-
-export function chooseScenario(scenarioId: ScenarioId) {
-    _model.update(($model) => {
-        if (!$model.scenarios.has(scenarioId)) {
-            console.error(`${scenarioId} was not found in model`);
-        }
-        return {
-            ...$model,
-            currentScenario: scenarioId,
-        };
-    });
-}
-
-// TODO
-export function setScenario(scenarioId: ScenarioId, scenario: Scenario) {
-}
-// chooseScenario(scenarioId: ScenarioId)
-// newScenario
-// setCurrency(currency: Currency)
-// deleteScenario(scenarioId: ScenarioId)
 // Default values here are derived from newScenario in applicaton/Model.elm
 const defaultScenario = (): Scenario => {
     return {
@@ -50,38 +27,114 @@ const defaultScenario = (): Scenario => {
     };
 };
 
-export const currentScenario = writable<Scenario>(defaultScenario());
+const _model = writable<Model>(defaultModel());
+export const model = readonly(_model);
 
-export const currentResults = derived<typeof currentScenario, Results>(
-    currentScenario,
-    ($currentScenario, set) => {
-        const months = math.months($currentScenario.months);
-        const data: Datum[] = months.map((month: number) => {
-            return {
-                month,
-                customers: math.customers(
-                    $currentScenario.customerGrowth,
-                    month,
-                ),
-                revenue: math.revenue($currentScenario, month),
-                grossMargin: math.grossMargin($currentScenario, month),
-                expenses: math.expenses($currentScenario, month),
-                ebit: math.earnings($currentScenario, month),
-                cumulativeEbit: math.cumulativeEarnings(
-                    $currentScenario,
-                    month,
-                ),
-            };
-        });
-        set({
-            data,
-            breakEven: math.breakEven($currentScenario),
-            earningsBreakEven: math.earningsBreakEven($currentScenario),
-            averageLife: math.averageLife($currentScenario),
-            cltv: math.cltv($currentScenario),
-            ltvcac: math.ltvcac($currentScenario),
-            minimumCumulativeEarnings:
-                math.minimumCumulativeEarnings($currentScenario),
-        });
+export function setScenario(scenarioId: ScenarioId, scenario: Scenario) {
+    _model.update(($model) => {
+        if (!$model.scenarios.has(scenarioId)) {
+            throw new Error("Scenario not found");
+        }
+        return {
+            ...$model,
+            scenarios: $model.scenarios.set(scenarioId, scenario),
+        };
+    });
+}
+
+export function chooseScenario(scenarioId: ScenarioId) {
+    _model.update(($model) => {
+        if (!$model.scenarios.has(scenarioId)) {
+            throw new Error("Scenario not found");
+        }
+        return {
+            ...$model,
+            currentScenario: scenarioId,
+        };
+    });
+}
+
+// TODO
+// newScenario
+let lastKey = 0;
+export function newScenario() {
+    _model.update(($model) => {
+        const newScenario = defaultScenario();
+        const scenarioId = lastKey;
+        lastKey = lastKey + 1;
+        const scenarios = $model.scenarios.set(scenarioId, newScenario);
+        return {
+            ...$model,
+            scenarios,
+            scenarioId,
+        };
+    });
+}
+
+export function setCurrency(currency: Currency) {
+    _model.update(($model) => {
+        return {
+            ...$model,
+            currency,
+        };
+    });
+}
+
+export function deleteScenario(scenarioId: ScenarioId) {
+    _model.update(($model) => {
+        const deleted = $model.scenarios.delete(scenarioId);
+        if (!deleted) {
+            throw new Error("scenarioId wasn't in scenarios");
+        }
+        return $model;
+    });
+}
+
+const _currentScenario = derived<typeof model, Scenario | undefined>(
+    model,
+    ($model, set) => {
+        const current = $model.currentScenario;
+        if (current === undefined) {
+            set(undefined);
+            return;
+        }
+        const scenario = $model.scenarios.get(current);
+        if (scenario === undefined) {
+            throw new Error("Expected scenario");
+        }
+        set(scenario);
     },
 );
+export const currentScenario = readonly(_currentScenario);
+
+export const currentResults = derived<
+    typeof currentScenario,
+    Results | undefined
+>(currentScenario, ($currentScenario, set) => {
+    if ($currentScenario === undefined) {
+        set(undefined);
+        return;
+    }
+    const months = math.months($currentScenario.months);
+    const data: Datum[] = months.map((month: number) => {
+        return {
+            month,
+            customers: math.customers($currentScenario.customerGrowth, month),
+            revenue: math.revenue($currentScenario, month),
+            grossMargin: math.grossMargin($currentScenario, month),
+            expenses: math.expenses($currentScenario, month),
+            ebit: math.earnings($currentScenario, month),
+            cumulativeEbit: math.cumulativeEarnings($currentScenario, month),
+        };
+    });
+    set({
+        data,
+        breakEven: math.breakEven($currentScenario),
+        earningsBreakEven: math.earningsBreakEven($currentScenario),
+        averageLife: math.averageLife($currentScenario),
+        cltv: math.cltv($currentScenario),
+        ltvcac: math.ltvcac($currentScenario),
+        minimumCumulativeEarnings:
+            math.minimumCumulativeEarnings($currentScenario),
+    });
+});

@@ -56,9 +56,17 @@ export interface Results {
     minimumCumulativeEarnings: Money;
 }
 
-type Currency = "USD" | "AUD" | "EUR" | "INR" | "JPY" | "TRY" | "UAH" | "VND";
+export type Currency =
+    | "USD"
+    | "AUD"
+    | "EUR"
+    | "INR"
+    | "JPY"
+    | "TRY"
+    | "UAH"
+    | "VND";
 
-export type ScenarioId = string;
+export type ScenarioId = number;
 
 export interface Model {
     scenarios: Map<ScenarioId, Scenario>;
