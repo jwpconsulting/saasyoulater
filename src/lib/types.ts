@@ -57,14 +57,14 @@ export interface Results {
 }
 
 export type Currency =
-    | "USD"
-    | "AUD"
-    | "EUR"
-    | "INR"
-    | "JPY"
-    | "TRY"
-    | "UAH"
-    | "VND";
+    | "usd"
+    | "aud"
+    | "eur"
+    | "inr"
+    | "jpy"
+    | "try"
+    | "uah"
+    | "vnd";
 
 export type ScenarioId = number;
 
@@ -80,12 +80,12 @@ interface CurrencyDefinition {
 }
 
 export const currencyDefinitions: Record<Currency, CurrencyDefinition> = {
-    USD: { longName: "United States dollar ($)", shortName: "$" },
-    AUD: { longName: "Australian dollar ($)", shortName: "" },
-    EUR: { longName: "Euro (€)", shortName: "€" },
-    INR: { longName: "Indian rupee (₹)", shortName: "₹" },
-    JPY: { longName: "Japanese yen (¥)", shortName: "¥" },
-    TRY: { longName: "Turkish lira (₺)", shortName: "₺" },
-    UAH: { longName: "Ukrainian hryvnia (₴)", shortName: "₴" },
-    VND: { longName: "Vietnamese dong (₫)", shortName: "₫" },
+    usd: { longName: "United States dollar ($)", shortName: "$" },
+    aud: { longName: "Australian dollar ($)", shortName: "" },
+    eur: { longName: "Euro (€)", shortName: "€" },
+    inr: { longName: "Indian rupee (₹)", shortName: "₹" },
+    jpy: { longName: "Japanese yen (¥)", shortName: "¥" },
+    try: { longName: "Turkish lira (₺)", shortName: "₺" },
+    uah: { longName: "Ukrainian hryvnia (₴)", shortName: "₴" },
+    vnd: { longName: "Vietnamese dong (₫)", shortName: "₫" },
 };

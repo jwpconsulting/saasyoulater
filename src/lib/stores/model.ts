@@ -8,7 +8,7 @@ function defaultModel(): Model {
     return {
         scenarios: new Map([[1, defaultScenario()]]),
         currentScenario: 1,
-        currency: "USD",
+        currency: "usd",
     };
 }
 
