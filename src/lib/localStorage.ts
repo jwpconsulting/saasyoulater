@@ -40,9 +40,9 @@ import type { Scenario } from "./types";
 import { z } from "zod";
 
 const customerGrowth = z.object({
-    startValue: z.number(),
-    growthRate: z.number(),
-    churnRate: z.number(),
+    start: z.number(),
+    growth: z.number(),
+    churn: z.number(),
 });
 
 const scenario = z.object({
@@ -52,21 +52,35 @@ const scenario = z.object({
     revenueGrossMargin: z.number(),
     cac: z.number(),
     fixedCost: z.number(),
-    name: z.optional(z.string()),
-    comment: z.optional(z.string()),
+    name: z.nullable(z.string()),
+    comment: z.nullable(z.string()),
 });
 
-const scenariosMap = z.map(z.number(), scenario);
+const scenariosMap = z.record(z.string(), scenario);
 
 export const scenarioSerializer: Serializer<Map<number, Scenario>> = {
     parse(text: string): Map<number, Scenario> {
-        const raw: Record<string, unknown> = JSON.parse(text);
-        const scenariosRaw: [number, unknown][] = Object.entries(raw).map(
+        const raw = JSON.parse(text);
+        const scenarios = scenariosMap.parse(raw);
+        const entries: [number, Scenario][] = Object.entries(scenarios).map(
             ([k, v]) => {
-                return [parseInt(k, 10), v];
+                return [
+                    parseInt(k, 10),
+                    {
+                        ...v,
+                        customerGrowth: {
+                            startValue: v.customerGrowth.start,
+                            growthRate: v.customerGrowth.growth * 100,
+                            churnRate: v.customerGrowth.churn * 100,
+                        },
+                        revenueGrossMargin: v.revenueGrossMargin * 100,
+                        name: v.name ?? undefined,
+                        comment: v.comment ?? undefined,
+                    },
+                ];
             },
         );
-        return scenariosMap.parse(new Map(scenariosRaw));
+        return new Map(entries);
     },
     stringify(o: Map<number, Scenario>): string {
         const record: Record<number, Scenario> = Object.fromEntries([...o]);
