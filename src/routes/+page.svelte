@@ -8,6 +8,10 @@
     import Results from "$lib/components/Results.svelte";
 </script>
 
+<svelte:head>
+    <title>SaaS You Later</title>
+</svelte:head>
+
 <Header />
 <div class="row">
     <div class="col-xs-6 col-md-2">
