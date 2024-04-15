@@ -56,12 +56,11 @@ export function chooseScenario(scenarioId: ScenarioId) {
 
 // TODO
 // newScenario
-let lastKey = 0;
 export function newScenario() {
     _model.update(($model) => {
         const newScenario = defaultScenario();
-        const scenarioId = lastKey;
-        lastKey = lastKey + 1;
+        const lastKey = [...$model.scenarios.keys()].at(-1) ?? 0;
+        const scenarioId = lastKey + 1;
         const scenarios = $model.scenarios.set(scenarioId, newScenario);
         return {
             ...$model,
