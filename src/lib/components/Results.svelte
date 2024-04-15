@@ -8,13 +8,19 @@
     <dl>
         <dt>EBIT positive</dt>
         <dd>
-            At month <strong>{$currentResults.breakEven || "never"}</strong>
+            {#if $currentResults.breakEven}
+                At month <strong>{$currentResults.breakEven}</strong>
+            {:else}
+                Never
+            {/if}
         </dd>
         <dt>Cumulative EBIT positive</dt>
         <dd>
-            At month <strong
-                >{$currentResults.earningsBreakEven || "never"}</strong
-            >
+            {#if $currentResults.earningsBreakEven}
+                At month <strong>{$currentResults.earningsBreakEven}</strong>
+            {:else}
+                Never
+            {/if}
         </dd>
         <dt>Average Customer Life</dt>
         <dd>
