@@ -5,8 +5,8 @@ then
     exit 1
 fi
 
-if ! npm run check:no-playwright
+if ! npm run check
 then
-    echo "Couldn't run npm check:no-playwright"
+    echo "Couldn't run npm check"
     exit 1
 fi
