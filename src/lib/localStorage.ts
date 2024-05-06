@@ -83,7 +83,22 @@ export const scenarioSerializer: Serializer<Map<number, Scenario>> = {
         return new Map(entries);
     },
     stringify(o: Map<number, Scenario>): string {
-        const record: Record<number, Scenario> = Object.fromEntries([...o]);
-        return JSON.stringify(record);
+        const records: [string, unknown][] = [...o].map(
+            ([k, v]: [number, Scenario]) => [
+                k.toString(),
+                {
+                    ...v,
+                    customerGrowth: {
+                        start: v.customerGrowth.startValue,
+                        growth: v.customerGrowth.growthRate / 100,
+                        churn: v.customerGrowth.churnRate / 100,
+                    },
+                    revenueGrossMargin: v.revenueGrossMargin / 100,
+                    name: v.name ?? null,
+                    comment: v.comment ?? null,
+                },
+            ],
+        );
+        return JSON.stringify(Object.fromEntries(records));
     },
 };
