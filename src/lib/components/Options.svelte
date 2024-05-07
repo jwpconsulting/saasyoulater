@@ -3,7 +3,7 @@
     import Currency from "./form/Currency.svelte";
     import TextArea from "./form/TextArea.svelte";
     import TextInput from "./form/TextInput.svelte";
-    import { currentScenario } from "$lib/stores/model";
+    import { currentScenario, deleteScenario, model } from "$lib/stores/model";
 </script>
 
 <h3>Options</h3>
@@ -15,7 +15,12 @@
         placeholder="Scenario Comment"
         bind:value={$currentScenario.comment}
     />
-    <Button label="Delete Scenario" />
+    {#if $model.currentScenario}
+        <Button
+            label="Delete Scenario"
+            onClick={deleteScenario.bind(null, $model.currentScenario)}
+        />
+    {/if}
 {:else}
     No current scenario available
 {/if}

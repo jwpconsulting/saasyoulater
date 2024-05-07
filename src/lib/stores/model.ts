@@ -9,7 +9,7 @@ import { persisted } from "svelte-persisted-store";
 
 function defaultModel(): Model {
     return {
-        currentScenario: 1,
+        currentScenario: undefined,
         currency: "usd",
     };
 }
@@ -33,18 +33,13 @@ const defaultScenario = (): Scenario => {
 const _model = writable<Model>(defaultModel());
 export const model = readonly(_model);
 
-const _scenarios = persisted<Map<number, Scenario> | undefined>(
-    "scenarios",
-    undefined,
-    { serializer: scenarioSerializer },
-);
+const _scenarios = persisted<Map<number, Scenario>>("scenarios", new Map(), {
+    serializer: scenarioSerializer,
+});
 export const scenarios = readonly(_scenarios);
 
 export function setScenario(scenarioId: ScenarioId, scenario: Scenario) {
     _scenarios.update(($scenarios) => {
-        if ($scenarios === undefined) {
-            $scenarios = new Map();
-        }
         if (!$scenarios.has(scenarioId)) {
             throw new Error("Scenario not found");
         }
@@ -57,9 +52,6 @@ export function updateScenario(
     updater: (v: Scenario) => Scenario,
 ) {
     _scenarios.update(($scenarios) => {
-        if ($scenarios === undefined) {
-            $scenarios = new Map();
-        }
         const scenario = $scenarios.get(scenarioId);
         if (scenario === undefined) {
             throw new Error("Scenario not found");
@@ -70,9 +62,6 @@ export function updateScenario(
 
 export function chooseScenario(scenarioId: ScenarioId) {
     _scenarios.update(($scenarios) => {
-        if ($scenarios === undefined) {
-            throw new Error("Expected $scenarios");
-        }
         if (!$scenarios.has(scenarioId)) {
             throw new Error("Scenario not found");
         }
@@ -88,12 +77,12 @@ export function chooseScenario(scenarioId: ScenarioId) {
 
 // TODO
 // newScenario
-export function newScenario() {
+export function newScenario(): Scenario {
+    const newScenario = defaultScenario();
     _scenarios.update(($scenarios) => {
         if (!$scenarios) {
             throw new Error("Expected $scenarios");
         }
-        const newScenario = defaultScenario();
         const lastKey = [...$scenarios.keys()].at(-1) ?? 0;
         const scenarioId = lastKey + 1;
         const scenarios = $scenarios.set(scenarioId, newScenario);
@@ -105,6 +94,7 @@ export function newScenario() {
         });
         return scenarios;
     });
+    return newScenario;
 }
 
 export function setCurrency(currency: Currency) {
@@ -118,9 +108,6 @@ export function setCurrency(currency: Currency) {
 
 export function deleteScenario(scenarioId: ScenarioId) {
     _scenarios.update(($scenarios) => {
-        if ($scenarios === undefined) {
-            throw new Error("Expected $scenarios");
-        }
         const deleted = $scenarios.delete(scenarioId);
         if (!deleted) {
             throw new Error("scenarioId wasn't in scenarios");
@@ -129,27 +116,40 @@ export function deleteScenario(scenarioId: ScenarioId) {
     });
 }
 
-const _currentScenario: Readable<Scenario | undefined> = derived<
+const _currentScenario: Readable<Scenario> = derived<
     [typeof model, typeof scenarios],
-    Scenario | undefined
->([model, scenarios], ([$model, $scenarios], set) => {
-    if ($scenarios === undefined) {
-        set(undefined);
-        return;
-    }
-    const current = $model.currentScenario;
-    if (current === undefined) {
-        set(undefined);
-        return;
-    }
-    const scenario = $scenarios.get(current);
-    if (scenario === undefined) {
-        set(undefined);
-    } else {
-        set(scenario);
-    }
-});
-export const currentScenario: Writable<Scenario | undefined> = {
+    Scenario
+>(
+    [model, scenarios],
+    ([$model, $scenarios], set) => {
+        const current = $model.currentScenario;
+        if (current === undefined) {
+            if ($scenarios.size === 0) {
+                const scenario = newScenario();
+                set(scenario);
+            } else {
+                // Not very efficient, but getting .next().value from
+                // iterator gives us any? why?
+                const entry = [...$scenarios.entries()].at(0);
+                if (!entry) {
+                    throw new Error("Expected nextScenario");
+                }
+                const [id, scenario] = entry;
+                chooseScenario(id);
+                set(scenario);
+            }
+        } else {
+            const scenario = $scenarios.get(current);
+            if (scenario === undefined) {
+                throw new Error("Expected scenario");
+            } else {
+                set(scenario);
+            }
+        }
+    },
+    defaultScenario(),
+);
+export const currentScenario: Writable<Scenario> = {
     subscribe: _currentScenario.subscribe,
     set(newScenario: Scenario) {
         _model.update(($model) => {
@@ -161,7 +161,7 @@ export const currentScenario: Writable<Scenario | undefined> = {
             return $model;
         });
     },
-    update(updater: (v: Scenario | undefined) => Scenario) {
+    update(updater: (v: Scenario) => Scenario) {
         _model.update(($model) => {
             const { currentScenario } = $model;
             if (!currentScenario) {
@@ -173,34 +173,36 @@ export const currentScenario: Writable<Scenario | undefined> = {
     },
 };
 
-export const currentResults = derived<
-    typeof currentScenario,
-    Results | undefined
->(currentScenario, ($currentScenario, set) => {
-    if ($currentScenario === undefined) {
-        set(undefined);
-        return;
-    }
-    const months = math.months($currentScenario.months);
-    const data: Datum[] = months.map((month: number) => {
-        return {
-            month,
-            customers: math.customers($currentScenario.customerGrowth, month),
-            revenue: math.revenue($currentScenario, month),
-            grossMargin: math.grossMargin($currentScenario, month),
-            expenses: math.expenses($currentScenario, month),
-            ebit: math.earnings($currentScenario, month),
-            cumulativeEbit: math.cumulativeEarnings($currentScenario, month),
-        };
-    });
-    set({
-        data,
-        breakEven: math.breakEven($currentScenario),
-        earningsBreakEven: math.earningsBreakEven($currentScenario),
-        averageLife: math.averageLife($currentScenario),
-        cltv: math.cltv($currentScenario),
-        ltvcac: math.ltvcac($currentScenario),
-        minimumCumulativeEarnings:
-            math.minimumCumulativeEarnings($currentScenario),
-    });
-});
+export const currentResults = derived<typeof currentScenario, Results>(
+    currentScenario,
+    ($currentScenario, set) => {
+        const months = math.months($currentScenario.months);
+        const data: Datum[] = months.map((month: number) => {
+            return {
+                month,
+                customers: math.customers(
+                    $currentScenario.customerGrowth,
+                    month,
+                ),
+                revenue: math.revenue($currentScenario, month),
+                grossMargin: math.grossMargin($currentScenario, month),
+                expenses: math.expenses($currentScenario, month),
+                ebit: math.earnings($currentScenario, month),
+                cumulativeEbit: math.cumulativeEarnings(
+                    $currentScenario,
+                    month,
+                ),
+            };
+        });
+        set({
+            data,
+            breakEven: math.breakEven($currentScenario),
+            earningsBreakEven: math.earningsBreakEven($currentScenario),
+            averageLife: math.averageLife($currentScenario),
+            cltv: math.cltv($currentScenario),
+            ltvcac: math.ltvcac($currentScenario),
+            minimumCumulativeEarnings:
+                math.minimumCumulativeEarnings($currentScenario),
+        });
+    },
+);
