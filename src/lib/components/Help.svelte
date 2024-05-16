@@ -17,7 +17,10 @@
             <dt>Revenue per customer</dt>
             <dd>Monthly revenue from one customer</dd>
             <dt>Initial revenue per customer</dt>
-            <dd>Initial amount that customer pays to services agreement. Example: purchase cost of appliance</dd>
+            <dd>
+                Initial amount that customer pays to services agreement.
+                Example: purchase cost of appliance
+            </dd>
             <dt>Gross Margin</dt>
             <dd>Difference between revenue and cost.</dd>
             <dd>
