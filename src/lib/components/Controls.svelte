@@ -44,6 +44,14 @@
         />
         <NumberInput
             min={0}
+            max={1000}
+            step={10}
+            label="Initial rev. p. C."
+            prefixUnit="currency"
+            bind:value={$currentScenario.initialRevenue}
+        />
+        <NumberInput
+            min={0}
             max={100}
             step={5}
             label="Gross Margin"

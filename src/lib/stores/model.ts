@@ -25,6 +25,7 @@ const defaultScenario = (): Scenario => {
         },
         revenue: 30,
         revenueGrossMargin: 50,
+        initialRevenue: 0,
         cac: 45,
         fixedCost: 100,
     };

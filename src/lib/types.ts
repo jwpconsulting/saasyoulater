@@ -25,6 +25,7 @@ export interface Scenario {
     months: Month;
     // Add a setter here that ensures 0 <= revenue
     revenue: Money;
+    initialRevenue?: Money;
     customerGrowth: CustomerGrowth;
     // Add a setter here that ensures 0 <= revenueGrossMargin <= 100
     revenueGrossMargin: Percentage;

@@ -95,6 +95,11 @@ const constantLossyScenario: Scenario = {
     name: undefined,
     //     }
 };
+
+const initialRevenueScenario: Scenario = {
+    ...constantScenario,
+    initialRevenue: 10,
+};
 //
 //
 //
@@ -195,6 +200,23 @@ describe("Math", () => {
             });
             // ]
         });
+        describe("initialRevenueScenario", () => {
+            // Customers initially pay 10 * 10 initialRevenue
+            test("300 earnings at start", () => {
+                expect(
+                    math.earnings(initialRevenueScenario, math.firstMonth),
+                ).toBe(200 + 100);
+            });
+            test("200 earnings at end", () => {
+                expect(
+                    math.earnings(
+                        initialRevenueScenario,
+                        initialRevenueScenario.months,
+                    ),
+                ).toBe(200);
+            });
+            // ]
+        });
         // ]
     });
     // , describe "cumulativeEarnings"
@@ -238,6 +260,32 @@ describe("Math", () => {
                 // ]
             });
         });
+        describe("initialRevenueScenario", () => {
+            test("200 + 100 revenue at start", () => {
+                expect(
+                    math.cumulativeEarnings(
+                        initialRevenueScenario,
+                        math.firstMonth,
+                    ),
+                ).toBe(200 + 100);
+            });
+            test("200 * 2 + 100 revenue at month 2", () => {
+                expect(
+                    math.cumulativeEarnings(
+                        initialRevenueScenario,
+                        math.firstMonth + 1,
+                    ),
+                ).toBe(200 * 2 + 100);
+            });
+            test("200 * months + 100 revenue at end", () => {
+                expect(
+                    math.cumulativeEarnings(
+                        initialRevenueScenario,
+                        initialRevenueScenario.months,
+                    ),
+                ).toBe(200 * initialRevenueScenario.months + 100);
+            });
+        });
         // ]
     });
     // , describe "revenue"
@@ -254,7 +302,8 @@ describe("Math", () => {
                 );
             });
             // , test "300 revenue at month 1" <|
-            test("300 revenue at month 1", () => {
+            // first month is month 1, ....
+            test("300 revenue at month 2", () => {
                 // \() ->
                 // Expect.equal 300 <|
                 // Math.revenue constantScenario 1
@@ -269,6 +318,24 @@ describe("Math", () => {
                     math.revenue(constantScenario, constantScenario.months),
                 ).toBe(300);
                 // ]
+            });
+        });
+        describe("initialRevenueScenario", () => {
+            test("300 + 100 revenue at start", () => {
+                expect(
+                    math.revenue(initialRevenueScenario, math.firstMonth),
+                ).toBe(300 + 100);
+            });
+            test("300 revenue at month 2", () => {
+                expect(math.revenue(initialRevenueScenario, 2)).toBe(300);
+            });
+            test("300 revenue at end", () => {
+                expect(
+                    math.revenue(
+                        initialRevenueScenario,
+                        initialRevenueScenario.months,
+                    ),
+                ).toBe(300);
             });
         });
         // ]

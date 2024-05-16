@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { model } from "$lib/stores/model";
+    import { currencyDefinitions } from "$lib/types";
+
     export let label: string;
     export let min: number;
     export let max: number;
@@ -6,7 +9,7 @@
     export let prefixUnit: "percentage" | "currency" | undefined = undefined;
     export let value: number | undefined = undefined;
 
-    const currency = "$";
+    $: currency = currencyDefinitions[$model.currency].shortName;
 </script>
 
 <div class="form-group">

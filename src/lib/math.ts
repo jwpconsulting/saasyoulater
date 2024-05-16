@@ -38,9 +38,26 @@ export function customers(customerGrowth: CustomerGrowth, month: Month): Int {
     );
 }
 
+export function newCustomers(
+    customerGrowth: CustomerGrowth,
+    month: Month,
+): Int {
+    const total = customers(customerGrowth, month);
+    if (month === firstMonth) {
+        return total;
+    } else {
+        const previous = customers(customerGrowth, month - 1);
+        return Math.max(0, total - previous);
+    }
+}
+
 // revenue : Scenario -> Month -> Int
 export function revenue(scenario: Scenario, month: Month): Int {
-    return customers(scenario.customerGrowth, month) * scenario.revenue;
+    const customersTotal = customers(scenario.customerGrowth, month);
+    const initialRevenueRevenue =
+        (scenario.initialRevenue ?? 0) *
+        newCustomers(scenario.customerGrowth, month);
+    return customersTotal * scenario.revenue + initialRevenueRevenue;
 }
 
 // grossMargin : Scenario -> Month -> Money
