@@ -4,7 +4,7 @@
 </script>
 
 {#if $currentScenario}
-    <form>
+    <form class="flex flex-col">
         <h2>Controls</h2>
         <NumberInput
             min={1}

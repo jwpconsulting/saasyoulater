@@ -5,13 +5,15 @@
     import Results from "$lib/components/Results.svelte";
 </script>
 
-<div class="row">
-    <div class="col-xs-6 col-md-2">
+<div class="w-full px-10 flex flex-row flex-wrap xl:grid gap-x-8 grid-cols-4">
+    <div class="xl:order-1">
         <Controls />
     </div>
-    <div class="col-xs-6 col-md-3 col-md-push-7">
+    <div class="xl:order-4">
         <Results />
         <Options />
     </div>
-    <div class="col-xs-12 col-md-7 col-md-pull-3"><Numbers /></div>
+    <div class="max-w-full xl:order-2 col-span-2">
+        <Numbers />
+    </div>
 </div>
