@@ -29,8 +29,8 @@ npm ci
 
 and run the development server using
 
-```
-npm run dev
+```bash
+npm start
 ```
 
 You can then open SYL in your browser at
@@ -38,18 +38,7 @@ You can then open SYL in your browser at
 
 ## Testing
 
-To test locally, install the headless Firefox that
-[Playwright](https://playwright.dev/) uses by running
-
-```
-npm run check:playwright:install
-```
-
-You might want to use a desktop firewall like
-[OpenSnitch](https://github.com/evilsocket/opensnitch) to stop Firefox from
-phoning home to their location service or getpocket.com.
-
-To test everything then, run
+To test everything, run the following:
 
 ```
 npm test
@@ -59,9 +48,8 @@ This will
 
 - prettify,
 - lint,
-- check types,
-- run unit tests, and
-- run playwright e2e tests.
+- check types, and
+- run unit tests.
 
 ## Building
 
