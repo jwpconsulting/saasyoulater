@@ -10,13 +10,10 @@
         "preview": "vite preview --port 3000",
         "test": "npm run check",
         "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check && npm run check:vitest",
-        "check:with-playwright": "npm run check && npm run check:playwright",
         "check:svelte-check": "svelte-check --tsconfig ./tsconfig.json",
         "check:prettier": "prettier --check .",
         "check:eslint": "eslint .",
         "check:vitest": "vitest run",
-        "check:playwright": "playwright test",
-        "check:playwright:install": "playwright install firefox",
         "format": "npm run fix:prettier",
         "fix": "npm run fix:prettier",
         "fix:prettier": "prettier --write ."
@@ -36,7 +33,6 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
-        "@playwright/test": "^1.28.1",
         "@sveltejs/vite-plugin-svelte": "^5.0.0",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
