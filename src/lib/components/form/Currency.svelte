@@ -17,9 +17,9 @@
 </script>
 
 <div class="form-group">
-    <label>Currency</label>
+    <label for="currency">Currency</label>
     <div>
-        <select on:change={select} class="form-control">
+        <select id="currency" on:change={select} class="form-control">
             {#each options as [value, name]}
                 <option {value}>{name}</option>
             {/each}

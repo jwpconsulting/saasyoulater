@@ -2,11 +2,12 @@
     export let label: string;
     export let value: string | undefined = undefined;
     export let placeholder: string | undefined = undefined;
-    // TODO a11y
+    let uid = `text-area-${self.crypto.randomUUID()}`;
 </script>
 
 <div class="form-group">
-    <label>{label}</label><textarea
+    <label for={uid}>{label}</label><textarea
+        id={uid}
         class="form-control"
         bind:value
         placeholder={placeholder ?? label}

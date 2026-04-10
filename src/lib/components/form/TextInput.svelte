@@ -2,12 +2,13 @@
     export let label: string;
     export let value: string | undefined = undefined;
     export let placeholder: string | undefined = undefined;
-    // TODO add type=text to input
+    let uid = `text-input-${self.crypto.randomUUID()}`;
 </script>
 
 <div class="form-group">
-    <label>{label}</label><input
+    <label for={uid}>{label}</label><input
         class="form-control"
+        id={uid}
         placeholder={placeholder ?? label}
         bind:value
     />
