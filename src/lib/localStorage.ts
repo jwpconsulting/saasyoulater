@@ -37,43 +37,25 @@
 
 import type { Serializer } from "svelte-persisted-store";
 import type { Scenario } from "./types";
-import { z } from "zod";
-
-const customerGrowth = z.object({
-    start: z.number(),
-    growth: z.number(),
-    churn: z.number(),
-});
-
-const scenario = z.object({
-    months: z.number(),
-    revenue: z.number(),
-    customerGrowth,
-    revenueGrossMargin: z.number(),
-    cac: z.number(),
-    fixedCost: z.number(),
-    name: z.nullable(z.string()),
-    comment: z.nullable(z.string()),
-});
-
-const scenariosMap = z.record(z.string(), scenario);
 
 export const scenarioSerializer: Serializer<Map<number, Scenario>> = {
     parse(text: string): Map<number, Scenario> {
         const raw = JSON.parse(text);
-        const scenarios = scenariosMap.parse(raw);
-        const entries: [number, Scenario][] = Object.entries(scenarios).map(
-            ([k, v]) => {
+        const entries: [number, Scenario][] = Object.entries(raw).map(
+            ([k, v]: [string, any]) => {
                 return [
                     parseInt(k, 10),
                     {
-                        ...v,
+                        months: v.months,
+                        revenue: v.revenue,
                         customerGrowth: {
                             startValue: v.customerGrowth.start,
                             growthRate: v.customerGrowth.growth * 100,
                             churnRate: v.customerGrowth.churn * 100,
                         },
                         revenueGrossMargin: v.revenueGrossMargin * 100,
+                        cac: v.cac,
+                        fixedCost: v.fixedCost,
                         name: v.name ?? undefined,
                         comment: v.comment ?? undefined,
                     },
