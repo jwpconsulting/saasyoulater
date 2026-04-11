@@ -6,21 +6,23 @@
     import { currentScenario, deleteScenario, model } from "$lib/stores/model";
 </script>
 
-<h3>Options</h3>
-{#if $currentScenario}
-    <Currency />
-    <TextInput label="Scenario Name" bind:value={$currentScenario.name} />
-    <TextArea
-        label="Comment"
-        placeholder="Scenario Comment"
-        bind:value={$currentScenario.comment}
-    />
-    {#if $model.currentScenario}
-        <Button
-            label="Delete Scenario"
-            onClick={deleteScenario.bind(null, $model.currentScenario)}
+<div class="flex flex-col gap-2">
+    <h3>Options</h3>
+    {#if $currentScenario}
+        <Currency />
+        <TextInput label="Scenario Name" bind:value={$currentScenario.name} />
+        <TextArea
+            label="Comment"
+            placeholder="Scenario Comment"
+            bind:value={$currentScenario.comment}
         />
+        {#if $model.currentScenario}
+            <Button
+                label="Delete Scenario"
+                onClick={deleteScenario.bind(null, $model.currentScenario)}
+            />
+        {/if}
+    {:else}
+        No current scenario available
     {/if}
-{:else}
-    No current scenario available
-{/if}
+</div>

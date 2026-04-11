@@ -6,10 +6,12 @@
 </script>
 
 <div class="form-group">
-    <label for={uid}>{label}</label><textarea
-        id={uid}
-        class="form-control"
-        bind:value
-        placeholder={placeholder ?? label}
-    ></textarea>
+    <label for={uid}
+        >{label}<textarea
+            id={uid}
+            class="form-control"
+            bind:value
+            placeholder={placeholder ?? label}
+        ></textarea>
+    </label>
 </div>

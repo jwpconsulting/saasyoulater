@@ -7,9 +7,7 @@
 </script>
 
 <h2>Numbers</h2>
-<div class="table-responsive">
-    <table class="table table-hover table-condensed">
-        <TableHead />
-        <TableBody />
-    </table>
-</div>
+<table>
+    <TableHead />
+    <TableBody />
+</table>

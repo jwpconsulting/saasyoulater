@@ -14,7 +14,7 @@
                 class:warning={row.cumulativeEbit < 0}
                 class:success={row.cumulativeEbit >= 0}
             >
-                <td class="text-right">{row.month}</td>
+                <th scope="row" class="text-right">{row.month}</th>
                 <td class="text-right">{row.customers}</td>
                 <td class="text-right">
                     <strong class:text-success={row.revenue >= 0}>

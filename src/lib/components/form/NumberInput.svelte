@@ -14,17 +14,17 @@
     $: currency = currencyDefinitions[$model.currency].shortName;
 </script>
 
-<div class="form-group">
-    <label for={uid} class="control-label">{label}</label>
+<label for={uid} class="flex w-full justify-between"
+    >{label}
     {#if prefixUnit}
-        <div class="input-group">
+        <div>
             <span class="input-group-addon"
                 >{#if prefixUnit == "percentage"}%{:else if prefixUnit == "currency"}{currency}{/if}</span
             >
             <input
                 id={uid}
                 type="number"
-                class="form-control text-right"
+                class="text-right"
                 bind:value
                 {min}
                 {max}
@@ -35,11 +35,11 @@
         <input
             id={uid}
             type="number"
-            class="form-control text-right"
+            class="text-right"
             bind:value
             {min}
             {max}
             {step}
         />
     {/if}
-</div>
+</label>

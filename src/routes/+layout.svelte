@@ -9,9 +9,11 @@
     <title>SaaS You Later</title>
 </svelte:head>
 
-<Header />
-<slot />
-<hr />
-<Help />
-<hr />
-<Footer />
+<div class="container">
+    <Header />
+    <slot />
+    <hr />
+    <Help />
+    <hr />
+    <Footer />
+</div>

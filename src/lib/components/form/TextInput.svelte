@@ -5,11 +5,6 @@
     let uid = `text-input-${self.crypto.randomUUID()}`;
 </script>
 
-<div class="form-group">
-    <label for={uid}>{label}</label><input
-        class="form-control"
-        id={uid}
-        placeholder={placeholder ?? label}
-        bind:value
-    />
-</div>
+<label for={uid}
+    >{label}<input id={uid} placeholder={placeholder ?? label} bind:value />
+</label>

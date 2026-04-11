@@ -9,13 +9,13 @@
     $: s = [...($scenarios ?? [])];
 </script>
 
-<ul class="nav nav-tabs">
+<ul class="flex flex-row gap-8 text-base list-none">
     {#each s as [number, { name }] (number)}
         <li class:active={$model.currentScenario === number}>
-            <a href="#" on:click={() => chooseScenario(number)}
-                >{name ?? `Scenario ${number}`}</a
+            <button on:click={() => chooseScenario(number)}
+                >{name ?? `Scenario ${number}`}</button
             >
         </li>
     {/each}
-    <li><a href="#" on:click={newScenario}>+ Add a Scenario</a></li>
+    <li><button on:click={newScenario}>+ Add a Scenario</button></li>
 </ul>

@@ -2,7 +2,12 @@
 export default {
     content: ["./src/**/*.{html,js,svelte,ts}"],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                success: "#0f5132",
+                warning: "#856404",
+            },
+        },
     },
     corePlugins: {
         preflight: false,

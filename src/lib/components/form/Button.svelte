@@ -5,6 +5,4 @@
     export let onClick: () => void;
 </script>
 
-<a href="#" on:click={onClick} class="btn btn-danger btn-xs btn-block"
-    >{label}</a
->
+<button on:click={onClick}>{label}</button>

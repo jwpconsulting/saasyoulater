@@ -16,13 +16,11 @@
     );
 </script>
 
-<div class="form-group">
-    <label for="currency">Currency</label>
-    <div>
-        <select id="currency" on:change={select} class="form-control">
-            {#each options as [value, name]}
-                <option {value}>{name}</option>
-            {/each}
-        </select>
-    </div>
-</div>
+<label for="currency"
+    >Currency
+    <select id="currency" on:change={select} class="form-control">
+        {#each options as [value, name]}
+            <option {value}>{name}</option>
+        {/each}
+    </select>
+</label>
